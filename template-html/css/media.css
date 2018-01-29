@@ -1,0 +1,8 @@
+@media (max-width: 1219px) {
+	.method-switch>li>a {
+		width: 230px;
+	}
+	.uk-accordion-title>.uk-grid>div:last-child:after {
+		left: 50px;
+	}
+}

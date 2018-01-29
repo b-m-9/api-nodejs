@@ -1,0 +1,448 @@
+doctype html
+// Created by Bogdan Medvedev on 30.01.18.
+html(lang='en')
+    head
+        meta(charset='utf-8')
+        meta(http-equiv='X-UA-Compatible', content='IE=edge')
+        meta(name='viewport', content='width=device-width, initial-scale=1.0')
+        title !{config.domain} | Rest-API
+        // Uikit CSS
+        link(rel='stylesheet', href=config.server_path + '_API/src/css/uikit.min.css')
+        link(rel='stylesheet', href=config.server_path + '_API/src/css/accordion.min.css')
+        // Plugin CSS
+        link(rel='stylesheet', href=config.server_path + '_API/src/css/jquery.formstyler.css')
+        link(rel='stylesheet', href=config.server_path + '_API/src/css/jquery.formstyler.theme.css')
+        // Template CSS
+        link(rel='stylesheet', href=config.server_path + '_API/src/css/fonts.css')
+        link(rel='stylesheet', href=config.server_path + '_API/src/css/template.css')
+        link(rel='stylesheet', href=config.server_path + '_API/src/css/media.css')
+        script(src='https://www.google.com/recaptcha/api.js')
+        // HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries
+        // WARNING: Respond.js doesn't work if you view the page via file://
+        //if lt IE 9
+          script(src='https://oss.maxcdn.com/libs/html5shiv/3.7.2/html5shiv.min.js')
+          script(src='https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js')
+    body
+        .block1
+            .uk-container.uk-container-center
+                .uk-grid
+                    .uk-width-1-2
+                        a.logo(href='#')
+                            span.main-logo Documentation
+                            span.after-logo !{config.project_name}
+                            span.version-logo
+                    .uk-width-1-2.uk-text-right
+                        ul.nav-list
+                            li
+                                a(href='') Auth
+                            li
+                                a(href='') Methods
+                            li
+                                a(href='') Support
+                .block-api
+                    h1 REST-API interface
+                    p Set of ready-made procedures, functions for service !{config.project_name}
+                    a.uk-button.uk-button-primary(href='')
+                        i.uk-icon-sliders
+                        | Get API key
+            a.link-bottom(href='')
+                i.uk-icon-angle-down
+        .block2
+            .uk-container.uk-container-center.uk-text-center
+                .second-menu
+                    ul.list-menu(data-uk-switcher="{connect:'#api-switch', animation: 'slide-horizontal'}")
+                        li
+                            a(href='')
+                                img(src=config.server_path + '_API/src/images/icon_menu_01.png', alt='', width='16', height='16')
+                                | HTTP/2
+                        li
+                            a(href='')
+                                img(src=config.server_path + '_API/src/images/icon_menu_02.png', alt='', width='18', height='17')
+                                | WebSocket
+                        li
+                            a(href='')
+                                img(src=config.server_path + '_API/src/images/icon_menu_03.png', alt='', width='18', height='17')
+                                | About API
+                ul#api-switch.uk-switcher.uk-margin-large-top.uk-margin-bottom
+                    li
+                        h3 HTTP Example:
+                        p For authorization, replace _API_KEY_ (coming soon)
+                        .block-code
+                            .header-code
+                                ul.list-dotter
+                                    li
+                                    li
+                                    li
+                            .main-code.uk-flex.uk-flex-center.uk-flex-middle
+                                p
+                                    | !{config.shema + config.domain + config.server_path + config.api_path}_METHOD_NAME_/?api_key=
+                                    span _API_KEY_
+                                    | &other_params=
+                                .code-type HTTP
+                        p
+                            | params api_key is you user API key (get in  you account)
+                            | all responses have a latency ms parameter that indicates the time the request was processed by the server
+                            | _METHOD_NAME_ specify method name
+                            br
+                            br
+                            | Please limit your queries to a maximum of 500 every 1 hour.
+                        h3 Export this API for
+                        ul.uk-grid.uk-grid-width-1-3(data-uk-grid-margin='')
+                            li
+                                a.uk-button.uk-button-secondary.button-download.uk-width-1-1(href=config.shema + config.domain + config.server_path +'')
+                                    img(src=config.server_path + '_API/src/images/icon_api_button_01.png', alt='', width='107', height='45')
+                                    span.uk-display-block
+                                        i.uk-icon-download
+                                        |  Import api to NodeJS
+                            li
+                                a.uk-button.uk-button-secondary.button-download.uk-width-1-1(href=config.shema + config.domain + config.server_path + '/export/insomnia')
+                                    img(src=config.server_path + '_API/src/images/icon_api_button_02.png', alt='', width='107', height='45')
+                                    span.uk-display-block
+                                        i.uk-icon-download
+                                        |  Import api to Insomnia
+                            li
+                                a.uk-button.uk-button-secondary.button-download.uk-width-1-1(href=config.shema + config.domain + config.server_path + '/export/postman')
+                                    img(src=config.server_path + '_API/src/images/icon_api_button_03.png', alt='', width='107', height='45')
+                                    span.uk-display-block
+                                        i.uk-icon-download
+                                        |  Import api to Postman
+                    li
+                        h3 WS server
+                        p this protocol dont support (coming soon)
+                        .block-code
+                            .header-code
+                                ul.list-dotter
+                                    li
+                                    li
+                                    li
+                            .main-code.uk-flex.uk-flex-center.uk-flex-middle
+                                p
+                                    | !{'wss://' + config.domain + config.server_path}ws/?token
+                                    span _TOKEN_AUTH_
+                                    | &type=
+                                    span chat
+                                .code-type WebSoket
+                        p
+                            | _TOKEN_AUTH_ - this variable you can get from api method [get_token ws]
+                            | ATTENTION the connection to the web socket is restricted, you can create only one active connection all and not more than 30 connections per hour
+                    li
+                        h3 What is an API?
+                        p
+                            | API (Application Programming Interface) is a set of ready-made classes, procedures, functions, structures and constants provided by the service for use in external software products. Used by programmers when writing all kinds of applications.
+                            br
+                            br
+                            | Used in web development, usually a specific set of HTTP requests or WebSocket, as well as the definition of the WebSocket structure, HTTP responses, for the expression of which use JSON formats.
+
+            a.link-bottom(href='')
+                i.uk-icon-angle-down
+        .block3
+            .uk-container.uk-container-center
+                ul.list-statistic.uk-grid.uk-grid-collapse.uk-grid-width-1-6(data-uk-grid-margin='')
+                    li
+                        .list-panel.uk-flex.uk-flex-center.uk-flex-middle
+                            div
+                                span Uptime
+                                span
+                                    img(src=config.server_path + '_API/src/images/icon_statistic_01.png', alt='', width='20', height='21')
+                                    | 99.999%
+                    li
+                        .list-panel.uk-flex.uk-flex-center.uk-flex-middle
+                            div
+                                span Received queries
+                                span
+                                    img(src=config.server_path + '_API/src/images/icon_statistic_02.png', alt='', width='19', height='21')
+                                    | 450/min
+                    li
+                        .list-panel.uk-flex.uk-flex-center.uk-flex-middle
+                            div
+                                span Methods
+                                span
+                                    img(src=config.server_path + '_API/src/images/icon_statistic_03.png', alt='', width='18', height='19')
+                                    | 17
+                    li
+                        .list-panel.uk-flex.uk-flex-center.uk-flex-middle
+                            div
+                                span Downtime
+                                span
+                                    img(src=config.server_path + '_API/src/images/icon_statistic_04.png', alt='', width='21', height='21')
+                                    | 00h 28
+                                    span.text-small m
+                    li
+                        .list-panel.uk-flex.uk-flex-center.uk-flex-middle
+                            div
+                                span latency
+                                span
+                                    img(src=config.server_path + '_API/src/images/icon_statistic_05.png', alt='', width='18', height='21')
+                                    | 10
+                                    span.text-small ms
+                    li
+                        .list-panel.uk-flex.uk-flex-center.uk-flex-middle
+                            div
+                                span Version API
+                                span
+                                    span.text-small v
+                                    | 1.0.2
+                p.uk-text-center Statistics for 30 days - the data is updated every minute.
+        .block4
+            .block4-top
+            .uk-container.uk-container-center
+                .uk-grid
+                    .uk-width-1-2
+                        h3 Methods АPI
+                    .uk-width-1-2.uk-text-right
+                        ul.list-filter-btn
+                            li
+                                span Access:
+                            li
+                                button.uk-button.uk-button-primary All
+                            li
+                                button.uk-button.uk-button-primary Public
+                            li
+                                button.uk-button.uk-button-primary Private
+                form.method-block.uk-margin-top.uk-form
+                    .uk-grid.uk-grid-medium
+                        .uk-width-2-10
+                            select.uk-width-1-1
+                                option Group
+                                option User
+                                option UserEducation
+                                option Video
+                                option VideoStream
+                        .uk-width-8-10
+                            .uk-grid.uk-grid-collapse
+                                .uk-width-8-10
+                                    .uk-form-icon.uk-width-1-1
+                                        i.uk-icon-search
+                                        input.uk-width-1-1(type='text', placeholder='Search by name or description')
+                                .uk-width-2-10
+                                    button.uk-button.uk-width-1-1.button-form-find(type='submit')
+                                        | Search
+                                        img.uk-margin-left(src=config.server_path + '_API/src/images/icon_arrow_enter.png', alt='', width='12', height='8')
+                .uk-grid.method-name.uk-margin-top
+                    .uk-width-2-10
+                        span method
+                    .uk-width-6-10
+                        span description
+                    .uk-width-2-10.uk-text-center
+                        span group
+                .result-metod-block.uk-margin-top
+                    -var i= 0
+                    each val, index in methods
+                        each val1, index1 in val
+                            - i++
+                            .uk-accordion(data-uk-accordion='{showfirst: false}', id ="method_API_" + val1.method.split('/').join('-'))
+                                h3.uk-accordion-title
+                                    .uk-grid
+                                        .uk-width-1-5
+                                            if val1.method.length >=35
+                                                span(style='text-transform: none;font-size: 10px;')
+                                                    i.uk-icon-users.icon-green
+                                                    | !{val1.method}
+                                            else if val1.method.length >=25
+                                                span(style='text-transform: none;font-size: 11px;')
+                                                    i.uk-icon-users.icon-green
+                                                    | !{val1.method}
+                                            else if val1.method.length >=20
+                                                span(style='text-transform: none;font-size: 12px;')
+                                                    i.uk-icon-users.icon-green
+                                                    | !{val1.method}
+                                            else
+                                                span(style='text-transform: none;font-size: 13px;')
+                                                    i.uk-icon-users.icon-green
+                                                    | !{val1.method}
+                                        .uk-width-3-5
+                                            if val1 && val1.title
+                                                span.title !{val1.title}
+                                        .uk-width-1-5.uk-text-right
+                                            span
+                                                .uk-badge.bage-http !{val1.group}
+                                .uk-accordion-content(style='background:#fff')
+                                    ul.method-switch(data-uk-switcher="{connect:'#method-api-"+val1.method.split('/').join('-')+"', animation: 'uk-animation-fade'}")
+                                        li
+                                            a(href='') Request info
+                                        li
+                                            a(href='') Response
+                                        li
+                                            a(href='') Testing method
+                                        li
+                                            a(href='') Source code
+                                    ul.uk-switcher.uk-clearfix(id ="method-api-" + val1.method.split('/').join('-'))
+                                        li
+                                            div(style='margin: 5px 90px;')
+                                                table(cellspacing='0')
+                                                    tr
+                                                        th(colspan='2') Information about the method.
+                                                    tr
+                                                        td Method name:
+                                                        td !{val1.method}
+                                                    tr
+                                                        td Method URL:
+                                                        td
+                                                            a(href=config.shema + config.domain + config.server_path + config.api_path + val1.method) !{config.shema + config.domain + config.server_path + config.api_path + val1.method}
+                                                    tr
+                                                        td Access level:
+                                                        if val1.level == 0
+                                                            td Public API
+                                                        else if val1.level == 1
+                                                            td Private API (User access)
+                                                        else if val1.level == 2
+                                                            td Admin API (Admin access)
+                                                        else if val1.level == 3
+                                                            td Server API (Call Only Server)
+                                                    tr
+                                                        td Тип:
+                                                        td !{index}
+                                                    if val1 && val1.description
+                                                        tr
+                                                            th(colspan='2') Description of the method
+                                                        tr
+                                                            td(colspan='2') !{val1.description}
+
+                                            br
+                                            br
+                                            p.title-method POST PARAMETERS
+                                            table.uk-table.uk-table-middle.uk-table-hover.uk-table-striped
+                                                thead
+                                                    tr
+                                                        th Name
+                                                        th Description
+                                                        th Type
+                                                        th Required
+                                                        th Default value
+                                                tbody
+                                                    each oneParam in val1.param
+                                                        tr
+                                                            td !{oneParam.name}
+                                                            td !{oneParam.title}
+                                                            td !{oneParam.type}
+                                                            td
+                                                                if oneParam.necessarily
+                                                                    | YES
+                                                                else
+                                                                    | NO
+                                                            td !{oneParam.default}
+                                        li
+                                            p.title-method Response
+                                            table.uk-table.uk-table-middle.uk-table-hover.uk-table-striped
+                                                thead
+                                                    tr
+                                                        th Name
+                                                        th Description
+                                                        th Type
+                                                        th Default value
+                                                tbody
+                                                    each oneParam in val1.response
+                                                        tr
+                                                            td !{oneParam.name}
+                                                            td !{oneParam.title}
+                                                            td !{oneParam.type}
+                                                            td !{oneParam.default}
+                                        li
+                                            div(style='margin: -15px;')
+                                                if index === 'post' || val1.method !== 'post'
+                                                    form(method='post', action=config.shema + config.domain + config.server_path + config.api_path + val1.method, id="frame-result-api-" + val1.method.split('/').join('-'))
+                                                        .request-editor-url-container
+                                                            .request-editor__main(style='top: initial; width: initial;')
+                                                                .request-editor__main__url-group
+                                                                    .request-method-editor POST
+                                                                    .request-url-editor
+                                                                        | !{config.shema + config.domain + config.server_path + config.api_path + val1.method}
+                                                                .request-editor__main__button-group
+                                                                    .request-editor-send-button
+                                                                        .btn-group.btn-group-separated
+                                                                            .btn(tabindex='0', onclick='submitMethod("'+"frame-result-api-" + val1.method.split('/').join('-')+'","' + val1.method.split('/').join('-')+'")') Send
+                                                        .request-body-editors
+                                                            .key-value-form-header-row
+                                                                .key-value-form-row.header-row
+                                                                    .key-value-form-actions
+                                                                        .key-value-form-row__toggle
+                                                                        .feedback-state
+                                                                    .auto-suggest-group
+                                                                        .key-value-form-header-item(style='flex: 0 0 33%;')
+                                                                            .header-content Key
+                                                                        .key-value-form-header-item(style='flex: 0 0 33%;')
+                                                                            .resize-handle(data-index='0', style='touch-action: none;')
+                                                                            .header-content Value
+                                                                        .key-value-form-header-item(style='flex: 0 0 34%;')
+                                                                            .resize-handle(data-index='1', style='touch-action: none;')
+                                                                            .header-content.description Description
+
+                                                            if val1 && val1.param
+                                                                each oneParam in val1.param
+
+                                                                    .key-value-form-row(data-index='0')
+                                                                        .key-value-form-actions
+                                                                        .auto-suggest-group
+                                                                            .key-value-form-column(style='flex: 0 0 33%;')
+                                                                                span(data-text='true') !{oneParam.name}
+                                                                            .key-value-form-column(style='flex: 0 0 33%;')
+                                                                                input.key-value-form-input(value=oneParam.default, placeholder=oneParam.type, name=oneParam.name)
+                                                                            .key-value-form-column(style='flex: 0 0 34%;')
+                                                                                span(data-text='true') !{oneParam.title}
+                                                                        .key-value-form-row__delete
+                                                                            .key-value-form-row__delete__icon
+                                                    // code container
+                                                    .code-container.uk-margin-top
+                                                        .header-container
+                                                            .uk-grid
+                                                                .uk-width-2-3
+                                                                    ul.swithcer-code(data-uk-switcher="{connect:'#code-main-switch" + val1.method.split('/').join('-')+"', animation: 'fade'}")
+                                                                        li
+                                                                            a(href='') Body
+                                                                        li
+                                                                            a(href='') Request
+                                                                        li
+                                                                            a(href='')
+                                                                                | Headers
+                                                                                span(style='padding:0 5px;', id="testCountHeaders-" + val1.method.split('/').join('-')) (0)
+                                                                .uk-width-1-3.uk-text-right
+                                                                    ul.list-code-status(style='padding:0 20px;')
+                                                                        li
+                                                                            | Status:
+                                                                            span(id="testStatus-" + val1.method.split('/').join('-')) wait
+                                                                        li
+                                                                            | Time:
+                                                                            span(id="testTime-" + val1.method.split('/').join('-')) 0 ms
+                                                        ul.uk-switcher.uk-margin-top(id="code-main-switch" + val1.method.split('/').join('-'), style='padding:0 20px;')
+                                                            li
+                                                                div(id="testResponse-" + val1.method.split('/').join('-')) Please click start
+                                                            li
+                                                                div(id="testRequest-" + val1.method.split('/').join('-')) Please click start
+                                                            li
+                                                                div(id="testHeaders-" + val1.method.split('/').join('-')) Please click start
+                                                    // end code container
+
+
+
+
+                                        li
+                                            p.title-method Source code of the server:
+                                            ul.uk-list.uk-list-striped.list-code
+                                                pre(style='background: #091124 !important;    min-height: 30px;\n' +
+                                                '    line-height: 28px;\n' +
+                                                '    font-family: RobotoRegular;\n' +
+                                                '    font-size: 12px;\n' +
+                                                '    color: #07b8ab;\n' +
+                                                '    padding: 0 25px;\n' +
+                                                '    font-style: italic;') !{val1.code}
+        .footer
+            .uk-container.uk-container-center
+                .uk-grid.uk-margin-large-top
+                    .uk-width-1-2
+                        p.uk-margin-top All rights reserved !{config.project_name} © 2015
+                    .uk-width-1-2.uk-text-right.uk-margin-top
+                        ul.nav-footer
+                            li
+                                a(href='/') !{config.project_name}
+
+                            li
+                                a(href='mailto:www.clsa.ru@gmail.com') Developer @medve_dev
+        // jQuery
+        script(src=config.server_path + '_API/src/js/jquery-2.2.4.min.js')
+        // Uikit JavaScript
+        script(src=config.server_path + '_API/src/js/uikit.min.js')
+        script(src=config.server_path + '_API/src/js/accordion.min.js')
+        // Plugint JavaScript
+        script(src=config.server_path + '_API/src/js/jquery.formstyler.min.js')
+        // Template Javascript
+        script(src=config.server_path + '_API/src/js/main.js')

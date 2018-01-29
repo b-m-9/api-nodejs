@@ -1,0 +1,310 @@
+//
+   Created by bogdanmedvedev on 05.07.16.
+doctype html
+html
+    head
+        meta(charset='utf-8')
+        meta(name='viewport', content='width=device-width, initial-scale=1.0')
+        title !{config.domain} | Rest-API
+        link(rel='stylesheet', href=config.server_path+'_API/assets/bootstrap/css/bootstrap.min.css')
+        link(rel='stylesheet', href='https://fonts.googleapis.com/css?family=Cookie')
+        link(rel='stylesheet', href=config.server_path+'_API/assets/fonts/font-awesome.min.css')
+        link(rel='stylesheet', href=config.server_path+'_API/assets/css/Carousel-Hero.css')
+        link(rel='stylesheet', href=config.server_path+'_API/assets/css/Pretty-Footer.css')
+        link(rel='stylesheet', href=config.server_path+'_API/assets/css/Pretty-Header.css')
+        link(rel='stylesheet', href=config.server_path+'_API/assets/css/Pricing-Table-Style-01.css')
+        link(rel='stylesheet', href=config.server_path+'_API/assets/css/Pricing-Table-Style-011.css')
+        link(rel='stylesheet', href=config.server_path+'_API/assets/css/animate.css')
+        link(rel='stylesheet', href=config.server_path+'_API/assets/css/styles.css')
+        link(rel='stylesheet', href=config.server_path+'_API/assets/css/jquery.snippet.min.css')
+        link(rel='stylesheet', href=config.server_path+'_API/assets/css/sweetalert2.css')
+        link(rel="icon" href="/_API/assets/img/iconApi.png" type="image/x-icon")
+        link(rel="shortcut icon" href="/_API/assets/img/iconApi.png" type="image/x-icon")
+
+        script(src='https://www.google.com/recaptcha/api.js')
+    body
+        nav.navbar.navbar-default.navbar-fixed-top.custom-header
+            .container-fluid
+                .navbar-header
+                    a.navbar-brand.show.navbar-link(href='#')
+                        | !{config.project_name} -
+                        = ' '
+                        span API
+                    button.navbar-toggle.collapsed(data-toggle='collapse', data-target='#navbar-collapse')
+                        span.sr-only Menu
+                        span.icon-bar
+                        span.icon-bar
+                        span.icon-bar
+                #navbar-collapse.collapse.navbar-collapse
+                    ul.nav.navbar-nav.links
+                        li(role='presentation')
+                            a(href='#auth') Auth
+                        li(role='presentation')
+                            a(href="#methods" rel="m_PageScroll2id") Methods
+                        li(role='presentation')
+                            a(href="#support" rel="m_PageScroll2id") Support
+        #carousel-1.carousel.slide(data-ride='carousel')
+            .carousel-inner(role='listbox')
+                .item.active
+                    .jumbotron.hero-nature.carousel-hero
+                        img.flipInX.animated(data-animate='flipInX', data-delay='500', src=config.server_path+'_API/assets/img/t_logo.png')
+                        h1.hero-title.fadeInDown.animated(data-animate='fadeInDown', data-delay='1000')
+                            |  REST-API interface
+
+                        p.hero-subtitle.fadeInDown.animated(data-animate='fadeInDown', data-delay='1200')  Set of ready-made procedures, functions
+                            br
+                            | for service !{config.project_name}
+
+        #auth.container.service-bg
+            .row
+                .row
+                    .col-sm-9
+                        .services.sm-margin-bottom-100
+                            h2 HTTP/2
+                            p
+                                | For authorization, replace _TOKEN_ & _METHOD_NAME_
+                                br
+                                br
+                                strong !{config.shema + config.domain + config.server_path + config.api_path}_METHOD_NAME_/?token=_TOKEN_
+                                br
+                                br
+                                | params _TOKEN_ is token user
+                                br
+                                | all responses have a latency ms parameter that indicates the time the request was processed by the server
+                                br
+                                | _METHOD_NAME_ specify method name
+                            br
+                            br
+                    .col-sm-3
+                        .services
+                            .services-wrap
+                                .service-body
+                                    img(src=config.server_path+'_API/assets/img/http.png', alt='')
+
+                //.row
+                    .col-sm-3(style='padding-top: 7%;')
+                        .services
+                            .services-wrap
+                                .service-body
+                                    img(src=config.server_path+'_API/assets/img/ws.png', alt='')
+                    .col-sm-9
+                        .services
+                            h2 WebSocket
+                            p
+                                |  Для авторизации замените __API_KEY_ и __API_SECRET_
+                                br
+                                br
+                                strong
+                                    | wss://ws.domain.com/socket/v1?api_key=__API_KEY_&api_secret=__API_SECRET_
+                                br
+                                br
+                                | При успешном подключении и авторизации вам прийдет сообшение с сервера:
+                                br
+                                strong(style='color: #22a026;background: rgba(177, 220, 179, 0.83);padding: 2px 29px;')
+                                    | {"event":"auth","data":{"status":"success","user":{"_id":"...},"moder":0}}
+                            h3 Работа с  API
+                            p
+                                |   Запрос метода testUserAPI с параметрами testParam=123:
+                                br
+                                strong(style='color: #22a026;background: rgba(177, 220, 179, 0.83);padding: 2px 29px;')
+                                    |   {"event":"api","data":{"method":"testUserAPI","data":{testParam:123}}}
+                                br
+                                |   ответ сервера:
+                                br
+                                strong(style='color: #a5261f;background: antiquewhite;padding: 2px 29px;')
+                                    |   {"event":"API_Response_testUserAPI","data":{param: {testParam:123}, user: {...}, success: true, public: true}}
+
+        #methods.container
+            br
+            br
+            #accordion(role='tablist', aria-multiselectable='true')
+                -var i= 0
+                each val, index in methods
+                    each val1, index1 in val
+                        - i++
+                        .panel.panel-default(id ="method_API_" + val1.method.split('/').join('-'))
+                            .panel-heading(id ="heading_methodAPI_" + val1.method.split('/').join('-'),role='tab')
+                                h4.panel-title
+                                    a.collapsed(data-toggle='collapse', data-parent='#accordion', href="#methodAPI_" + val1.method.split('/').join('-'), aria-expanded='false', aria-controls="methodAPI_" + val1.method.split('/').join('-'))
+
+
+                                        if val1.access == 1
+                                            i.fa.fa-users(aria-hidden='true')
+                                        else if val1.access == 2
+                                            i.fa.fa-lock(aria-hidden='true')
+                                        ='  '
+                                        | !{val1.method}
+                                        if val1 && val1.title
+                                            =' '
+                                            span(style='font-size: 12px;') - !{val1.title}
+
+
+
+                                    span(style='float: right;')
+                                        span(style='font-size: 12px;font-weight: 300;') Request Method:
+                                        if index == 'all'
+                                            span.label.label-danger(style='margin: 0 3px;') HTTP
+                                            //span.label.label-primary(style='margin: 0 3px;') /
+                                            span.label.label-success(style='margin: 0 3px;') WebSocket
+                                        else
+                                            span.label.label-primary(style='margin: 0 3px;') !{index}
+                            .panel-collapse.collapse(id ="methodAPI_" + val1.method.split('/').join('-'), role='tabpanel', aria-labelledby="heading_methodAPI_" + val1.method.split('/').join('-'))
+                                div(style='margin: 5px 90px;')
+                                    table(cellspacing='0')
+                                        tr
+                                            th(colspan='2') Information about the method.
+                                        tr
+                                            td Method name:
+                                            td !{val1.method}
+                                        tr
+                                            td Method URL:
+                                            td !{config.shema + config.domain + config.server_path + config.api_path + val1.method}
+                                        tr
+                                            td Access level:
+                                            if val1.level == 0
+                                                td Public API
+                                            else if val1.level == 1
+                                                td Private API (User access)
+                                            else if val1.level == 2
+                                                td Admin API (Admin access)
+                                            else if val1.level == 3
+                                                td Server API (Call Only Server)
+                                        tr
+                                            td Тип:
+                                            td !{index}
+                                        if val1 && val1.description
+                                            tr
+                                                th(colspan='2') Description of the method
+                                            tr
+                                                td(colspan='2') !{val1.description}
+                                div(style='margin: 5px 20px;')
+                                    if val1 && val1.param
+                                        table(cellspacing='0')
+                                            tr
+                                                th(colspan='5') Options
+                                                    br
+                                                    if val1.captcha
+                                                        | Required: reСaptcha
+                                            tr
+                                                th Name
+                                                th Description
+                                                th Type
+                                                th Required
+                                                th Default value
+                                            each oneParam in val1.param
+                                                tr
+                                                    td !{oneParam.name}
+                                                    td !{oneParam.title}
+                                                    td !{oneParam.type}
+                                                    td
+                                                        if oneParam.necessarily
+                                                            | YES
+                                                        else
+                                                            | NO
+                                                    td !{oneParam.default}
+                                div(style='margin: 5px 20px;')
+                                    if val1 && val1.response
+                                        table(cellspacing='0')
+                                            tr
+                                                th(colspan='5') Server Response (JSON)
+                                            tr
+                                                th Name
+                                                th Description
+                                                th Type
+                                                th Example response
+                                            each oneParam in val1.response
+                                                tr
+                                                    td !{oneParam.name}
+                                                    td !{oneParam.title}
+                                                    td !{oneParam.type}
+                                                    td !{oneParam.default}
+
+                                div(style='margin: 15px 50px;')
+                                    h3 Testing the API method:
+                                    if index === 'post' || val1.method ==='post'
+                                        form(method='post',action=config.shema + config.domain + config.server_path+ config.api_path + val1.method,target="_blank")
+                                            if val1.access != 1
+                                                .input-group(style='width: 100%;')
+                                                    span.input-group-addon(style='width: 250px;') API key
+                                                    input.form-control(type='text',value='',placeholder='Rest API key',name='api_key')
+                                                    span.input-group-addon(style='width: 150px;') _API.key_
+
+                                            if val1 && val1.param
+                                                each oneParam in val1.param
+                                                    .input-group(style='width: 100%;')
+                                                        span.input-group-addon(style='width: 250px;') !{oneParam.name}
+                                                        input.form-control(type='text',value=oneParam.default,placeholder=oneParam.title,name=oneParam.name)
+                                                        span.input-group-addon(style='width: 150px;') !{oneParam.type}
+                                            //if val1.captcha
+                                            //    .g-recaptcha(data-sitekey='6Ld9IwgUAAAAAFSnZKftGybB1woVu7lCy2uJGNJG')
+                                            //button.btn.btn-primary(type="submit",style='width: 100%;margin: 10px 0;')
+                                            //    i.fa.fa-server
+                                            //    =' '
+                                            //    | Проверить данный метод
+                                            //    =' '
+                                            //    i.fa.fa-paper-plane
+                                    else
+                                        form(method='get', action=config.shema + config.domain + config.server_path + config.api_path + val1.method, target="_blank")
+                                            if val1.access != 1
+                                                .input-group(style='width: 100%;')
+                                                    span.input-group-addon(style='width: 250px;') API key
+                                                    input.form-control(type='text',value='',placeholder='Rest API key',name='api_key')
+                                                    span.input-group-addon(style='width: 150px;') _API.key_
+
+                                            br
+                                            if val1 && val1.param
+                                                each oneParam in val1.param
+                                                    .input-group(style='width: 100%;')
+                                                        span.input-group-addon(style='width: 250px;') !{oneParam.name}
+                                                        input.form-control(type='text',value=oneParam.default, placeholder=oneParam.title,name=oneParam.name)
+                                                        span.input-group-addon(style='width: 150px;') !{oneParam.type}
+                                            //if val1.captcha
+                                            //    center
+                                            //        .g-recaptcha(data-sitekey=config.get('users:recaptcha:key'))
+                                            button.btn.btn-primary(type="submit",style='width: 100%;')
+                                                i.fa.fa-server
+                                                =' '
+                                                | Check this method
+                                                =' '
+                                                i.fa.fa-paper-plane
+                                if admin == true
+                                    div(style='margin: 15px 50px;')
+                                        h3 Source code of the server:
+                                        pre.js !{val1.code}
+
+        footer#support
+            .row
+                .col-md-5.col-sm-6.footer-navigation
+                    h3
+                        a(href='#')
+                            | !{config.domain} -
+                            = ' '
+                            span API
+                    .footer-contacts
+                        div
+                            i.fa.fa-envelope.footer-contacts-icon
+                            p
+                                a(href='#', target='_blank') support@!{config.domain}
+                    p.company-name API developed by !{config.project_name} team. © 2015
+
+                .clearfix.visible-sm-block
+                .col-md-7.footer-about
+                    h4 What is an API?
+                    p
+                        | API (Application Programming Interface) is a set of ready-made classes, procedures, functions, structures and constants provided by the service for use in external software products. Used by programmers when writing all kinds of applications.
+                        br
+                        br
+                        | Used in web development, usually a specific set of HTTP requests or WebSocket, as well as the definition of the WebSocket structure, HTTP responses, for the expression of which use JSON formats.
+
+
+
+        script(src=config.server_path+'_API/assets/js/jquery.min.js')
+        script(src=config.server_path+'_API/assets/js/jquery.snippet.min.js')
+        script(src=config.server_path+'_API/assets/js/jquery.malihu.PageScroll2id.js')
+        script(src=config.server_path+'_API/assets/js/script.js')
+        script(src=config.server_path+'_API/assets/js/sweetalert2.min.js')
+        script(src=config.server_path+'_API/assets/bootstrap/js/bootstrap.min.js')
+        script.
+            $("pre.js").snippet("javascript", {style: "ide-codewarrior"});
+
+
