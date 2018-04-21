@@ -22,5 +22,14 @@
   "bugs": {
     "url": "https://github.com/medve-dev/api-nodejs/issues"
   },
-  "homepage": "https://github.com/medve-dev/api-nodejs#readme"
+  "homepage": "https://github.com/medve-dev/api-nodejs#readme",
+  "dependencies": {
+    "bluebird": "^3.5.1",
+    "country-list": "^1.1.0",
+    "fs": "0.0.1-security",
+    "jade": "^1.11.0",
+    "path": "^0.12.7",
+    "tabgeo": "^0.1.0",
+    "winston": "^2.4.2"
+  }
 }
