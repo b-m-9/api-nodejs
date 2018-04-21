@@ -11,6 +11,7 @@ const Promise = require("bluebird");
 const authController = require('./auth.js');
 const error = require('../error/api.js');
 const random = require('../random');
+const APIConfigAuth = require('../../index');
 let API;
 let redis = require('redis').createClient(config.get('redis:port'), config.get('redis:host'));
 redis.publishAPI = (method, user, data) => {
@@ -182,8 +183,8 @@ API = {
             .then(() => {
                 // auth data
                 return Promise.props({
-                    user: authController.user(user),
-                    admin: authController.admin(user)
+                    user: APIConfigAuth.user(user),
+                    admin: APIConfigAuth.admin(user)
                 }).catch(err => {
                     return Promise.reject(err);
                 })
@@ -288,7 +289,7 @@ let API_cnt = 0;
 function requireAPI(apiPath) {
     // console.log("API:" + apiPath);
     API_cnt++;
-    let fileAPI = require(path.normalize(__dirname +DIR_TO_ROOT + 'api/' + apiPath));
+    let fileAPI = require(path.normalize(__dirname + DIR_TO_ROOT + 'api/' + apiPath));
     if (typeof fileAPI === 'function')
         fileAPI(API, redis);
     else
