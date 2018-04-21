@@ -13,8 +13,10 @@ const error = require('../../modules/error/api');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
 
+const bodyParser = require('body-parser');
+const fileUpload = require('express-fileupload');
+router.use(['/_API', '/docs/_API'], express.static(path.normalize(__dirname + '/../../_API')));
 router.use(cookieParser());
-
 if (config.get('server:session'))
     router.use(session({
         secret: config.get('server:session:secret'),
@@ -34,7 +36,6 @@ router.use((req, res, next) => {
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Locale");
     next();
 });
-router.use(['/_API', '/docs/_API'], express.static(path.normalize(__dirname + '/../../_API')));
 
 router.get('/export/nodejs', (req, res) => {
     res.download(path.normalize(__dirname + '/../../_docs/postman.postman_collection'));
@@ -45,6 +46,9 @@ router.get('/export/insomnia', (req, res) => {
 router.get('/export/postman', (req, res) => {
     res.download(path.normalize(__dirname + '/../../_docs/postman.postman_collection'));
 });
+router.use(bodyParser.json({limit: '10mb'}));
+router.use(bodyParser.urlencoded({extended: false, limit: '10mb'}));
+router.use(fileUpload());
 router.use('/', (req, res, next) => {
     req.initTimestamp = (new Date()).getTime();
     let IP = req.headers['x-forwarded-for'] || req.connection.remoteAddress || '0.0.0.0';
