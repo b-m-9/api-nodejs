@@ -76,48 +76,6 @@ router.use('/', (req, res, next) => {
 
 });
 
-router.all('/payments/:name/:status/', (req, res) => {
-    let param = {...req.query, ...req.body, files: req.files};
-    return new Promise(resolve => {
-        if (!param._order_id)
-            return resolve({});
-
-        API.call('getOrder', {session: {auth: true}}, {id: param._order_id}, 'server')
-            .then(res => {
-                return resolve(res.data)
-            })
-            .catch(err => {
-                return resolve({});
-            })
-    })
-        .then(order => {
-
-            API.call('statusOrder', {session: {auth: true}}, {
-                status: req.params.status,
-                payment_system: req.params.name,
-                parameters: param,
-                order: order,
-            })
-                .then(result => {
-                    return result.data;
-                })
-                .then(result => {
-                    if (result.headers) {
-                        for (let key in result.headers) {
-                            if (result.headers.hasOwnProperty(key))
-                                res.header(key, result.headers[key]);
-                        }
-                    }
-                    if (typeof result.data === 'object')
-                        result.data = JSON.stringify(result.data);
-                    return res.end && res.end(result.data);
-                })
-                .catch(err => {
-                    res.header("Content-Type", "text/html; charset=utf-8");
-                    return res.end && res.end(err.error.message.replace('REST-API Error: REST-API Error:',''));
-                });
-        });
-});
 router.get('/docs/', (req, res) => {
 
     let config_local = {
