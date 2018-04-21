@@ -1,16 +1,14 @@
-const path = require('path');
-
 const express = require('express');
+const path = require('path');
 const router = express.Router();
 const jade = require('jade');
-const API = require('./index.js');
+const API = require('../modules/api').API;
 
-const config = require('../config');
+const config = require('../modules/config');
 
-const log = require('../log');
-const geoip = require('../geoip');
-const error = require('../error/api');
-
+const log = require('../modules/log');
+const geoip = require('../modules/geoip');
+const error = require('../modules/error/api');
 
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
@@ -36,7 +34,17 @@ router.use((req, res, next) => {
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Locale");
     next();
 });
+router.use(['/_API', '/docs/_API'], express.static('_API'));
 
+router.get('/export/nodejs', (req, res) => {
+    res.download(path.resolve('./_docs/postman.postman_collection'));
+});
+router.get('/export/insomnia', (req, res) => {
+    res.download(path.resolve('./_docs/insomnia.json'));
+});
+router.get('/export/postman', (req, res) => {
+    res.download(path.resolve('./_docs/postman.postman_collection'));
+});
 router.use('/', (req, res, next) => {
     req.initTimestamp = (new Date()).getTime();
     let IP = req.headers['x-forwarded-for'] || req.connection.remoteAddress || '0.0.0.0';
@@ -68,8 +76,71 @@ router.use('/', (req, res, next) => {
 
 });
 
+router.all('/payments/:name/:status/', (req, res) => {
+    let param = {...req.query, ...req.body, files: req.files};
+    return new Promise(resolve => {
+        if (!param._order_id)
+            return resolve({});
 
-router.all('/api/:method/', (req, res) => {
+        API.call('getOrder', {session: {auth: true}}, {id: param._order_id}, 'server')
+            .then(res => {
+                return resolve(res.data)
+            })
+            .catch(err => {
+                return resolve({});
+            })
+    })
+        .then(order => {
+
+            API.call('statusOrder', {session: {auth: true}}, {
+                status: req.params.status,
+                payment_system: req.params.name,
+                parameters: param,
+                order: order,
+            })
+                .then(result => {
+                    return result.data;
+                })
+                .then(result => {
+                    if (result.headers) {
+                        for (let key in result.headers) {
+                            if (result.headers.hasOwnProperty(key))
+                                res.header(key, result.headers[key]);
+                        }
+                    }
+                    if (typeof result.data === 'object')
+                        result.data = JSON.stringify(result.data);
+                    return res.end && res.end(result.data);
+                })
+                .catch(err => {
+                    res.header("Content-Type", "text/html; charset=utf-8");
+                    return res.end && res.end(err.error.message.replace('REST-API Error: REST-API Error:',''));
+                });
+        });
+});
+router.get('/docs/', (req, res) => {
+
+    let config_local = {
+        server_path: config.get('server_path'),
+        ws_url: config.get('server:ws:url'),
+        api_path: config.get('api_path'),
+        domain: config.get('domain'),
+        project_name: config.get('project_name'),
+        version: config.get('version'),
+        commitHash: config.get('git:commitHash'),
+        latency_ms: (Math.random() * 100).toFixed(0),
+        countQueries: (Math.random() * 1000).toFixed(0),
+        shema: config.get('shema') + '://'
+    };
+    res.set('Content-Type', 'text/html');
+    res.end(jade.renderFile(path.normalize(__dirname + '/../_API/index.jade'), {
+        methods: {all: API.docs},
+        config: config_local,
+        admin: true
+    }));
+});
+
+router.all('/:method/', (req, res) => {
     if (config.get('application:server:logs:express')) log.info('Call API: ' + req.params.method);
     let param = {...req.query, ...req.body, files: req.files};
 
@@ -78,19 +149,19 @@ router.all('/api/:method/', (req, res) => {
     if (!req.params.method) {
         res.sendStatus(404);
         return res.end && res.end(JSON.stringify({
-            error: error.api('method not found', 'param', {method: req.params.method, code: 404}, 0),
+            error: error.create('method not found', 'param', {method: req.params.method, code: 404}, 0),
             success: false
         }));
     }
 
-    API.API.emit(req.params.method, user, param, 'http').then(result => {
+    API.call(req.params.method, user, param, 'http').then(result => {
         if (result) {
             res.header("Content-Type", "application/json; charset=utf-8");
             return res.end(JSON.stringify(result));
         }
 
         return res.end && res.end(JSON.stringify({
-            error: error.api('API result of null', 'api', {param: param}, 10),
+            error: error.create('API result of null', 'api', {param: param}, 10),
             success: false
         }));
 
@@ -99,36 +170,4 @@ router.all('/api/:method/', (req, res) => {
         return res.end && res.end(JSON.stringify(err));
     });
 });
-
-let config_local = {
-    server_path: config.get('server_path'),
-    api_path: config.get('api_path'),
-    domain: config.get('domain'),
-    project_name: config.get('project_name'),
-    shema: config.get('shema') + '://'
-};
-router.get('/api_docs/', (req, res) => {
-    res.set('Content-Type', 'text/html');
-    res.end(jade.renderFile(path.normalize(__dirname + '/../../_API' + '/index.jade'), {
-        methods: {all: API.API.docs},
-        config: config_local,
-        admin: true
-    }));
-});
 module.exports = router;
-
-
-//api router
-// const api_router = require('./modules/api/expressRouter.js');
-
-// app.use('/_API', express.static('_API'));
-
-// app.use('/v1', api_router);
-//
-// app.get('/export/insomnia', (req, res) => {
-//     res.download(path.resolve('./_docs/insomnia.json'));
-// });
-// app.get('/export/postman', (req, res) => {
-//     res.download(path.resolve('./_docs/postman.postman_collection'));
-// });
-//api router
