@@ -34,7 +34,7 @@ router.use((req, res, next) => {
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Locale");
     next();
 });
-router.use(['/_API', '/docs/_API'], express.static('_API'));
+router.use(['/_API', '/docs/_API'], express.static(path.normalize(__dirname + '/../../_API')));
 
 router.get('/export/nodejs', (req, res) => {
     res.download(path.normalize(__dirname + '/../../_docs/postman.postman_collection'));

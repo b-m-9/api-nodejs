@@ -103,7 +103,7 @@ module.exports = () => {
         //     if (err)
         //         return console.error('Error save /_docs/history/insomnia_' + dateString + '.json,', err);
         // });
-        fs.writeFile(path.normalize(__dirname + '/../_docs/insomnia.json'), JSON.stringify(methods), (err) => {
+        fs.writeFile(path.normalize(__dirname + '/../../_docs/insomnia.json'), JSON.stringify(methods), (err) => {
             if (err)
                 return console.error('Error save /_docs/insomnia.json,', err);
 

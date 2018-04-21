@@ -87,7 +87,7 @@ module.exports = () => {
         //     if (err)
         //         return console.error('Error save /_docs/history/postman_' + dateString + '.postman_collection,', err);
         // });
-        fs.writeFile(path.normalize(__dirname + '/../_docs/postman.postman_collection'), JSON.stringify(methods), (err) => {
+        fs.writeFile(path.normalize(__dirname + '/../../_docs/postman.postman_collection'), JSON.stringify(methods), (err) => {
             if (err)
                 return console.error('Error save /_docs/postman.postman_collection,', err);
 
