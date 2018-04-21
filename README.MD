@@ -29,6 +29,7 @@ const API = new api({}, {
 
 app.use('/api/v1', API.expressRouter);
 ```
+
 ### API File
 ./api/GROUP_PATH/API_file.js
 ```javascript
@@ -68,3 +69,8 @@ module.exports = (API, redis) => {
     });
 };
 ```
+
+After starting the application, the ./api/ and ./config/ folder will be created.
+- ./api/ - directory with API
+- ./config/api_config.json - configuration file
+ 
