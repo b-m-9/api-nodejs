@@ -1,5 +1,7 @@
-const express = require('express');
+
 const path = require('path');
+
+const express = require('express');
 const router = express.Router();
 const jade = require('jade');
 const API = require('./index.js');
@@ -83,7 +85,7 @@ let config_local = {
 };
 router.get('/api_docs/', (req, res) => {
     res.set('Content-Type', 'text/html');
-    res.end(jade.renderFile(path.join(_path_root, '_API' + '/index.jade'), {
+    res.end(jade.renderFile(path.normalize(__dirname+ '/../../_API' + '/index.jade'), {
         methods: {all: API.API.docs},
         config: config_local,
         admin: true
