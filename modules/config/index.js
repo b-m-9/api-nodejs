@@ -15,12 +15,9 @@ const fs = require('fs'),
     _path_config = path.normalize(__dirname + DIR_TO_ROOT + DIR_CONFIG + '/');
 if (!fs.existsSync(path.normalize(__dirname + DIR_TO_ROOT + DIR_CONFIG)))
     fs.mkdirSync(path.normalize(__dirname + DIR_TO_ROOT + DIR_CONFIG));
-console.log(_path_config);
-
 let statusSaveConfig = true;
 
 function reloadConfig() {
-
     try {
         if (statusSaveConfig) {
             nconf.argv().env().file({file: _path_config + '' + NAME_CONFIG + '.json'});

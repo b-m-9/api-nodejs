@@ -3,9 +3,9 @@ var config = require('./index');
 var random = require('../../modules/random');
 
 // var portfinder = require('portfinder');
-config.default('project_name', 'example');
+config.default('project_name', 'API');
 config.default('shema', 'http');
-config.default('domain', 'localhost:3001');
+config.default('domain', 'localhost:3000');
 config.default('server_path', '/');
 // config.default('server_path', '/service/'); // nginx conf
 config.default('api_path', 'api/v1/');

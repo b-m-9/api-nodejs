@@ -185,7 +185,6 @@ API = {
                     user: authController.user(user),
                     admin: authController.admin(user)
                 }).catch(err => {
-                    console.error('Error authorization init', err);
                     return Promise.reject(err);
                 })
 
@@ -193,7 +192,6 @@ API = {
             .then(auth => {
                 // check user
                 return authController.checkAuth(controller[name].level, auth).catch(err => {
-                    console.error('Error authorization checkAuth', err);
                     return Promise.reject(err);
                 })
             })
