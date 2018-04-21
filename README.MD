@@ -36,36 +36,29 @@ app.use('/api/v1', API.expressRouter);
 const path = require('path');
 const nameGroupAPI = path.basename(__filename, '.js');
 module.exports = (API, redis) => {
-    API.register('example', (user, param) => {
+    API.register('test', (user, param) => {
         return new Promise((resolve, reject) => {
-            if (!param)
-                return reject(API.error.create('param is not defined', 'api', {}, 1, 0));
-
-            return resolve({example:1,param:param});
-
+            if (!param) return reject('param is not defined');
+            return resolve({example: 1, param: param})
         })
-        .catch(API.error.validate)
+            .catch(API.error.validate)
     }, {
-        title: 'EXAMPLE TITLE',
-        level: 1,// 0 public,1 user,2 admin,3 server
-        description: 'Example',
-        group:nameGroupAPI,
-        param: [
-           {
-                name: 'test',
-                type: "int",
-                title: 'example param',
-                necessarily: true
-            }
-        ],
-        response: [
-            {
-                name: 'data.example',
-                type: "string",
-                title: 'example res',
-                default: '1'
-            }
-        ]
+        title: 'Test API',
+        level: 0,// 0 public,1 user,2 admin,3 server
+        description: 'Example API',
+        group: nameGroupAPI,
+        param: [{
+            name: 'test',
+            type: "int",
+            title: 'example param',
+            necessarily: true
+        }],
+        response: [{
+            name: 'data.example',
+            type: "string",
+            title: 'example res',
+            default: '1'
+        }]
     });
 };
 ```
