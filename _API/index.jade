@@ -7,15 +7,15 @@ html(lang='en')
         meta(name='viewport', content='width=device-width, initial-scale=1.0')
         title !{config.domain} | Rest-API
         // Uikit CSS
-        link(rel='stylesheet', href=config.server_path + '_API/src/css/uikit.min.css')
-        link(rel='stylesheet', href=config.server_path + '_API/src/css/accordion.min.css')
+        link(rel='stylesheet', href=config.server_path + config.api_path + '_API/src/css/uikit.min.css')
+        link(rel='stylesheet', href=config.server_path + config.api_path + '_API/src/css/accordion.min.css')
         // Plugin CSS
-        link(rel='stylesheet', href=config.server_path + '_API/src/css/jquery.formstyler.css')
-        link(rel='stylesheet', href=config.server_path + '_API/src/css/jquery.formstyler.theme.css')
+        link(rel='stylesheet', href=config.server_path + config.api_path + '_API/src/css/jquery.formstyler.css')
+        link(rel='stylesheet', href=config.server_path + config.api_path + '_API/src/css/jquery.formstyler.theme.css')
         // Template CSS
-        link(rel='stylesheet', href=config.server_path + '_API/src/css/fonts.css')
-        link(rel='stylesheet', href=config.server_path + '_API/src/css/template.css')
-        link(rel='stylesheet', href=config.server_path + '_API/src/css/media.css')
+        link(rel='stylesheet', href=config.server_path + config.api_path + '_API/src/css/fonts.css')
+        link(rel='stylesheet', href=config.server_path + config.api_path + '_API/src/css/template.css')
+        link(rel='stylesheet', href=config.server_path + config.api_path + '_API/src/css/media.css')
         script(src='https://www.google.com/recaptcha/api.js')
         // HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries
         // WARNING: Respond.js doesn't work if you view the page via file://
@@ -53,15 +53,15 @@ html(lang='en')
                     ul.list-menu(data-uk-switcher="{connect:'#api-switch', animation: 'slide-horizontal'}")
                         li
                             a(href='')
-                                img(src=config.server_path + '_API/src/images/icon_menu_01.png', alt='', width='16', height='16')
+                                img(src=config.server_path + config.api_path + '_API/src/images/icon_menu_01.png', alt='', width='16', height='16')
                                 | HTTP/2
                         li
                             a(href='')
-                                img(src=config.server_path + '_API/src/images/icon_menu_02.png', alt='', width='18', height='17')
+                                img(src=config.server_path + config.api_path + '_API/src/images/icon_menu_02.png', alt='', width='18', height='17')
                                 | WebSocket
                         li
                             a(href='')
-                                img(src=config.server_path + '_API/src/images/icon_menu_03.png', alt='', width='18', height='17')
+                                img(src=config.server_path + config.api_path + '_API/src/images/icon_menu_03.png', alt='', width='18', height='17')
                                 | About API
                 ul#api-switch.uk-switcher.uk-margin-large-top.uk-margin-bottom
                     li
@@ -89,20 +89,20 @@ html(lang='en')
                         h3 Export this API for
                         ul.uk-grid.uk-grid-width-1-3(data-uk-grid-margin='')
                             li
-                                a.uk-button.uk-button-secondary.button-download.uk-width-1-1(href=config.shema + config.domain + config.server_path +'')
-                                    img(src=config.server_path + '_API/src/images/icon_api_button_01.png', alt='', width='107', height='45')
+                                a.uk-button.uk-button-secondary.button-download.uk-width-1-1(href=config.shema + config.domain + config.server_path + config.api_path + '')
+                                    img(src=config.server_path + config.api_path + '_API/src/images/icon_api_button_01.png', alt='', width='107', height='45')
                                     span.uk-display-block
                                         i.uk-icon-download
                                         |  Import api to NodeJS
                             li
-                                a.uk-button.uk-button-secondary.button-download.uk-width-1-1(href=config.shema + config.domain + config.server_path + '/export/insomnia')
-                                    img(src=config.server_path + '_API/src/images/icon_api_button_02.png', alt='', width='107', height='45')
+                                a.uk-button.uk-button-secondary.button-download.uk-width-1-1(href=config.shema + config.domain + config.server_path + config.api_path + '/export/insomnia')
+                                    img(src=config.server_path + config.api_path + '_API/src/images/icon_api_button_02.png', alt='', width='107', height='45')
                                     span.uk-display-block
                                         i.uk-icon-download
                                         |  Import api to Insomnia
                             li
-                                a.uk-button.uk-button-secondary.button-download.uk-width-1-1(href=config.shema + config.domain + config.server_path + '/export/postman')
-                                    img(src=config.server_path + '_API/src/images/icon_api_button_03.png', alt='', width='107', height='45')
+                                a.uk-button.uk-button-secondary.button-download.uk-width-1-1(href=config.shema + config.domain + config.server_path + config.api_path + '/export/postman')
+                                    img(src=config.server_path + config.api_path + '_API/src/images/icon_api_button_03.png', alt='', width='107', height='45')
                                     span.uk-display-block
                                         i.uk-icon-download
                                         |  Import api to Postman
@@ -143,28 +143,28 @@ html(lang='en')
                             div
                                 span Uptime
                                 span
-                                    img(src=config.server_path + '_API/src/images/icon_statistic_01.png', alt='', width='20', height='21')
+                                    img(src=config.server_path + config.api_path + '_API/src/images/icon_statistic_01.png', alt='', width='20', height='21')
                                     | 99.999%
                     li
                         .list-panel.uk-flex.uk-flex-center.uk-flex-middle
                             div
                                 span Received queries
                                 span
-                                    img(src=config.server_path + '_API/src/images/icon_statistic_02.png', alt='', width='19', height='21')
+                                    img(src=config.server_path + config.api_path + '_API/src/images/icon_statistic_02.png', alt='', width='19', height='21')
                                     | 450/min
                     li
                         .list-panel.uk-flex.uk-flex-center.uk-flex-middle
                             div
                                 span Methods
                                 span
-                                    img(src=config.server_path + '_API/src/images/icon_statistic_03.png', alt='', width='18', height='19')
+                                    img(src=config.server_path + config.api_path + '_API/src/images/icon_statistic_03.png', alt='', width='18', height='19')
                                     | 17
                     li
                         .list-panel.uk-flex.uk-flex-center.uk-flex-middle
                             div
                                 span Downtime
                                 span
-                                    img(src=config.server_path + '_API/src/images/icon_statistic_04.png', alt='', width='21', height='21')
+                                    img(src=config.server_path + config.api_path + '_API/src/images/icon_statistic_04.png', alt='', width='21', height='21')
                                     | 00h 28
                                     span.text-small m
                     li
@@ -172,7 +172,7 @@ html(lang='en')
                             div
                                 span latency
                                 span
-                                    img(src=config.server_path + '_API/src/images/icon_statistic_05.png', alt='', width='18', height='21')
+                                    img(src=config.server_path + config.api_path + '_API/src/images/icon_statistic_05.png', alt='', width='18', height='21')
                                     | 10
                                     span.text-small ms
                     li
@@ -217,7 +217,7 @@ html(lang='en')
                                 .uk-width-2-10
                                     button.uk-button.uk-width-1-1.button-form-find(type='submit')
                                         | Search
-                                        img.uk-margin-left(src=config.server_path + '_API/src/images/icon_arrow_enter.png', alt='', width='12', height='8')
+                                        img.uk-margin-left(src=config.server_path + config.api_path + '_API/src/images/icon_arrow_enter.png', alt='', width='12', height='8')
                 .uk-grid.method-name.uk-margin-top
                     .uk-width-2-10
                         span method
@@ -234,15 +234,15 @@ html(lang='en')
                                 h3.uk-accordion-title
                                     .uk-grid
                                         .uk-width-1-5
-                                            if val1.method.length >=35
+                                            if val1.method.length >= 35
                                                 span(style='text-transform: none;font-size: 10px;')
                                                     i.uk-icon-users.icon-green
                                                     | !{val1.method}
-                                            else if val1.method.length >=25
+                                            else if val1.method.length >= 25
                                                 span(style='text-transform: none;font-size: 11px;')
                                                     i.uk-icon-users.icon-green
                                                     | !{val1.method}
-                                            else if val1.method.length >=20
+                                            else if val1.method.length >= 20
                                                 span(style='text-transform: none;font-size: 12px;')
                                                     i.uk-icon-users.icon-green
                                                     | !{val1.method}
@@ -257,7 +257,7 @@ html(lang='en')
                                             span
                                                 .uk-badge.bage-http !{val1.group}
                                 .uk-accordion-content(style='background:#fff')
-                                    ul.method-switch(data-uk-switcher="{connect:'#method-api-"+val1.method.split('/').join('-')+"', animation: 'uk-animation-fade'}")
+                                    ul.method-switch(data-uk-switcher="{connect:'#method-api-" + val1.method.split('/').join('-') + "', animation: 'uk-animation-fade'}")
                                         li
                                             a(href='') Request info
                                         li
@@ -350,7 +350,7 @@ html(lang='en')
                                                                 .request-editor__main__button-group
                                                                     .request-editor-send-button
                                                                         .btn-group.btn-group-separated
-                                                                            .btn(tabindex='0', onclick='submitMethod("'+"frame-result-api-" + val1.method.split('/').join('-')+'","' + val1.method.split('/').join('-')+'")') Send
+                                                                            .btn(tabindex='0', onclick='submitMethod("' + "frame-result-api-" + val1.method.split('/').join('-') + '","' + val1.method.split('/').join('-') + '")') Send
                                                         .request-body-editors
                                                             .key-value-form-header-row
                                                                 .key-value-form-row.header-row
@@ -386,7 +386,7 @@ html(lang='en')
                                                         .header-container
                                                             .uk-grid
                                                                 .uk-width-2-3
-                                                                    ul.swithcer-code(data-uk-switcher="{connect:'#code-main-switch" + val1.method.split('/').join('-')+"', animation: 'fade'}")
+                                                                    ul.swithcer-code(data-uk-switcher="{connect:'#code-main-switch" + val1.method.split('/').join('-') + "', animation: 'fade'}")
                                                                         li
                                                                             a(href='') Body
                                                                         li
@@ -438,11 +438,11 @@ html(lang='en')
                             li
                                 a(href='mailto:www.clsa.ru@gmail.com') Developer @medve_dev
         // jQuery
-        script(src=config.server_path + '_API/src/js/jquery-2.2.4.min.js')
+        script(src=config.server_path + config.api_path + '_API/src/js/jquery-2.2.4.min.js')
         // Uikit JavaScript
-        script(src=config.server_path + '_API/src/js/uikit.min.js')
-        script(src=config.server_path + '_API/src/js/accordion.min.js')
+        script(src=config.server_path + config.api_path + '_API/src/js/uikit.min.js')
+        script(src=config.server_path + config.api_path + '_API/src/js/accordion.min.js')
         // Plugint JavaScript
-        script(src=config.server_path + '_API/src/js/jquery.formstyler.min.js')
+        script(src=config.server_path + config.api_path + '_API/src/js/jquery.formstyler.min.js')
         // Template Javascript
-        script(src=config.server_path + '_API/src/js/main.js')
+        script(src=config.server_path + config.api_path + '_API/src/js/main.js')
