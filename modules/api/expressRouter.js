@@ -37,13 +37,13 @@ router.use((req, res, next) => {
 router.use(['/_API', '/docs/_API'], express.static('_API'));
 
 router.get('/export/nodejs', (req, res) => {
-    res.download(path.resolve('./_docs/postman.postman_collection'));
+    res.download(path.normalize(__dirname + '/../_docs/postman.postman_collection'));
 });
 router.get('/export/insomnia', (req, res) => {
-    res.download(path.resolve('./_docs/insomnia.json'));
+    res.download(path.normalize(__dirname + '/../_docs/insomnia.json'));
 });
 router.get('/export/postman', (req, res) => {
-    res.download(path.resolve('./_docs/postman.postman_collection'));
+    res.download(path.normalize(__dirname + '/../_docs/postman.postman_collection'));
 });
 router.use('/', (req, res, next) => {
     req.initTimestamp = (new Date()).getTime();

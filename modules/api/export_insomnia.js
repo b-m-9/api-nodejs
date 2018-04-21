@@ -1,6 +1,7 @@
 const API = require('../api');
 const config = require('../config');
 const Promise = require("bluebird");
+const path = require("path");
 const fs = require("fs");
 
 const config_local = {
@@ -102,7 +103,7 @@ module.exports = () => {
         //     if (err)
         //         return console.error('Error save /_docs/history/insomnia_' + dateString + '.json,', err);
         // });
-        fs.writeFile('./_docs/insomnia.json', JSON.stringify(methods), (err) => {
+        fs.writeFile(path.normalize(__dirname + '/../_docs/insomnia.json'), JSON.stringify(methods), (err) => {
             if (err)
                 return console.error('Error save /_docs/insomnia.json,', err);
 
