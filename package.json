@@ -1,0 +1,26 @@
+{
+  "name": "api-nodejs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/medve-dev/api-nodejs.git"
+  },
+  "keywords": [
+    "api",
+    "rest",
+    "docs",
+    "nodejs",
+    "api"
+  ],
+  "author": "Bogdan Medvediev",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/medve-dev/api-nodejs/issues"
+  },
+  "homepage": "https://github.com/medve-dev/api-nodejs#readme"
+}

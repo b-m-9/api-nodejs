@@ -11,7 +11,6 @@ const config_local = {
     project_name: config.get('project_name'),
     shema: config.get('shema') + '://'
 };
-const wrk_id = "wrk_" + (new Date().getTime());
 let methods = {
     "_type": "export",
     "__export_format": 3,
@@ -98,16 +97,16 @@ module.exports = () => {
         addMethod(el_docs);
         return el_docs;
     }).then(all => {
-        let dateString = new Date().toISOString();
-        fs.writeFile('./_docs/history/insomnia_' + dateString + '.json', JSON.stringify(methods), (err) => {
-            if (err)
-                return console.error('Error save /_docs/history/insomnia_' + dateString + '.json,', err);
-        });
+        // let dateString = new Date().toISOString();
+        // fs.writeFile('./_docs/history/insomnia_' + dateString + '.json', JSON.stringify(methods), (err) => {
+        //     if (err)
+        //         return console.error('Error save /_docs/history/insomnia_' + dateString + '.json,', err);
+        // });
         fs.writeFile('./_docs/insomnia.json', JSON.stringify(methods), (err) => {
             if (err)
                 return console.error('Error save /_docs/insomnia.json,', err);
 
-            console.log('Saved exported json api for Insomnia: '+config_local.shema + config_local.domain + config_local.server_path +'export/insomnia')
+            // console.log('Saved exported json api for Insomnia: '+config_local.shema + config_local.domain + config_local.server_path +'api/export/insomnia')
         });
     });
 };
