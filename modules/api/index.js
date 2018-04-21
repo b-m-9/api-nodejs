@@ -1,4 +1,6 @@
 "use strict";
+const DIR_TO_ROOT = '../../../';
+
 const config = require('../../modules/config');
 
 const Promise = require("bluebird");

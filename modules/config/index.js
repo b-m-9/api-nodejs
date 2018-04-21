@@ -2,97 +2,101 @@
 /**
  * Created by bogdanmedvedev on 11.01.18.
  */
+
+const DIR_TO_ROOT = '../../../../';
+const DIR_CONFIG = 'config';
+const NAME_CONFIG = 'api_config';
+
 const fs = require('fs'),
     path = require('path'),
     nconf = require('nconf'),
     error = require('../../modules/error'),
     log = require('../../modules/log'),
-    _path_config = _path_root+'config/';
-var statusSaveConfig = true;
+    _path_config = path.normalize(__dirname + DIR_TO_ROOT + DIR_CONFIG + '/');
+if (!fs.existsSync(path.normalize(__dirname + DIR_TO_ROOT + DIR_CONFIG)))
+    fs.mkdirSync(path.normalize(__dirname + DIR_TO_ROOT + DIR_CONFIG));
+console.log(_path_config);
+
+let statusSaveConfig = true;
+
 function reloadConfig() {
 
     try {
         if (statusSaveConfig) {
-            nconf.argv().env().file({file: _path_config + 'app_config.json'});
+            nconf.argv().env().file({file: _path_config + '' + NAME_CONFIG + '.json'});
         }
     } catch (e) {
         setTimeout(reloadConfig, 5000);
-        log.error('File app_config.json [format Error]:', e);
+        log.error('File ' + NAME_CONFIG + '.json [format Error]:', e);
     }
 
 }
+
 reloadConfig();
 
 function saveConfig() {
-    if (model.get('server:server:logs:app_config')) log.info('[app_config save] starting...');
-    statusSaveConfig = false;
-    nconf.save(function (err) {
-        if (err) return new error('core/createConfig.js/nconf.save :' + err);
-        if (model.get('server:server:logs:app_config')) log.info('[app_config save] saved and read new app_config starting...');
+    return new Promise((resolve, reject) => {
+        statusSaveConfig = false;
+        nconf.save(function (err) {
+            if (err) return new error('core/createConfig.js/nconf.save :' + err);
 
-        fs.readFile(_path_config + 'app_config.json', function (err, data) {
-            if (model.get('server:server:logs:app_config')) log.info('[app_config save] saved and JSON.parse new app_config starting...');
-            if (err) return new error('core/createConfig.js/fs.readFile :' + err);
-            try {
-                let res = JSON.parse(data);
-                if (model.get('server:server:logs:app_config')) log.info('[app_config save] saved and read new app_config to JSON');
-                if (model.get('server:server:logs:app_config')) console.log('[app_config]', res);
-                statusSaveConfig = true;
-            } catch (e) {
-                log.error('File app_config.json [Error read format]: see app_config.json saveConfig' + e);
-            }
+            fs.readFile(_path_config + '' + NAME_CONFIG + '.json', "utf8", (err, configString) => {
+                if (err) return new error('core/createConfig.js/fs.readFile :' + err);
+                try {
+                    JSON.parse(configString);
+                    statusSaveConfig = true;
+                    return resolve(true);
+                } catch (e) {
+                    log.error('File ' + NAME_CONFIG + '.json [Error read format]: see ' + NAME_CONFIG + '.json saveConfig' + e);
+                    return reject('File ' + NAME_CONFIG + '.json [Error read format]: see ' + NAME_CONFIG + '.json saveConfig')
+                }
+            });
         });
     });
 }
 
 const model = {
-    set: (param, value, testWrite, dontSave)=> {
-        if (model.get('server:server:logs:app_config')) log.info('[app_config set] Param:' + param + ', Value:' + value + ', testParam:' + testWrite + ',dontSave:' + dontSave);
-        if (testWrite) {
-            if (!nconf.get(param)) {
-                nconf.set(param, value);
-                return true;
+    set: (param, value, testWrite, dontSave) => {
+
+        return new Promise((resolve, reject) => {
+            if (!param || typeof param !== 'string')
+                return reject('param is not string');
+            if (testWrite) {
+                if (!nconf.get(param)) {
+                    nconf.set(param, value);
+                    return resolve(true);
+                }
+                return resolve(false);
             }
-            return false;
-        }
-        nconf.set(param, value);
-        if (!dontSave) saveConfig();
-        return true;
+            nconf.set(param, value);
+            return resolve(true);
+        }).then((status) => {
+            if (!dontSave) return saveConfig();
+            return true
+        });
     },
     get: function (param) {
-        var value = nconf.get(param);
-        if (param != 'server:server:logs:app_config' && model.get('server:server:logs:app_config')) log.info('[app_config get] Param:' + param + ', Value:' + value);
-        return value
+
+        return nconf.get(param)
     },
     save: saveConfig,
     rereadConfig: reloadConfig,
-    getAllToJsonConfig: (callback)=> {
-        if (err)callback(err, null);
-        fs.readFile(_path_config + 'app_config.json', (err, data)=> {
-            if (err)callback(err, null);
+    getAllToJsonConfig: (callback) => {
+        fs.readFile(_path_config + '' + NAME_CONFIG + '.json', (err, data) => {
+            if (err) callback(err, null);
             try {
                 callback(null, JSON.parse(data));
             } catch (e) {
-                callback('File app_config.json [Error read format]: see app_config.json getAllToJsonConfig' + e, null);
+                callback('File ' + NAME_CONFIG + '.json [Error read format]: see ' + NAME_CONFIG + '.json getAllToJsonConfig' + e, null);
 
             }
         });
+    },
+    default: (param, value, resave) => {
+        return model.set(param, value, !resave, true);
     }
 };
-module.exports = exports = model;
+module.exports = model;
 require('./createConfig'); // init create conf
-
-setTimeout(()=>{
-    const chokidar = require('chokidar');
-    const watcher = chokidar.watch(_path_config + 'app_config.json', {
-        ignored: /[\/\\]\./,
-        persistent: true
-    });
-    watcher.on('add', function () {
-        if (model.get('server:server:logs:app_config')) log.info('[app_config watcher] .on("add")');
-        reloadConfig();
-    }).on('change', function () {
-        if (model.get('server:server:logs:app_config')) log.info('[app_config watcher] .on("change")');
-        reloadConfig();
-    });
-},1000*30); // watcher after 30s
+if (fs.existsSync(_path_config + 'default.' + NAME_CONFIG + '.js'))
+    require(_path_config + 'default.' + NAME_CONFIG + '.js')(model); // init create conf

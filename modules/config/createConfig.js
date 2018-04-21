@@ -1,10 +1,5 @@
-/**
- * Created by bogdanmedvedev on 13.06.16.
- */
-
 'use strict';
 var config = require('./index');
-var os = require('os');
 var random = require('../../modules/random');
 
 // var portfinder = require('portfinder');
