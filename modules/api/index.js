@@ -1,12 +1,15 @@
 "use strict";
-const DIR_TO_ROOT = '../../../';
+const DIR_TO_ROOT = '/../../../../';
 
 const config = require('../../modules/config');
+const path = require("path");
+const fs = require('fs');
 
+if (!fs.existsSync(path.normalize(__dirname + DIR_TO_ROOT + 'api')))
+    fs.mkdirSync(path.normalize(__dirname + DIR_TO_ROOT + 'api'));
 const Promise = require("bluebird");
 const authController = require('./auth.js');
 const error = require('../error/api.js');
-const fs = require('fs');
 const random = require('../random');
 let API;
 let redis = require('redis').createClient(config.get('redis:port'), config.get('redis:host'));
@@ -286,19 +289,20 @@ let API_cnt = 0;
 function requireAPI(apiPath) {
     // console.log("API:" + apiPath);
     API_cnt++;
-    let fileAPI = require('../../api/' + apiPath);
+    let fileAPI = require(path.normalize(DIR_TO_ROOT+'./api/' + apiPath));
     if (typeof fileAPI === 'function')
         fileAPI(API, redis);
     else
         console.error('[Error] (api/' + apiPath + ') Function is not defined:  \n\t' + '\n' +
             'module.exports = (API, redis) => {};\n')
 }
-fs.readdir('./api', (err, items) => {
+console.log('api',path.normalize(__dirname+DIR_TO_ROOT+'api'));
+fs.readdir(path.normalize(__dirname+DIR_TO_ROOT+'api'), (err, items) => {
     for (let i = 0; i < items.length; i++) {
-        if (fs.statSync('./api/' + items[i]).isDirectory())
-            fs.readdir('./api/' + items[i], (err, items2) => {
+        if (fs.statSync(path.normalize(__dirname+DIR_TO_ROOT+'api/' + items[i])).isDirectory())
+            fs.readdir(path.normalize(__dirname+DIR_TO_ROOT+'api/' + items[i]), (err, items2) => {
                 for (let i2 = 0; i2 < items2.length; i2++) {
-                    if (!fs.statSync('./api/' + items[i] + '/' + items2[i2]).isDirectory())
+                    if (!fs.statSync(path.normalize(__dirname+DIR_TO_ROOT+'api/' + items[i] + '/' + items2[i2]).isDirectory()))
                         requireAPI(items[i] + '/' + items2[i2]);
                     else
                         console.error("API Error load:" + items[i] + '/' + items2[i2]);

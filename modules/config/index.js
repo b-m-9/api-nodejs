@@ -3,7 +3,7 @@
  * Created by bogdanmedvedev on 11.01.18.
  */
 
-const DIR_TO_ROOT = '../../../../';
+const DIR_TO_ROOT = '/../../../../';
 const DIR_CONFIG = 'config';
 const NAME_CONFIG = 'api_config';
 
