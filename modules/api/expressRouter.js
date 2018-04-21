@@ -2,13 +2,13 @@ const express = require('express');
 const path = require('path');
 const router = express.Router();
 const jade = require('jade');
-const API = require('../modules/api').API;
+const API = require('../../modules/api').API;
 
-const config = require('../modules/config');
+const config = require('../../modules/config');
 
-const log = require('../modules/log');
-const geoip = require('../modules/geoip');
-const error = require('../modules/error/api');
+const log = require('../../modules/log');
+const geoip = require('../../modules/geoip');
+const error = require('../../modules/error/api');
 
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
@@ -37,13 +37,13 @@ router.use((req, res, next) => {
 router.use(['/_API', '/docs/_API'], express.static('_API'));
 
 router.get('/export/nodejs', (req, res) => {
-    res.download(path.normalize(__dirname + '/../_docs/postman.postman_collection'));
+    res.download(path.normalize(__dirname + '/../../_docs/postman.postman_collection'));
 });
 router.get('/export/insomnia', (req, res) => {
-    res.download(path.normalize(__dirname + '/../_docs/insomnia.json'));
+    res.download(path.normalize(__dirname + '/../../_docs/insomnia.json'));
 });
 router.get('/export/postman', (req, res) => {
-    res.download(path.normalize(__dirname + '/../_docs/postman.postman_collection'));
+    res.download(path.normalize(__dirname + '/../../_docs/postman.postman_collection'));
 });
 router.use('/', (req, res, next) => {
     req.initTimestamp = (new Date()).getTime();
@@ -133,7 +133,7 @@ router.get('/docs/', (req, res) => {
         shema: config.get('shema') + '://'
     };
     res.set('Content-Type', 'text/html');
-    res.end(jade.renderFile(path.normalize(__dirname + '/../_API/index.jade'), {
+    res.end(jade.renderFile(path.normalize(__dirname + '/../../_API/index.jade'), {
         methods: {all: API.docs},
         config: config_local,
         admin: true
