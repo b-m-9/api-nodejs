@@ -6,20 +6,20 @@ html
         meta(charset='utf-8')
         meta(name='viewport', content='width=device-width, initial-scale=1.0')
         title !{config.domain} | Rest-API
-        link(rel='stylesheet', href=config.server_path+'_API/assets/bootstrap/css/bootstrap.min.css')
+        link(rel='stylesheet', href=config.server_path+config.api_path+'_API/assets/bootstrap/css/bootstrap.min.css')
         link(rel='stylesheet', href='https://fonts.googleapis.com/css?family=Cookie')
-        link(rel='stylesheet', href=config.server_path+'_API/assets/fonts/font-awesome.min.css')
-        link(rel='stylesheet', href=config.server_path+'_API/assets/css/Carousel-Hero.css')
-        link(rel='stylesheet', href=config.server_path+'_API/assets/css/Pretty-Footer.css')
-        link(rel='stylesheet', href=config.server_path+'_API/assets/css/Pretty-Header.css')
-        link(rel='stylesheet', href=config.server_path+'_API/assets/css/Pricing-Table-Style-01.css')
-        link(rel='stylesheet', href=config.server_path+'_API/assets/css/Pricing-Table-Style-011.css')
-        link(rel='stylesheet', href=config.server_path+'_API/assets/css/animate.css')
-        link(rel='stylesheet', href=config.server_path+'_API/assets/css/styles.css')
-        link(rel='stylesheet', href=config.server_path+'_API/assets/css/jquery.snippet.min.css')
-        link(rel='stylesheet', href=config.server_path+'_API/assets/css/sweetalert2.css')
-        link(rel="icon" href="/_API/assets/img/iconApi.png" type="image/x-icon")
-        link(rel="shortcut icon" href="/_API/assets/img/iconApi.png" type="image/x-icon")
+        link(rel='stylesheet', href=config.server_path+config.api_path+'_API/assets/fonts/font-awesome.min.css')
+        link(rel='stylesheet', href=config.server_path+config.api_path+'_API/assets/css/Carousel-Hero.css')
+        link(rel='stylesheet', href=config.server_path+config.api_path+'_API/assets/css/Pretty-Footer.css')
+        link(rel='stylesheet', href=config.server_path+config.api_path+'_API/assets/css/Pretty-Header.css')
+        link(rel='stylesheet', href=config.server_path+config.api_path+'_API/assets/css/Pricing-Table-Style-01.css')
+        link(rel='stylesheet', href=config.server_path+config.api_path+'_API/assets/css/Pricing-Table-Style-011.css')
+        link(rel='stylesheet', href=config.server_path+config.api_path+'_API/assets/css/animate.css')
+        link(rel='stylesheet', href=config.server_path+config.api_path+'_API/assets/css/styles.css')
+        link(rel='stylesheet', href=config.server_path+config.api_path+'_API/assets/css/jquery.snippet.min.css')
+        link(rel='stylesheet', href=config.server_path+config.api_path+'_API/assets/css/sweetalert2.css')
+        link(rel="icon" href=config.server_path+config.api_path+"/_API/assets/img/iconApi.png" type="image/x-icon")
+        link(rel="shortcut icon" href=config.server_path+config.api_path+"/_API/assets/img/iconApi.png" type="image/x-icon")
 
         script(src='https://www.google.com/recaptcha/api.js')
     body
@@ -47,7 +47,7 @@ html
             .carousel-inner(role='listbox')
                 .item.active
                     .jumbotron.hero-nature.carousel-hero
-                        img.flipInX.animated(data-animate='flipInX', data-delay='500', src=config.server_path+'_API/assets/img/t_logo.png')
+                        img.flipInX.animated(data-animate='flipInX', data-delay='500', src=config.server_path+config.api_path+'_API/assets/img/t_logo.png')
                         h1.hero-title.fadeInDown.animated(data-animate='fadeInDown', data-delay='1000')
                             |  REST-API interface
 
@@ -79,14 +79,14 @@ html
                         .services
                             .services-wrap
                                 .service-body
-                                    img(src=config.server_path+'_API/assets/img/http.png', alt='')
+                                    img(src=config.server_path+config.api_path+'_API/assets/img/http.png', alt='')
 
                 //.row
                     .col-sm-3(style='padding-top: 7%;')
                         .services
                             .services-wrap
                                 .service-body
-                                    img(src=config.server_path+'_API/assets/img/ws.png', alt='')
+                                    img(src=config.server_path+config.api_path+'_API/assets/img/ws.png', alt='')
                     .col-sm-9
                         .services
                             h2 WebSocket
@@ -298,12 +298,12 @@ html
 
 
 
-        script(src=config.server_path+'_API/assets/js/jquery.min.js')
-        script(src=config.server_path+'_API/assets/js/jquery.snippet.min.js')
-        script(src=config.server_path+'_API/assets/js/jquery.malihu.PageScroll2id.js')
-        script(src=config.server_path+'_API/assets/js/script.js')
-        script(src=config.server_path+'_API/assets/js/sweetalert2.min.js')
-        script(src=config.server_path+'_API/assets/bootstrap/js/bootstrap.min.js')
+        script(src=config.server_path+config.api_path+'_API/assets/js/jquery.min.js')
+        script(src=config.server_path+config.api_path+'_API/assets/js/jquery.snippet.min.js')
+        script(src=config.server_path+config.api_path+'_API/assets/js/jquery.malihu.PageScroll2id.js')
+        script(src=config.server_path+config.api_path+'_API/assets/js/script.js')
+        script(src=config.server_path+config.api_path+'_API/assets/js/sweetalert2.min.js')
+        script(src=config.server_path+config.api_path+'_API/assets/bootstrap/js/bootstrap.min.js')
         script.
             $("pre.js").snippet("javascript", {style: "ide-codewarrior"});
 
