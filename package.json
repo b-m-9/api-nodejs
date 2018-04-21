@@ -25,7 +25,9 @@
   "homepage": "https://github.com/medve-dev/api-nodejs#readme",
   "dependencies": {
     "bluebird": "^3.5.1",
+    "cookie-parser": "^1.4.3",
     "country-list": "^1.1.0",
+    "express-session": "^1.15.6",
     "fs": "0.0.1-security",
     "jade": "^1.11.0",
     "nconf": "^0.10.0",

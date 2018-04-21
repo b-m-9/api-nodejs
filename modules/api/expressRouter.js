@@ -1,4 +1,3 @@
-
 const path = require('path');
 
 const express = require('express');
@@ -12,6 +11,31 @@ const log = require('../log');
 const geoip = require('../geoip');
 const error = require('../error/api');
 
+
+const session = require('express-session');
+const cookieParser = require('cookie-parser');
+
+router.use(cookieParser());
+
+if (config.get('server:session'))
+    router.use(session({
+        secret: config.get('server:session:secret'),
+        name: config.get('server:session:name'),
+        cookie: {
+
+            maxAge: config.get('server:session:ttl_hours') * 60 * 60 * 1000 // hours
+        },
+        httpOnly: true,
+        resave: true,
+        saveUninitialized: true,
+
+    }));
+router.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Locale");
+    next();
+});
 
 router.use('/', (req, res, next) => {
     req.initTimestamp = (new Date()).getTime();
@@ -47,7 +71,7 @@ router.use('/', (req, res, next) => {
 
 router.all('/api/:method/', (req, res) => {
     if (config.get('application:server:logs:express')) log.info('Call API: ' + req.params.method);
-    let param = {...req.query,...req.body,files:req.files};
+    let param = {...req.query, ...req.body, files: req.files};
 
 
     let user = {ip: req.infoClient, session: req.session};
@@ -85,20 +109,13 @@ let config_local = {
 };
 router.get('/api_docs/', (req, res) => {
     res.set('Content-Type', 'text/html');
-    res.end(jade.renderFile(path.normalize(__dirname+ '/../../_API' + '/index.jade'), {
+    res.end(jade.renderFile(path.normalize(__dirname + '/../../_API' + '/index.jade'), {
         methods: {all: API.API.docs},
         config: config_local,
         admin: true
     }));
 });
 module.exports = router;
-
-
-
-
-
-
-
 
 
 //api router
