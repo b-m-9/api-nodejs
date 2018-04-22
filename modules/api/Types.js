@@ -87,10 +87,9 @@ const INTEGER = (length, options) => {
 };
 
 
-const exports = {
+module.exports = {
     DATE: DATE,
     STRING: STRING,
     FLOAT: FLOAT,
     INTEGER: INTEGER,
 };
-module.exports = exports;

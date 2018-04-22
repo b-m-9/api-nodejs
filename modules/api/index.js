@@ -303,7 +303,7 @@ API = {
     },
     proxy: {},
     error: error,
-    Types: TypesAPI,
+    types: TypesAPI,
     cache: {}
 };
 // alias method
