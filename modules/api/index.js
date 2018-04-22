@@ -10,6 +10,7 @@ if (!fs.existsSync(path.normalize(__dirname + DIR_TO_ROOT + 'api')))
 const Promise = require("bluebird");
 const authController = require('./auth.js');
 const error = require('../error/api.js');
+const TypesAPI = require('../api/Types.js');
 const random = require('../random');
 const APIConfigAuth = require('../../index');
 let API;
@@ -213,6 +214,29 @@ API = {
                 return true;
             })
             .then(() => {
+                if (!controller[name].param)
+                    return true;
+                let cParam = {};
+                for (let i in controller[name].param) {
+                    if (controller[name].param.hasOwnProperty(i) && controller[name].param[i].name)
+                        cParam[controller[name].param[i].name] = controller[name].param[i];
+                    if (cParam[controller[name].param[i].name].required && (param[controller[name].param[i].name] === undefined || param[controller[name].param[i].name] === null || param[controller[name].param[i].name] === ''))
+                        return Promise.reject(error.create('param "' + controller[name].param[i].name + '" required', 'api', {}, 0, controller[name].param[i].error_code || 500400404));
+                }
+                for (let key in param) {
+                    if (param.hasOwnProperty(key) && cParam.hasOwnProperty(key) && cParam[key].type && typeof cParam[key].type === 'function') {
+                        let r = cParam[key].type(param.key);
+                        if (!r)
+                            return Promise.reject(error.create('param "' + key + '" type error (function validator)', 'api', {}, 0, cParam[key].error_code || 500400404));
+                        if (!r.success)
+                            return Promise.reject(error.create('param "' + key + '" error: ' + r.error, 'api', {}, 0, cParam[key].error_code || 500400404));
+                        param[key] = r.value;
+                    }
+                }
+                return 'ok';
+
+            })
+            .then(() => {
                 // function
                 return controller[name].fn(user, param)
             })
@@ -279,6 +303,7 @@ API = {
     },
     proxy: {},
     error: error,
+    Types: TypesAPI,
     cache: {}
 };
 // alias method

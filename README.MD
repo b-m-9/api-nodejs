@@ -29,6 +29,36 @@ const API = new api({}, {
 
 app.use('/api/v1', API.expressRouter);
 ```
+- нужно описать основные принципы работы 
+- описать что такое функции auth_user auth_admin
+- описать как создается  конфигурационый файл
+- описать что такое api express router
+- описать файл конфигураций что значит каждый из параметров в нем 
+
+
+### API Types and validate
+----
+                 
+```
+API.Types.STRING(lenght,options)
+```               
+```
+API.Types.FLOAT(10,2,options)
+```          
+```
+API.Types.DATE()
+```        
+```
+API.Types.INTEGER(10)
+```
+
+
+- нужно описать  что такое типы как они работают какие опыции они принимают
+- описать каждый из типов 
+- описать как работает ответ ошибок 
+- как принимают regexp
+- описать как написать свой тип данных
+
 
 ### API File
 ./api/GROUP_PATH/API_file.js
@@ -49,9 +79,11 @@ module.exports = (API, redis) => {
         group: nameGroupAPI,
         param: [{
             name: 'test',
-            type: "int",
+            type: API.Types.STRING(10),
+            error_code:12345678,
+            test: "int",
             title: 'example param',
-            necessarily: true
+            required: true
         }],
         response: [{
             name: 'data.example',
@@ -62,6 +94,18 @@ module.exports = (API, redis) => {
     });
 };
 ```
+
+- если еррор кода нет то вернет код 500400404 если параметр не пройдет валидацию или будет не найден
+- нужно описать как создать файл апи  
+- как регестрировать метод 
+- что значит имя  метода
+- что метод должен вернуть  какие параметры они приймет
+- описать doc 
+- что такое lvl
+- не забыть упомянуть про hide
+- что такое параметр  
+- что такое  ответ 
+
 
 After starting the application, the ./api/ and ./config/ folder will be created.
 - ./api/ - directory with API
