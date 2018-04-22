@@ -20,7 +20,7 @@ let statusSaveConfig = true;
 function reloadConfig() {
     try {
         if (statusSaveConfig) {
-            nconf.argv().env().file({file: _path_config + '' + NAME_CONFIG + '.json'});
+            nconf.file({file: _path_config + '' + NAME_CONFIG + '.json'});
         }
     } catch (e) {
         setTimeout(reloadConfig, 5000);
