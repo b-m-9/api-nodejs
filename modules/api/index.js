@@ -225,8 +225,8 @@ API = {
                         return Promise.reject(error.create('param "' + controller[name].infoAndControl.param[i].name + '" required', 'api', {}, 0, controller[name].infoAndControl.param[i].error_code || 500400404));
                 }
                 for (let key in param) {
-                    if (param.hasOwnProperty(key) && cParam.hasOwnProperty(key) && cParam[key].type && typeof cParam[key].type === 'function') {
-                        let r = cParam[key].type.valid(param.key);
+                    if (param.hasOwnProperty(key) && cParam.hasOwnProperty(key) && cParam[key].type && typeof cParam[key].type.valid === 'function') {
+                        let r = cParam[key].type.valid(param[key]);
                         if (!r)
                             return Promise.reject(error.create('param "' + key + '" type error (function validator)', 'api', {}, 0, cParam[key].error_code || 500400404));
                         if (!r.success)

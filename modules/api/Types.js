@@ -14,7 +14,7 @@ class _String {
         if (!v) return {success: false, error: 'Value undefined'};
         v = String(v);
         if (typeof v !== 'string') return {success: false, error: 'Value is not string'};
-        if (v.length > this.max) return {success: false, error: 'Value length > ' + 255};
+        if (v.length > this.max) return {success: false, error: 'Value length > ' + this.max};
         if (this.regexp && !this.regexp.test(v)) return {success: false, error: 'Value not valid regexp'};
         return {success: true, value: v};
     }
@@ -40,7 +40,7 @@ class _Float {
         if (typeof v !== 'number') return {success: false, error: 'Value is not string'};
         if (isNaN(v)) return {success: false, error: 'Value NaN'};
         if (!isFinite(v)) return {success: false, error: 'Value Infinity'};
-        if (String(v).length > this.max) return {success: false, error: 'Value length > ' + 255};
+        if (String(v).length > this.max) return {success: false, error: 'Value length > ' + this.max};
         // Gaussovo (bank rounding)
         let d = this.fixed || 0,
             m = Math.pow(10, d),
@@ -78,7 +78,7 @@ class _Intenger {
         if (typeof v !== 'number') return {success: false, error: 'Value is not string'};
         if (isNaN(v)) return {success: false, error: 'Value NaN'};
         if (!isFinite(v)) return {success: false, error: 'Value Infinity'};
-        if (String(v).length > this.max) return {success: false, error: 'Value length > ' + 255};
+        if (String(v).length > this.max) return {success: false, error: 'Value length > ' + this.max};
         // Gaussovo (bank rounding)
         let d = this.fixed || 0,
             m = Math.pow(10, d),
