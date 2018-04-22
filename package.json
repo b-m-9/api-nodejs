@@ -26,6 +26,9 @@
   "dependencies": {
     "bluebird": "^3.5.1",
     "body-parser": "^1.18.2",
+    "connect-mongo": "^2.0.1",
+    "connect-pg-simple": "^4.2.1",
+    "connect-redis": "^3.3.3",
     "cookie-parser": "^1.4.3",
     "country-list": "^1.1.0",
     "express-fileupload": "^0.4.0",
@@ -35,6 +38,7 @@
     "jade": "^1.11.0",
     "nconf": "^0.10.0",
     "path": "^0.12.7",
+    "pg": "^7.4.1",
     "redis": "^2.8.0",
     "tabgeo": "^0.1.0",
     "winston": "^2.4.2"

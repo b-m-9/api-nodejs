@@ -17,19 +17,59 @@ const bodyParser = require('body-parser');
 const fileUpload = require('express-fileupload');
 router.use(['/_API', '/docs/_API'], express.static(path.normalize(__dirname + '/../../_API')));
 router.use(cookieParser());
-if (config.get('server:session'))
+
+if (config.get('server:session:enable')) {
+    let store;
+    if (config.get('server:session:driver') === 'mongodb') {
+        console.log('api-nodejs-> Express use session store MongoDB');
+        const MongoStore = require('connect-mongo')(session);
+        store = new MongoStore({
+            url: 'mongodb://' + config.get('server:session:database:username') + ':' + config.get('server:session:database:password') + '@' + config.get('server:session:database:host') + '/' + config.get('server:session:database:database'),
+            stringify: false
+        });
+    }
+    if (config.get('server:session:driver') === 'redis') {
+        console.log('api-nodejs-> Express use session store Redis');
+        const redis = require('redis').createClient(config.get('redis:port'), config.get('redis:host'));
+        const RedisStore = require('connect-redis')(session);
+        store = new RedisStore({client: redis});
+    }
+
+    if (config.get('server:session:driver') === 'pg') {
+
+        console.log('api-nodejs-> Express use session store Postgres');
+
+        const pg = require('pg'),
+            pgSession = require('connect-pg-simple')(session),
+            pgPool = new pg.Pool({
+                user: config.get('server:session:database:username'),
+                password: config.get('server:session:database:password'),
+                host: config.get('server:session:database:host'),
+                database: config.get('server:session:database:database')
+            });
+        store = new pgSession({
+            pool: pgPool,// Connection pool
+            tableName: 'session'   // Use another table-name than the default "session" one
+        })
+    }
+
+    if (config.get('server:session:driver') === 'local') {
+        console.log('api-nodejs-> Express use session store Local');
+        store = undefined
+    }
+
     router.use(session({
         secret: config.get('server:session:secret'),
         name: config.get('server:session:name'),
         cookie: {
-
             maxAge: config.get('server:session:ttl_hours') * 60 * 60 * 1000 // hours
         },
         httpOnly: true,
         resave: true,
         saveUninitialized: true,
-
+        store
     }));
+}
 router.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
     res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
