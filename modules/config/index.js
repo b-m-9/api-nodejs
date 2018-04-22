@@ -9,7 +9,7 @@ const NAME_CONFIG = 'api_config';
 
 const fs = require('fs'),
     path = require('path'),
-    nconf = require('nconf'),
+    nconf = require('../nconf-local'),
     error = require('../../modules/error'),
     log = require('../../modules/log'),
     _path_config = path.normalize(__dirname + DIR_TO_ROOT + DIR_CONFIG + '/');
