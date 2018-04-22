@@ -102,6 +102,7 @@ API = {
             controller[name].level = 0;
         if (!docs.level && docs.level !== 0)
             controller[name].level = 3;
+        controller[name].infoAndControl = docs;
 
         if (docs && !docs.hide) {
             docs.method = name;
@@ -214,18 +215,18 @@ API = {
                 return true;
             })
             .then(() => {
-                if (!controller[name].param)
+                if (!controller[name].infoAndControl.param)
                     return true;
                 let cParam = {};
-                for (let i in controller[name].param) {
-                    if (controller[name].param.hasOwnProperty(i) && controller[name].param[i].name)
-                        cParam[controller[name].param[i].name] = controller[name].param[i];
-                    if (cParam[controller[name].param[i].name].required && (param[controller[name].param[i].name] === undefined || param[controller[name].param[i].name] === null || param[controller[name].param[i].name] === ''))
-                        return Promise.reject(error.create('param "' + controller[name].param[i].name + '" required', 'api', {}, 0, controller[name].param[i].error_code || 500400404));
+                for (let i in controller[name].infoAndControl.param) {
+                    if (controller[name].infoAndControl.param.hasOwnProperty(i) && controller[name].infoAndControl.param[i].name)
+                        cParam[controller[name].infoAndControl.param[i].name] = controller[name].infoAndControl.param[i];
+                    if (cParam[controller[name].infoAndControl.param[i].name].required && (param[controller[name].infoAndControl.param[i].name] === undefined || param[controller[name].infoAndControl.param[i].name] === null || param[controller[name].infoAndControl.param[i].name] === ''))
+                        return Promise.reject(error.create('param "' + controller[name].infoAndControl.param[i].name + '" required', 'api', {}, 0, controller[name].infoAndControl.param[i].error_code || 500400404));
                 }
                 for (let key in param) {
                     if (param.hasOwnProperty(key) && cParam.hasOwnProperty(key) && cParam[key].type && typeof cParam[key].type === 'function') {
-                        let r = cParam[key].type.valid(param.key);
+                        let r = cParam[key].type(param.key);
                         if (!r)
                             return Promise.reject(error.create('param "' + key + '" type error (function validator)', 'api', {}, 0, cParam[key].error_code || 500400404));
                         if (!r.success)
