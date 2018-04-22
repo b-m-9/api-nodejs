@@ -489,6 +489,8 @@ html(lang='en')
                                                             | /**
                                                             |   @name !{oneParam.name}
                                                             |   @type !{oneParam.type.name}
+                                                            if oneParam.type.regexp
+                                                                |   @regexp !{oneParam.type.regexp}
                                                             | */
                                                             | !{oneParam.type.valid}
                                                             | // ============
