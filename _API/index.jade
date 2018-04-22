@@ -369,7 +369,7 @@ html(lang='en')
                                                         tr
                                                             td !{oneParam.name}
                                                             td !{oneParam.title}
-                                                            td !{oneParam.type}
+                                                            td !{oneParam.type.name}
                                                             td
                                                                 if oneParam.necessarily
                                                                     | YES
@@ -390,7 +390,7 @@ html(lang='en')
                                                         tr
                                                             td !{oneParam.name}
                                                             td !{oneParam.title}
-                                                            td !{oneParam.type}
+                                                            td !{oneParam.type.name}
                                                             td !{oneParam.default}
                                         li
                                             div(style='margin: -15px;')
@@ -431,10 +431,10 @@ html(lang='en')
                                                                             .key-value-form-column(style='flex: 0 0 33%;')
                                                                                 span(data-text='true') !{oneParam.name}
                                                                             .key-value-form-column(style='flex: 0 0 33%;')
-                                                                                if oneParam.type === 'file'
-                                                                                    input.key-value-form-input(value=oneParam.default, type='file', placeholder=oneParam.type, name=oneParam.name, style='padding: 5px 5%;')
+                                                                                if oneParam.type.name === 'FILE'
+                                                                                    input.key-value-form-input(value=oneParam.default, type='file', placeholder=oneParam.type.name, name=oneParam.name, style='padding: 5px 5%;')
                                                                                 else
-                                                                                    input.key-value-form-input(value=oneParam.default, placeholder=oneParam.type, name=oneParam.name)
+                                                                                    input.key-value-form-input(value=oneParam.default, placeholder=oneParam.type.name, name=oneParam.name)
                                                                             .key-value-form-column(style='flex: 0 0 34%;')
                                                                                 span(data-text='true') !{oneParam.title}
                                                                         .key-value-form-row__delete

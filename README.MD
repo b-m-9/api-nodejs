@@ -40,19 +40,18 @@ app.use('/api/v1', API.expressRouter);
 ----
                  
 ```
-API.Types.STRING(lenght,options)
+API.types.STRING(lenght,options)
 ```               
 ```
-API.Types.FLOAT(10,2,options)
+API.types.FLOAT(10,2,options)
 ```          
 ```
-API.Types.DATE()
+API.types.DATE()
 ```        
 ```
-API.Types.INTEGER(10)
+API.types.INTEGER(10,options)
 ```
-
-
+- options.regexp = 'STRING_REGEXP'
 - нужно описать  что такое типы как они работают какие опыции они принимают
 - описать каждый из типов 
 - описать как работает ответ ошибок 
@@ -79,9 +78,8 @@ module.exports = (API, redis) => {
         group: nameGroupAPI,
         param: [{
             name: 'test',
-            type: API.Types.STRING(10),
+            type: API.types.STRING(10),
             error_code:12345678,
-            test: "int",
             title: 'example param',
             required: true
         }],

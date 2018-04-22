@@ -16,27 +16,7 @@
 	padding: 0;
 	opacity: 0;
 }
-.jq-file {
-	position: relative;
-	display: inline-block;
-	overflow: hidden;
-}
-.jq-file input {
-	position: absolute;
-	top: 0;
-	right: 0;
-	height: auto;
-	margin: 0;
-	padding: 0;
-	opacity: 0;
-	font-size: 100px;
-	line-height: 1em;
-}
-.jq-file__name {
-	overflow: hidden;
-	white-space: nowrap;
-	text-overflow: ellipsis;
-}
+
 .jq-selectbox,
 .jq-select-multiple {
 	position: relative;
