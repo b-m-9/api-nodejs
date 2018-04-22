@@ -474,7 +474,7 @@ html(lang='en')
 
 
                                         li
-                                            if val1 && val1.param
+                                            if val1 && val1.param && val1.param.length > 0
                                                 p.title-method Source code validate param:
 
                                                 ul.uk-list.uk-list-striped.list-code
@@ -486,8 +486,9 @@ html(lang='en')
                                                     '    padding: 0 25px;\n' +
                                                     '    font-style: italic;')
                                                         each oneParam in val1.param
-                                                            | /*
-                                                            |   @name = !{oneParam.name} [!{oneParam.type.name}]
+                                                            | /**
+                                                            |   @name !{oneParam.name}
+                                                            |   @type !{oneParam.type.name}
                                                             | */
                                                             | !{oneParam.type.valid}
                                                             | // ============
