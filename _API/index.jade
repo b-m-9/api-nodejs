@@ -486,18 +486,25 @@ html(lang='en')
                                                     '    padding: 0 25px;\n' +
                                                     '    font-style: italic;')
                                                         each oneParam in val1.param
+                                                            br
                                                             | /**
                                                             |   @name !{oneParam.name}
                                                             |   @type !{oneParam.type.name}
+
                                                             if oneParam.type.max
+                                                                br
                                                                 |   @var max=!{oneParam.type.max}
+
                                                             if oneParam.type.fixed
+                                                                br
                                                                 |   @var fixed=!{oneParam.type.fixed}
                                                             if oneParam.type.regexp
+                                                                br
                                                                 |   @regexp !{oneParam.type.regexp}
+                                                            br
                                                             | */
                                                             | !{oneParam.type.valid}
-                                                            | // ============
+                                                            | // =====================================
 
                                             p.title-method Source code of the method:
                                             ul.uk-list.uk-list-striped.list-code
