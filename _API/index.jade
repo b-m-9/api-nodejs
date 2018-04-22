@@ -489,6 +489,10 @@ html(lang='en')
                                                             | /**
                                                             |   @name !{oneParam.name}
                                                             |   @type !{oneParam.type.name}
+                                                            if oneParam.type.max
+                                                                |   @var max=!{oneParam.type.max}
+                                                            if oneParam.type.fixed
+                                                                |   @var fixed=!{oneParam.type.fixed}
                                                             if oneParam.type.regexp
                                                                 |   @regexp !{oneParam.type.regexp}
                                                             | */
