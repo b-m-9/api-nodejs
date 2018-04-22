@@ -23,8 +23,10 @@ if (config.get('server:session:enable')) {
     if (config.get('server:session:driver') === 'mongodb') {
         console.log('api-nodejs-> Express use session store MongoDB');
         const MongoStore = require('connect-mongo')(session);
+        let access = config.get('server:session:database:username') + ':' + config.get('server:session:database:password');
+        if(access ===':') access = '';
         store = new MongoStore({
-            url: 'mongodb://' + config.get('server:session:database:username') + ':' + config.get('server:session:database:password') + '@' + config.get('server:session:database:host') + '/' + config.get('server:session:database:database'),
+            url: 'mongodb://' + access + '@' + config.get('server:session:database:host') + '/' + config.get('server:session:database:database'),
             stringify: false
         });
     }
