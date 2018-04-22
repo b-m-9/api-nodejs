@@ -487,10 +487,9 @@ html(lang='en')
                                                     '    font-style: italic;')
                                                         each oneParam in val1.param
                                                             | /*
-                                                            |   @name = !{oneParam.type}
+                                                            |   @name = !{oneParam.name} [!{oneParam.type.name}]
                                                             | */
                                                             | !{oneParam.type.valid}
-                                                            |
                                                             | // ============
 
                                             p.title-method Source code of the method:

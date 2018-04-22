@@ -60,7 +60,7 @@ class _Float {
 
 class _Intenger {
     // IEEE_754-2008 - Standard for Floating-Point Arithmetic
-    constructor(length, fixed, options) {
+    constructor(length, options) {
         this.max = length || 10;
         this.name = 'INTEGER';
 
@@ -136,10 +136,10 @@ const FLOAT = (length, fixed, options) => {
 
 };
 const INTEGER = (length, options) => {
-    return _Intenger(length, options);
+    return new _Intenger(length, options);
 };
 const FILE = () => {
-    return _File();
+    return new _File();
 };
 
 
