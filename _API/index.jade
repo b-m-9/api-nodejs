@@ -101,7 +101,7 @@ html(lang='en')
                                         i.uk-icon-download
                                         |  Import api to Insomnia
                             li
-                                a.uk-button.uk-button-secondary.button-download.uk-width-1-1(href=config.shema + config.domain + config.server_path + config.api_path +'export/postman', style="background: none;  border: 2px solid #FFF;")
+                                a.uk-button.uk-button-secondary.button-download.uk-width-1-1(href=config.shema + config.domain + config.server_path + config.api_path + 'export/postman', style="background: none;  border: 2px solid #FFF;")
                                     img(src='_API/src/images/icon_api_button_03.png', alt='', width='107', height='45')
                                     span.uk-display-block
                                         i.uk-icon-download
@@ -275,7 +275,7 @@ html(lang='en')
                                         .uk-width-1-5
                                             if val1.method.length >= 35
                                                 span(style='text-transform: none;font-size: 10px;')
-                                                    i(class=val1.iconClass style='color: #'+val1.iconColor+';font-size: 14px;position: relative;bottom: 0px;')
+                                                    i(class=val1.iconClass style='color: #' + val1.iconColor + ';font-size: 14px;position: relative;bottom: 0px;')
                                                     if val1.method.toLowerCase().indexOf('add') !== -1 || val1.method.toLowerCase().indexOf('create') !== -1 || val1.method.toLowerCase().indexOf('insert') !== -1
                                                         i.uk-icon-plus(style='color: #137d2a;font-size: 10px;position: relative;margin-left: -16px;background:  #fff;border-radius: 12px;bottom: -7px;padding: 1px 3px;')
                                                     if val1.method.toLowerCase().indexOf('delete') !== -1 || val1.method.toLowerCase().indexOf('remove') !== -1
@@ -474,7 +474,26 @@ html(lang='en')
 
 
                                         li
-                                            p.title-method Source code of the server:
+                                            if val1 && val1.param
+                                                p.title-method Source code validate param:
+
+                                                ul.uk-list.uk-list-striped.list-code
+                                                    pre(style='background: #091124 !important;    min-height: 30px;\n' +
+                                                    '    line-height: 28px;\n' +
+                                                    '    font-family: RobotoRegular;\n' +
+                                                    '    font-size: 12px;\n' +
+                                                    '    color: #07b8ab;\n' +
+                                                    '    padding: 0 25px;\n' +
+                                                    '    font-style: italic;')
+                                                        each oneParam in val1.param
+                                                            | /*
+                                                            |   @name = !{oneParam.type}
+                                                            | */
+                                                            | !{oneParam.type.valid}
+                                                            |
+                                                            | // ============
+
+                                            p.title-method Source code of the method:
                                             ul.uk-list.uk-list-striped.list-code
                                                 pre(style='background: #091124 !important;    min-height: 30px;\n' +
                                                 '    line-height: 28px;\n' +
