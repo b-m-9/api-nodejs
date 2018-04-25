@@ -11,12 +11,29 @@ class _String {
     }
 
     valid(v) {
-        if (!v) return {success: false, error: 'Value undefined'};
+        if (!v && v !== '') return {success: false, error: 'Value undefined'};
         v = String(v);
         if (typeof v !== 'string') return {success: false, error: 'Value is not string'};
         if (v.length > this.max) return {success: false, error: 'Value length > ' + this.max};
         if (this.regexp && !this.regexp.test(v)) return {success: false, error: 'Value not valid regexp'};
         return {success: true, value: v};
+    }
+}
+
+class _Boolean {
+    constructor() {
+        this.name = 'BOOLEAN';
+    }
+
+    valid(v) {
+        if (v === 1) v = true;
+        if (v === 0) v = false;
+        if (v === '1') v = true;
+        if (v === '0') v = false;
+        if (v === 'true') v = true;
+        if (v === 'false') v = false;
+        if (typeof v !== 'boolean') return {success: false, error: 'Value is not boolean'};
+        return {success: true, value: Boolean(v)};
     }
 }
 
@@ -142,11 +159,16 @@ const FILE = () => {
     return new _File();
 };
 
+const BOOLEAN = () => {
+    return new _Boolean();
+};
+
 
 module.exports = {
     DATE,
     STRING,
     FLOAT,
     INTEGER,
+    BOOLEAN,
     FILE
 };
