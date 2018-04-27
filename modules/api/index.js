@@ -33,6 +33,11 @@ function stringToRGBHash(str) { // java String#hashCode
 
 let iconsClass = {
     login: 'uk-icon-sign-in',
+    register: 'uk-icon-address-card-o',
+    tour: 'uk-icon-road',
+    wallet: 'uk-icon-credit-card',
+    transactions: 'uk-icon-list-ul',
+    transfer: 'uk-icon-exchange',
     logout: 'uk-icon-sign-out',
     setting: 'uk-icon-cog',
     config: 'uk-icon-cog',
