@@ -1,15 +1,26 @@
 # NodeJS Module Rest-API
+API-NodeJS - это минималистичный и гибкий фреймворк
+ предоставляющий обширный набор функций для построения REST-API на Node.js.
+
+Имеет в своем распоряжении множество служебных методов и 
+промежуточных обработчиков,
+для создания надежного професионального сервера быстро и легко.
+
+Данный модуль предоставлет веб панель для просмотра, 
+тестирование и анализа методов API.
+
 ### Install module
 ```javascript
 npm i api-nodejs
 ```
 
-#### Init application api-nodejs
+#### Quick start
 ```javascript
-const api = require('api-nodejs');
 const express = require('express');
 const app = express();
-const API = new api({}, {
+
+const RestAPI = require('api-nodejs');
+const restapi = new RestAPI({}, {
     auth_user: (user) => {
 
         return new Promise(resolve => {
@@ -22,12 +33,15 @@ const API = new api({}, {
     },
     auth_admin: (user) => {
         return new Promise(resolve => {
-            resolve({status: false});
+             if (user.session.auth && user.session.user_id&& user.session.admin ===1)
+                 resolve({status: true, user_id: user.session.user_id});
+             else
+                 resolve({status: false})
         });
     }
 });
 
-app.use('/api/v1', API.expressRouter);
+app.use('/api/v1', restapi.expressRouter);
 ```
 - нужно описать основные принципы работы 
 - описать что такое функции auth_user auth_admin
