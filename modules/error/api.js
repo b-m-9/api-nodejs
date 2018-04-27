@@ -38,5 +38,13 @@ function validate_error(err) {
     return Promise.reject(create_error(message, 'api', err_obj, 1, 500));
 }
 
+function soon() {
+    let message = 'method in development';
+    let stack = 'no stack';
+    let err_obj = {stack};
+    return Promise.reject(create_error(message, 'api', err_obj, 1, 500));
+}
+
 exports.create = create_error;
 exports.validate = validate_error;
+exports.soon = soon;

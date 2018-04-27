@@ -239,10 +239,11 @@ API = {
             })
             .then(() => {
                 // function
-                let call_method =controller[name].fn(user, param);
-                if(!call_method || !call_method.then){
+                let call_method = controller[name].fn(user, param);
+                if (!call_method || !call_method.then) {
                     // очень опасно код внутри метода выполнился  но метод нечего не вернул ПРОСТО ПИЗДЕЦ =)
-                    return Promise.reject(error.create('Server error: "'+name+'" - the method did not return a promise', 'api', {}, 10, 500));
+                    console.log(new Error('Server error: "' + name + '" - the method did not return a promise'));
+                    return Promise.reject(error.create('Server error: "' + name + '" - the method did not return a promise', 'api', {}, 10, 500));
                 }
                 return call_method
             })
