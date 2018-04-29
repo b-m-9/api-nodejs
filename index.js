@@ -4,7 +4,6 @@ class APIEmitter extends EventEmitter {
 }
 
 const ApiEmitter = new APIEmitter();
-module.exports.ApiEmitter = ApiEmitter;
 
 class API {
     constructor(auth_controller, options) {
@@ -17,10 +16,10 @@ class API {
                 module.exports.admin = auth_controller.auth_admin;
         }
         this.expressRouter = require('./modules/api/expressRouter');
-        ApiEmitter.emit('init', {start: !!1});
         this.emitter = ApiEmitter;
+        module.exports.ApiEmitter = ApiEmitter;
+        ApiEmitter.emit('init', {start: !!1});
     }
-
 }
 
 module.exports = API;
