@@ -18,10 +18,9 @@ class API {
         }
         this.expressRouter = require('./modules/api/expressRouter');
         ApiEmitter.emit('init', {start: !!1});
-
+        this.on = ApiEmitter.on;
     }
 
 }
 
 module.exports = API;
-module.exports.on = ApiEmitter.on;
