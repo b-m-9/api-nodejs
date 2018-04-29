@@ -17,7 +17,7 @@ class API {
                 module.exports.admin = auth_controller.auth_admin;
         }
         this.expressRouter = require('./modules/api/expressRouter');
-
+        ApiEmitter.emit('init', {start: !!1});
 
     }
 
