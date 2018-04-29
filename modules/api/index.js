@@ -73,7 +73,7 @@ let controller = {};
 API = {
     saveLog(name, err, user, param, json, type, request_id) {
         if (APIConfig.ApiEmitter) {
-            APIConfig.ApiEmitter.emit('call', {name, user, param, err, type, json, request_id})
+            APIConfig.ApiEmitter.emit('call', {method: name, user, param, error: err, response: json, request_id})
         }
         // console.log('API log:', name, err, param, json, type, request_id);
         // new db.logsAPI({
