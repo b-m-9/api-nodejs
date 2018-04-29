@@ -1,3 +1,5 @@
+const moment = require('moment');
+
 class _String {
     constructor(len, options) {
         this.name = 'STRING';
@@ -114,13 +116,28 @@ class _Intenger {
 }
 
 class _Date {
-    constructor(len) {
+    constructor(options) {
         this.name = 'DATE';
+        if (options) {
+            if (options.unix)
+                this.unix = options.unix;
 
-        this.max = len;
+            if (options.zone_utc && typeof options.zone_utc === 'number')
+                this.zone_utc = options.zone_utc;
+        }
     }
 
     valid(v) {
+        if (!v) return {success: false, error: 'Value undefined'};
+        if (typeof v !== 'string' && typeof v !== 'number') return {success: false, error: 'Value invalid typeof'};
+
+        if (!moment(v).isValid())
+            return {success: false, error: 'Value Invalid Date'};
+        v = moment(v);
+        if (this.zone_utc)
+            v = v.utcOffset(this.zone_utc);
+
+        return {success: true, value: v.format()};
 
     }
 }
@@ -128,6 +145,27 @@ class _Date {
 class _File {
     constructor() {
         this.name = 'FILE';
+    }
+
+    valid(v) {
+        return {success: true, value: v};
+    }
+}
+
+class _Array {
+    constructor() {
+        this.name = 'ARRAY';
+    }
+
+    valid(v) {
+
+        return {success: true, value: v};
+    }
+}
+
+class _Object {
+    constructor() {
+        this.name = 'OBJECT';
     }
 
     valid(v) {
@@ -163,6 +201,14 @@ const BOOLEAN = () => {
     return new _Boolean();
 };
 
+const ARRAY = () => {
+    return new _Array();
+};
+
+const OBJECT = () => {
+    return new _Object();
+};
+
 
 module.exports = {
     DATE,
@@ -170,5 +216,7 @@ module.exports = {
     FLOAT,
     INTEGER,
     BOOLEAN,
-    FILE
+    FILE,
+    ARRAY,
+    OBJECT
 };
