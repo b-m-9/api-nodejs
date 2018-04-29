@@ -1,5 +1,15 @@
+const EventEmitter = require('events');
+
+class APIEmitter extends EventEmitter {
+}
+
+const ApiEmitter = new APIEmitter();
+module.exports.ApiEmitter = ApiEmitter;
+
 class API {
-    constructor(config, auth_controller) {
+    constructor(auth_controller, options) {
+        if (!auth_controller || !auth_controller.auth_user) auth_controller = options;
+
         if (auth_controller) {
             if (auth_controller.auth_user && typeof auth_controller.auth_user === 'function')
                 module.exports.user = auth_controller.auth_user;
@@ -14,3 +24,4 @@ class API {
 }
 
 module.exports = API;
+module.exports.on = ApiEmitter.on;

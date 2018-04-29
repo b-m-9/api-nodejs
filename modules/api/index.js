@@ -12,7 +12,7 @@ const authController = require('./auth.js');
 const error = require('../error/api.js');
 const TypesAPI = require('../api/Types.js');
 const random = require('../random');
-const APIConfigAuth = require('../../index');
+const APIConfig = require('../../index');
 let API;
 let redis = require('redis').createClient(config.get('redis:port'), config.get('redis:host'));
 redis.publishAPI = (method, user, data) => {
@@ -72,7 +72,9 @@ let iconsClass = {
 let controller = {};
 API = {
     saveLog(name, err, user, param, json, type, request_id) {
-
+        if (APIConfig.ApiEmitter) {
+            APIConfig.ApiEmitter.emit('call', {name, user, param, err, type, json, request_id})
+        }
         // console.log('API log:', name, err, param, json, type, request_id);
         // new db.logsAPI({
         //     user_id: user._id,
@@ -190,8 +192,8 @@ API = {
             .then(() => {
                 // auth data
                 return Promise.props({
-                    user: APIConfigAuth.user(user),
-                    admin: APIConfigAuth.admin(user)
+                    user: APIConfig.user(user),
+                    admin: APIConfig.admin(user)
                 }).catch(err => {
                     return Promise.reject(err);
                 })
