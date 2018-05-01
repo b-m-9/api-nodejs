@@ -128,6 +128,8 @@ class _Date {
     }
 
     valid(v) {
+        return {success: true, value: v};
+
         if (!v) return {success: false, error: 'Value undefined'};
         if (typeof v !== 'string' && typeof v !== 'number') return {success: false, error: 'Value invalid typeof'};
 
@@ -158,6 +160,10 @@ class _Array {
     }
 
     valid(v) {
+        if (typeof v === 'string')
+            v = v.split(',');
+        if (Array.isArray(v))
+            return {success: false, error: 'Value is not array'};
 
         return {success: true, value: v};
     }
@@ -169,6 +175,8 @@ class _Object {
     }
 
     valid(v) {
+        if (typeof v === 'object')
+            return {success: false, error: 'Value is not object'};
         return {success: true, value: v};
     }
 }
