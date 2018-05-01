@@ -162,7 +162,7 @@ class _Array {
     valid(v) {
         if (typeof v === 'string')
             v = v.split(',');
-        if (Array.isArray(v))
+        if (!Array.isArray(v))
             return {success: false, error: 'Value is not array'};
 
         return {success: true, value: v};
