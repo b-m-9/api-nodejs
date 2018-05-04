@@ -15,6 +15,8 @@ const random = require('../random');
 const APIConfig = require('../../index');
 let API;
 let redis = require('redis').createClient(config.get('redis:port'), config.get('redis:host'));
+redis.select(config.get('redis:port'));
+
 redis.publishAPI = (method, user, data) => {
     redis.publish('api_notify', JSON.stringify({method, user, data}));
 };
