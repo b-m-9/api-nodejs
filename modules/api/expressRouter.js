@@ -15,6 +15,14 @@ const cookieParser = require('cookie-parser');
 
 const bodyParser = require('body-parser');
 const fileUpload = require('express-fileupload');
+
+let git_status = {version: '1.2.0', commitHash: '#git'};
+const git = require('git-rev');
+git.short((str) => {
+    if (str) {
+        git_status.commitHash = str;
+    }
+});
 router.use(['/_API', '/docs/_API'], express.static(path.normalize(__dirname + '/../../_API')));
 router.use(cookieParser());
 
@@ -24,7 +32,7 @@ if (config.get('server:session:enable')) {
         console.log('api-nodejs-> Express use session store MongoDB');
         const MongoStore = require('connect-mongo')(session);
         let access = config.get('server:session:database:username') + ':' + config.get('server:session:database:password');
-        if(access ===':') access = '';
+        if (access === ':') access = '';
         store = new MongoStore({
             url: 'mongodb://' + access + '@' + config.get('server:session:database:host') + '/' + config.get('server:session:database:database'),
             stringify: false
@@ -122,6 +130,7 @@ router.use('/', (req, res, next) => {
 
 });
 
+
 router.get('/docs/', (req, res) => {
 
     let config_local = {
@@ -130,8 +139,8 @@ router.get('/docs/', (req, res) => {
         api_path: config.get('api_path'),
         domain: config.get('domain'),
         project_name: config.get('project_name'),
-        version: config.get('version'),
-        commitHash: config.get('git:commitHash'),
+        version: git_status.version,
+        commitHash: git_status.commitHash,
         latency_ms: (Math.random() * 100).toFixed(0),
         countQueries: (Math.random() * 1000).toFixed(0),
         shema: config.get('shema') + '://'
