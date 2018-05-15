@@ -30,25 +30,59 @@ function reloadConfig() {
 }
 
 reloadConfig();
+Object.equal = function (firstObj, secondObject) {
+    let keysFirstObj = Object.keys(firstObj);
+    let keysSecondObject = Object.keys(secondObject);
+    if (keysFirstObj.length !== keysSecondObject.length) {
+        return false;
+    }
+    return !keysFirstObj.filter(function (key) {
+        if (typeof firstObj[key] === "object" || Array.isArray(firstObj[key])) {
+            return !Object.equal(firstObj[key], secondObject[key]);
+        } else {
+            return firstObj[key] !== secondObject[key];
+        }
+    }).length;
+};
 
 function saveConfig() {
     return new Promise((resolve, reject) => {
         statusSaveConfig = false;
-        nconf.save(function (err) {
-            if (err) return new error('core/createConfig.js/nconf.save :' + err);
+        fs.readFile(_path_config + '' + NAME_CONFIG + '.json', "utf8", (err, configString) => {
+            if (err) return nconf.save((err) => {
+                console.log('[!] Created config ' + NAME_CONFIG);
+                statusSaveConfig = true;
 
-            fs.readFile(_path_config + '' + NAME_CONFIG + '.json', "utf8", (err, configString) => {
-                if (err) return new error('core/createConfig.js/fs.readFile :' + err);
-                try {
-                    JSON.parse(configString);
-                    statusSaveConfig = true;
-                    return resolve(true);
-                } catch (e) {
-                    log.error('File ' + NAME_CONFIG + '.json [Error read format]: see ' + NAME_CONFIG + '.json saveConfig' + e);
-                    return reject('File ' + NAME_CONFIG + '.json [Error read format]: see ' + NAME_CONFIG + '.json saveConfig')
-                }
+                return resolve(true);
             });
+            try {
+                if (configString === '')
+                    return nconf.save((err) => {
+                        console.error('[WARN] Rewrite config ' + NAME_CONFIG,'SUCCESS!');
+                        statusSaveConfig = true;
+                        return resolve(true);
+                    });
+                configString = JSON.parse(configString);
+                if (!Object.equal(configString, nconf.stores.file.store)) {
+                    nconf.save((err) => {
+                        console.log('[!] Updated config ' + NAME_CONFIG);
+                        statusSaveConfig = true;
+
+                        return resolve(true);
+                    });
+                } else {
+                    statusSaveConfig = true;
+
+                    return resolve(true);
+
+                }
+            } catch (e) {
+                log.error('File ' + NAME_CONFIG + '.json [Error read format]: see ' + NAME_CONFIG + '.json saveConfig' + e);
+                return reject('File ' + NAME_CONFIG + '.json [Error read format]: see ' + NAME_CONFIG + '.json saveConfig')
+            }
         });
+        //
+
     });
 }
 
