@@ -146,8 +146,24 @@ router.get('/docs/', (req, res) => {
         shema: config.get('shema') + '://'
     };
     res.set('Content-Type', 'text/html');
+    let docs = API.docs.map(el => {
+        let params = [];
+        if (Array.isArray(el.param))
+            params = el.param;
+        else {
+            for (let i in  el.param) {
+                if (el.param.hasOwnProperty(i)) {
+                    el.param[i].name = i;
+                    params.push(el.param[i])
+                }
+            }
+        }
+        el.param = params;
+        return el;
+    });
+
     res.end(jade.renderFile(path.normalize(__dirname + '/../../_API/index.jade'), {
-        methods: {all: API.docs},
+        methods: {all: docs},
         config: config_local,
         admin: true
     }));
