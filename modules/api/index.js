@@ -132,6 +132,8 @@ API = {
                 else
                     docs.level = 1;
             }
+            if (!docs.response || !Array.isArray(docs.response))
+                docs.response = [];
             if (docs.response) {
                 docs.response.unshift({
                         name: 'success',
