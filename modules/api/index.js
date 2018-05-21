@@ -70,6 +70,47 @@ let iconsClass = {
 
 };
 let controller = {};
+
+
+function schemaParam(schema, params, key_param) {
+
+    if (typeof schema === 'object' && !(schema.type && schema.type.valid && typeof schema.type.valid === 'function')) {
+        if (!params) params = {};
+
+        for (let op in schema) {
+            let typeData = Array.isArray(schema[op]) ? 'array' : typeof schema[op];
+            if (typeData === 'array') {
+                if (Array.isArray(params[op])) {
+                    for (let i in params[op]) {
+                        let isErrorParam = schemaParam(schema[op][0], params[op][i], key_param + '[' + i + '].' + op);
+                        if (isErrorParam) return isErrorParam;
+                    }
+                }
+
+                if (!params[op] || !params[op].length || params[op].length === 0) {
+                    let isErrorParam = schemaParam(schema[op][0], undefined, key_param + '.' + op);
+                    if (isErrorParam) return isErrorParam;
+                }
+
+            } else {
+                let isErrorParam = schemaParam(schema[op], params[op], key_param + '.' + op);
+                if (isErrorParam) return isErrorParam;
+            }
+        }
+    } else {
+        if (schema.type && typeof schema.type.valid === 'function') {
+            let r = schema.type.valid(params);
+            if (!r)
+                return {param_name: key_param, error_code: schema.error_code, type: 'function'};
+            if (!r.success)
+                return {param_name: key_param, error_code: schema.error_code, type: 'val'};
+
+        }
+    }
+
+
+}
+
 API = {
     saveLog(name, err, user, param, json, type, request_id) {
         if (APIConfig.ApiEmitter) {
@@ -224,8 +265,11 @@ API = {
                 return true;
             })
             .then(() => {
-
-
+                if (typeof controller[name].infoAndControl.param === 'object' && !Array.isArray(controller[name].infoAndControl.param)) {
+                    let isErrorParam = schemaParam(controller[name].infoAndControl.param, param, '');
+                    if (isErrorParam)
+                        return Promise.reject(error.create('param "' + isErrorParam.param_name + '" required', 'api', {}, 0, isErrorParam.error_code || 500400404));
+                }
                 return 'ok'
             })
             .then((status) => {
@@ -234,15 +278,7 @@ API = {
                 if (!controller[name].infoAndControl.param)
                     return true;
                 let cParam = {};
-                if (!Array.isArray(controller[name].infoAndControl.param) && typeof controller[name].infoAndControl.param === 'object') {
-                    cParam = controller[name].infoAndControl.param;
-                    for (let i in cParam) {
-                        if (cParam.hasOwnProperty(i))
-                            if (cParam[i].required && (param[i] === undefined || param[i] === null || param[i] === ''))
-                                return Promise.reject(error.create('param "' + i + '" required', 'api', {}, 0, controller[name].infoAndControl.param[i].error_code || 500400404));
-                    }
-
-                } else {
+                if (typeof controller[name].infoAndControl.param === 'object' && Array.isArray(controller[name].infoAndControl.param)) {
                     for (let i in controller[name].infoAndControl.param) {
                         if (controller[name].infoAndControl.param.hasOwnProperty(i) && controller[name].infoAndControl.param[i].name)
                             cParam[controller[name].infoAndControl.param[i].name] = controller[name].infoAndControl.param[i];

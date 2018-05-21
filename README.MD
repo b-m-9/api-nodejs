@@ -90,13 +90,14 @@ module.exports = (API, redis) => {
         level: 0,// 0 public,1 user,2 admin,3 server
         description: 'Example API',
         group: nameGroupAPI,
-        param: [{
-            name: 'test',
-            type: API.types.STRING(10),
-            error_code:12345678,
-            title: 'example param',
-            required: true
-        }],
+        param: {
+            test:{
+                type: API.types.STRING(10),
+                error_code:12345678,
+                title: 'example param',
+                required: true
+            }
+        },
         response: [{
             name: 'data.example',
             type: "string",
