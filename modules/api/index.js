@@ -14,7 +14,7 @@ const TypesAPI = require('../api/Types.js');
 const random = require('../random');
 const APIConfig = require('../../index');
 let API;
-let redis = require('redis').createClient(config.get('redis:port'), config.get('redis:host'),{db:config.get('redis:database')});
+let redis = require('redis').createClient(config.get('redis:port'), config.get('redis:host'), {db: config.get('redis:database')});
 redis.publishAPI = (method, user, data) => {
     redis.publish('api_notify', JSON.stringify({method, user, data}));
 };
@@ -222,14 +222,31 @@ API = {
                 return true;
             })
             .then(() => {
+
+
+                return 'ok'
+            })
+            .then((status) => {
+                if (status === 'ok')
+                    return 'ok';
                 if (!controller[name].infoAndControl.param)
                     return true;
                 let cParam = {};
-                for (let i in controller[name].infoAndControl.param) {
-                    if (controller[name].infoAndControl.param.hasOwnProperty(i) && controller[name].infoAndControl.param[i].name)
-                        cParam[controller[name].infoAndControl.param[i].name] = controller[name].infoAndControl.param[i];
-                    if (cParam[controller[name].infoAndControl.param[i].name].required && (param[controller[name].infoAndControl.param[i].name] === undefined || param[controller[name].infoAndControl.param[i].name] === null || param[controller[name].infoAndControl.param[i].name] === ''))
-                        return Promise.reject(error.create('param "' + controller[name].infoAndControl.param[i].name + '" required', 'api', {}, 0, controller[name].infoAndControl.param[i].error_code || 500400404));
+                if (!Array.isArray(controller[name].infoAndControl.param) && typeof controller[name].infoAndControl.param === 'object') {
+                    cParam = controller[name].infoAndControl.param;
+                    for (let i in cParam) {
+                        if (cParam.hasOwnProperty(i))
+                            if (cParam[i].required && (param[i] === undefined || param[i] === null || param[i] === ''))
+                                return Promise.reject(error.create('param "' + i + '" required', 'api', {}, 0, controller[name].infoAndControl.param[i].error_code || 500400404));
+                    }
+
+                } else {
+                    for (let i in controller[name].infoAndControl.param) {
+                        if (controller[name].infoAndControl.param.hasOwnProperty(i) && controller[name].infoAndControl.param[i].name)
+                            cParam[controller[name].infoAndControl.param[i].name] = controller[name].infoAndControl.param[i];
+                        if (cParam[controller[name].infoAndControl.param[i].name].required && (param[controller[name].infoAndControl.param[i].name] === undefined || param[controller[name].infoAndControl.param[i].name] === null || param[controller[name].infoAndControl.param[i].name] === ''))
+                            return Promise.reject(error.create('param "' + controller[name].infoAndControl.param[i].name + '" required', 'api', {}, 0, controller[name].infoAndControl.param[i].error_code || 500400404));
+                    }
                 }
                 for (let key in param) {
                     if (param.hasOwnProperty(key) && cParam.hasOwnProperty(key) && cParam[key].type && typeof cParam[key].type.valid === 'function') {
