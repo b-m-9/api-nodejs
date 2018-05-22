@@ -1,7 +1,6 @@
 const express = require('express');
 const path = require('path');
 const router = express.Router();
-const jade = require('jade');
 const API = require('../../modules/api').API;
 
 const config = require('../../modules/config');
@@ -97,8 +96,9 @@ router.get('/export/postman', (req, res) => {
     res.download(path.normalize(__dirname + '/../../_docs/postman.postman_collection'));
 });
 router.use(bodyParser.json({limit: '10mb'}));
-router.use(bodyParser.urlencoded({extended: false, limit: '10mb'}));
 router.use(fileUpload());
+router.use(bodyParser.urlencoded({extended: true, limit: '10mb'}));
+
 router.use('/', (req, res, next) => {
     req.initTimestamp = (new Date()).getTime();
     let IP = req.headers['x-forwarded-for'] || req.connection.remoteAddress || '0.0.0.0';
@@ -129,7 +129,7 @@ router.use('/', (req, res, next) => {
     }
 
 });
-
+var pug = require('pug');
 
 router.get('/docs/', (req, res) => {
 
@@ -147,14 +147,11 @@ router.get('/docs/', (req, res) => {
     };
     res.set('Content-Type', 'text/html');
     let docs = API.docs.map(el => {
-        let params = [];
-        if (Array.isArray(el.param))
-            params = el.param;
-        else {
+        let params = {};
+        if (Array.isArray(el.param)) {
             for (let i in  el.param) {
                 if (el.param.hasOwnProperty(i)) {
-                    el.param[i].name = i;
-                    params.push(el.param[i])
+                    params[el.param[i].name] = el.param[i]
                 }
             }
         }
@@ -162,7 +159,8 @@ router.get('/docs/', (req, res) => {
         return el;
     });
 
-    res.end(jade.renderFile(path.normalize(__dirname + '/../../_API/index.jade'), {
+
+    res.end(pug.renderFile(path.normalize(__dirname + '/../../_API/index.pug'), {
         methods: {all: docs},
         config: config_local,
         admin: true
