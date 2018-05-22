@@ -36,7 +36,6 @@
     "express-session": "^1.15.6",
     "fs": "0.0.1-security",
     "git-rev": "^0.2.1",
-    "jade": "^1.11.0",
     "moment": "^2.22.1",
     "nconf": "^0.10.0",
     "path": "^0.12.7",
