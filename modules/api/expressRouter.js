@@ -146,18 +146,7 @@ router.get('/docs/', (req, res) => {
         shema: config.get('shema') + '://'
     };
     res.set('Content-Type', 'text/html');
-    let docs = API.docs.map(el => {
-        let params = {};
-        if (Array.isArray(el.param)) {
-            for (let i in  el.param) {
-                if (el.param.hasOwnProperty(i)) {
-                    params[el.param[i].name] = el.param[i]
-                }
-            }
-        }
-        el.param = params;
-        return el;
-    });
+    let docs = API.docs;
 
 
     res.end(pug.renderFile(path.normalize(__dirname + '/../../_API/index.pug'), {
