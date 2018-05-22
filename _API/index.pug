@@ -14,10 +14,10 @@ mixin oldParam(params)
                     span(data-text='true') !{oneParam.title}
             .key-value-form-row__delete
                 .key-value-form-row__delete__icon
-mixin paramsInfo(name_key,params,test)
+mixin paramsInfo(name_key,params)
     if params && params.type && params.type.valid && params.type.name
         tr
-            td !{params.name}
+            td !{name_key}
             td !{params.title}
             td !{params.type.name}
             td
@@ -27,29 +27,30 @@ mixin paramsInfo(name_key,params,test)
                     | NO
             td !{params.default}
     else
-        for paramOne,name in params
+        each paramOne,name in params
             if name_key === ''
-                - name_key = name
+                -var name_key_local = name
             else
-                - name_key = name_key + '['+name+']';
+                -var name_key_local = name_key + '.'+name+'';
 
             if paramOne && paramOne.type && paramOne.type.valid && paramOne.type.name
+
                 tr
-                    td !{oneParam.name}
-                    td !{oneParam.title}
-                    td !{oneParam.type.name}
+                    td !{name_key_local}
+                    td !{paramOne.title}
+                    td !{paramOne.type.name}
                     td
-                        if oneParam.necessarily && oneParam.required
+                        if paramOne.necessarily && paramOne.required
                             | YES
                         else
                             | NO
-                    td !{oneParam.default}
+                    td !{paramOne.default}
             else
                 if Array.isArray(paramOne)
-                    +paramsInfo(name_key + '[]',paramOne[0])
+                    +paramsInfo(name_key_local + '[]',paramOne[0])
                 else
-                    +paramsInfo(name_key,paramOne)
-mixin shemaParam(name_key,params,test)
+                    +paramsInfo(name_key_local,paramOne)
+mixin shemaParam(name_key,params)
     if params && params.type && params.type.valid && params.type.name
         .key-value-form-row(data-index='0')
             .key-value-form-actions
@@ -66,32 +67,32 @@ mixin shemaParam(name_key,params,test)
             .key-value-form-row__delete
                 .key-value-form-row__delete__icon
     else
-        for paramOne,name in params
+        each  paramOne,name in params
             if name_key === ''
-                - name_key = name
+                - var name_key_local = name
             else
-                - name_key = name_key + '['+name+']';
+                - var name_key_local  = name_key + '['+name+']';
 
             if paramOne && paramOne.type && paramOne.type.valid && paramOne.type.name
                 .key-value-form-row(data-index='0')
                     .key-value-form-actions
                     .auto-suggest-group
                         .key-value-form-column(style='flex: 0 0 33%;')
-                            span(data-text='true') !{name_key}
+                            span(data-text='true') !{name_key_local}
                         .key-value-form-column(style='flex: 0 0 33%;')
                             if paramOne.type.name === 'FILE'
-                                input.key-value-form-input(value=paramOne.default, type='file', placeholder=paramOne.type.name, name=name_key, style='padding: 5px 5%;')
+                                input.key-value-form-input(value=paramOne.default, type='file', placeholder=paramOne.type.name, name=name_key_local, style='padding: 5px 5%;')
                             else
-                                input.key-value-form-input(value=paramOne.default, placeholder=paramOne.type.name, name=name_key)
+                                input.key-value-form-input(value=paramOne.default, placeholder=paramOne.type.name, name=name_key_local)
                         .key-value-form-column(style='flex: 0 0 34%;')
                             span(data-text='true') !{paramOne.title}
                     .key-value-form-row__delete
                         .key-value-form-row__delete__icon
             else
                 if Array.isArray(paramOne)
-                    +shemaParam(name_key + '[]',paramOne[0])
+                    +shemaParam(name_key_local + '[]',paramOne[0])
                 else
-                    +shemaParam(name_key,paramOne)
+                    +shemaParam(name_key_local,paramOne)
 
 
 doctype html
@@ -462,7 +463,21 @@ html(lang='en')
                                                         th Required
                                                         th Default value
                                                 tbody
-                                                    +paramsInfo(val1.param)
+                                                    if val1 && val1.param
+                                                        if Array.isArray(val1.param)
+                                                            each oneParam in val1.param
+                                                                tr
+                                                                    td !{oneParam.name}
+                                                                    td !{oneParam.title}
+                                                                    td !{oneParam.type.name}
+                                                                    td
+                                                                        if oneParam.necessarily && oneParam.required
+                                                                            | YES
+                                                                        else
+                                                                            | NO
+                                                                    td !{oneParam.default}
+                                                        else
+                                                            +paramsInfo('',val1.param)
                                         li
                                             p.title-method Response
                                             table.uk-table.uk-table-middle.uk-table-hover.uk-table-striped
