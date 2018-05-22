@@ -423,22 +423,25 @@ html(lang='en')
                                                                             .header-content.description Description
 
                                                             if val1 && val1.param
-                                                                each oneParam in val1.param
+                                                                mixin list(params)
+                                                                    each oneParam in params
 
-                                                                    .key-value-form-row(data-index='0')
-                                                                        .key-value-form-actions
-                                                                        .auto-suggest-group
-                                                                            .key-value-form-column(style='flex: 0 0 33%;')
-                                                                                span(data-text='true') !{oneParam.name}
-                                                                            .key-value-form-column(style='flex: 0 0 33%;')
-                                                                                if oneParam.type.name === 'FILE'
-                                                                                    input.key-value-form-input(value=oneParam.default, type='file', placeholder=oneParam.type.name, name=oneParam.name, style='padding: 5px 5%;')
-                                                                                else
-                                                                                    input.key-value-form-input(value=oneParam.default, placeholder=oneParam.type.name, name=oneParam.name)
-                                                                            .key-value-form-column(style='flex: 0 0 34%;')
-                                                                                span(data-text='true') !{oneParam.title}
-                                                                        .key-value-form-row__delete
-                                                                            .key-value-form-row__delete__icon
+                                                                        .key-value-form-row(data-index='0')
+                                                                            .key-value-form-actions
+                                                                            .auto-suggest-group
+                                                                                .key-value-form-column(style='flex: 0 0 33%;')
+                                                                                    span(data-text='true') !{oneParam.name}
+                                                                                .key-value-form-column(style='flex: 0 0 33%;')
+                                                                                    if oneParam.type.name === 'FILE'
+                                                                                        input.key-value-form-input(value=oneParam.default, type='file', placeholder=oneParam.type.name, name=oneParam.name, style='padding: 5px 5%;')
+                                                                                    else
+                                                                                        input.key-value-form-input(value=oneParam.default, placeholder=oneParam.type.name, name=oneParam.name)
+                                                                                .key-value-form-column(style='flex: 0 0 34%;')
+                                                                                    span(data-text='true') !{oneParam.title}
+                                                                            .key-value-form-row__delete
+                                                                                .key-value-form-row__delete__icon
+                                                                +list(val1.param)
+
                                                     // code container
                                                     .code-container.uk-margin-top
                                                         .header-container
