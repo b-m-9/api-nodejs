@@ -1,3 +1,99 @@
+mixin oldParam(params)
+    each oneParam in params
+        .key-value-form-row(data-index='0')
+            .key-value-form-actions
+            .auto-suggest-group
+                .key-value-form-column(style='flex: 0 0 33%;')
+                    span(data-text='true') !{oneParam.name}
+                .key-value-form-column(style='flex: 0 0 33%;')
+                    if oneParam.type.name === 'FILE'
+                        input.key-value-form-input(value=oneParam.default, type='file', placeholder=oneParam.type.name, name=oneParam.name, style='padding: 5px 5%;')
+                    else
+                        input.key-value-form-input(value=oneParam.default, placeholder=oneParam.type.name, name=oneParam.name)
+                .key-value-form-column(style='flex: 0 0 34%;')
+                    span(data-text='true') !{oneParam.title}
+            .key-value-form-row__delete
+                .key-value-form-row__delete__icon
+mixin paramsInfo(name_key,params,test)
+    if params && params.type && params.type.valid && params.type.name
+        tr
+            td !{params.name}
+            td !{params.title}
+            td !{params.type.name}
+            td
+                if params.necessarily && params.required
+                    | YES
+                else
+                    | NO
+            td !{params.default}
+    else
+        for paramOne,name in params
+            if name_key === ''
+                - name_key = name
+            else
+                - name_key = name_key + '['+name+']';
+
+            if paramOne && paramOne.type && paramOne.type.valid && paramOne.type.name
+                tr
+                    td !{oneParam.name}
+                    td !{oneParam.title}
+                    td !{oneParam.type.name}
+                    td
+                        if oneParam.necessarily && oneParam.required
+                            | YES
+                        else
+                            | NO
+                    td !{oneParam.default}
+            else
+                if Array.isArray(paramOne)
+                    +paramsInfo(name_key + '[]',paramOne[0])
+                else
+                    +paramsInfo(name_key,paramOne)
+mixin shemaParam(name_key,params,test)
+    if params && params.type && params.type.valid && params.type.name
+        .key-value-form-row(data-index='0')
+            .key-value-form-actions
+            .auto-suggest-group
+                .key-value-form-column(style='flex: 0 0 33%;')
+                    span(data-text='true') !{name_key}
+                .key-value-form-column(style='flex: 0 0 33%;')
+                    if params.type.name === 'FILE'
+                        input.key-value-form-input(value=params.default, type='file', placeholder=params.type.name, name=name_key, style='padding: 5px 5%;')
+                    else
+                        input.key-value-form-input(value=params.default, placeholder=params.type.name, name=name_key)
+                .key-value-form-column(style='flex: 0 0 34%;')
+                    span(data-text='true') !{params.title}
+            .key-value-form-row__delete
+                .key-value-form-row__delete__icon
+    else
+        for paramOne,name in params
+            if name_key === ''
+                - name_key = name
+            else
+                - name_key = name_key + '['+name+']';
+
+            if paramOne && paramOne.type && paramOne.type.valid && paramOne.type.name
+                .key-value-form-row(data-index='0')
+                    .key-value-form-actions
+                    .auto-suggest-group
+                        .key-value-form-column(style='flex: 0 0 33%;')
+                            span(data-text='true') !{name_key}
+                        .key-value-form-column(style='flex: 0 0 33%;')
+                            if paramOne.type.name === 'FILE'
+                                input.key-value-form-input(value=paramOne.default, type='file', placeholder=paramOne.type.name, name=name_key, style='padding: 5px 5%;')
+                            else
+                                input.key-value-form-input(value=paramOne.default, placeholder=paramOne.type.name, name=name_key)
+                        .key-value-form-column(style='flex: 0 0 34%;')
+                            span(data-text='true') !{paramOne.title}
+                    .key-value-form-row__delete
+                        .key-value-form-row__delete__icon
+            else
+                if Array.isArray(paramOne)
+                    +shemaParam(name_key + '[]',paramOne[0])
+                else
+                    +shemaParam(name_key,paramOne)
+
+
 doctype html
 // Created by Bogdan Medvedev on 30.01.18.
 html(lang='en')
@@ -23,6 +119,7 @@ html(lang='en')
           script(src='https://oss.maxcdn.com/libs/html5shiv/3.7.2/html5shiv.min.js')
           script(src='https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js')
     body
+
         .block1
             .uk-container.uk-container-center
                 .uk-grid
@@ -365,17 +462,7 @@ html(lang='en')
                                                         th Required
                                                         th Default value
                                                 tbody
-                                                    each oneParam in val1.param
-                                                        tr
-                                                            td !{oneParam.name}
-                                                            td !{oneParam.title}
-                                                            td !{oneParam.type.name}
-                                                            td
-                                                                if oneParam.necessarily
-                                                                    | YES
-                                                                else
-                                                                    | NO
-                                                            td !{oneParam.default}
+                                                    +paramsInfo(val1.param)
                                         li
                                             p.title-method Response
                                             table.uk-table.uk-table-middle.uk-table-hover.uk-table-striped
@@ -423,24 +510,10 @@ html(lang='en')
                                                                             .header-content.description Description
 
                                                             if val1 && val1.param
-                                                                mixin list(params)
-                                                                    each oneParam in params
-
-                                                                        .key-value-form-row(data-index='0')
-                                                                            .key-value-form-actions
-                                                                            .auto-suggest-group
-                                                                                .key-value-form-column(style='flex: 0 0 33%;')
-                                                                                    span(data-text='true') !{oneParam.name}
-                                                                                .key-value-form-column(style='flex: 0 0 33%;')
-                                                                                    if oneParam.type.name === 'FILE'
-                                                                                        input.key-value-form-input(value=oneParam.default, type='file', placeholder=oneParam.type.name, name=oneParam.name, style='padding: 5px 5%;')
-                                                                                    else
-                                                                                        input.key-value-form-input(value=oneParam.default, placeholder=oneParam.type.name, name=oneParam.name)
-                                                                                .key-value-form-column(style='flex: 0 0 34%;')
-                                                                                    span(data-text='true') !{oneParam.title}
-                                                                            .key-value-form-row__delete
-                                                                                .key-value-form-row__delete__icon
-                                                                +list(val1.param)
+                                                                if Array.isArray(val1.param)
+                                                                    +oldParam(val1.param)
+                                                                else
+                                                                    +shemaParam('',val1.param)
 
                                                     // code container
                                                     .code-container.uk-margin-top
