@@ -57,7 +57,7 @@ mixin shemaParam(name_key,params)
         .key-value-form-row(data-index='0', id=idkeyfield)
             .key-value-form-actions
                 if name_key.indexOf('[]') !== -1
-                    button.uk-button.uk-button-default.uk-button-small(onclick="$('#"+idkeyfield+"').parents('.request-body-editors').after($('#"+idkeyfield+"').clone(true))", type="button", aria-hidden='true', style='color: #1a4ab0;font-size: 25px;margin-top: -1px;font-weight: 300;padding: 0 13px;height: 30px;line-height: 20px;min-height:  20px;')
+                    button.uk-button.uk-button-default.uk-button-small(onclick="$(this).parents('.request-body-editors').after($(this).parents('.key-value-form-row').clone(true))", type="button", aria-hidden='true', style='color: #1a4ab0;font-size: 25px;margin-top: -1px;font-weight: 300;padding: 0 13px;height: 30px;line-height: 20px;min-height:  20px;')
                         | +
             .auto-suggest-group
                 .key-value-form-column(style='flex: 0 0 33%;')
@@ -84,7 +84,7 @@ mixin shemaParam(name_key,params)
                 .key-value-form-row(data-index='0', id=idkeyfield)
                     .key-value-form-actions
                         if name_key.indexOf('[]') !== -1
-                            button.uk-button.uk-button-default.uk-button-small(onclick="$('#" + idkeyfield + "').parents('.request-body-editors').after($('#" + idkeyfield + "').clone(true))", type="button", aria-hidden='true', style='color: #1a4ab0;font-size: 25px;margin-top: -1px;font-weight: 300;padding: 0 13px;height: 30px;line-height: 20px;min-height:  20px;')
+                            button.uk-button.uk-button-default.uk-button-small(onclick="$(this).parents('.request-body-editors').after($(this).parents('.key-value-form-row').clone(true))", type="button", aria-hidden='true', style='color: #1a4ab0;font-size: 25px;margin-top: -1px;font-weight: 300;padding: 0 13px;height: 30px;line-height: 20px;min-height:  20px;')
                                 | +
                     .auto-suggest-group
                         .key-value-form-column(style='flex: 0 0 33%;')
