@@ -71,26 +71,17 @@ let iconsClass = {
 };
 let controller = {};
 
-var json = {
-    'key1.key2.key3': 'test',
-    'key1.key3': 'value'
-};
 
-var objectMerge = [];
-
-
-console.log(merge(...objectMerge));
-
-function merge() {
+function merge(array_params) {
     let object = {};
 
-    for (let i = 0; i < arguments.length; i++) {
-        for (let key in arguments[i]) {
-            if (typeof arguments[i][key] === "string" || typeof arguments[i][key] === "number" || (typeof arguments[i][key] === "object" && Array.isArray(arguments[i][key]))) {
-                object[key] = arguments[i][key];
+    for (let i = 0; i < array_params.length; i++) {
+        for (let key in array_params[i]) {
+            if (typeof array_params[i][key] === "string" || typeof array_params[i][key] === "number" || (typeof array_params[i][key] === "object" && Array.isArray(array_params[i][key]))) {
+                object[key] = array_params[i][key];
             }
             else {
-                object[key] = Object.assign({}, object[key], merge(arguments[i][key]));
+                object[key] = Object.assign({}, object[key], merge(array_params[i][key]));
             }
         }
     }
@@ -131,7 +122,7 @@ function schemaParam(schema, params, key_param) {
 
                         let r = schemaParam(schema[op][0], params[op][i], '');
                         if (r.error) return r;
-                        newArr[key_param + op].push(r.newParams[0]);
+                        newArr[key_param + op].push(merge(r.newParams));
                     }
                     newParams = newParams.concat([newArr]);
                 }
@@ -332,7 +323,7 @@ API = {
                     let params_ = schemaParam(controller[name].infoAndControl.param, param, '');
                     if (params_.error)
                         return Promise.reject(error.create('param "' + params_.error.param_name + '" ' + params_.error.msg, 'api', {}, 0, params_.error.error_code || 500400404));
-                    param = Object.assign({}, param, merge(...params_.newParams));
+                    param = Object.assign({}, param, merge(params_.newParams));
                 }
                 return 'ok'
             })
