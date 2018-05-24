@@ -82,10 +82,10 @@ var objectMerge = [];
 console.log(merge(...objectMerge));
 
 function merge() {
-    var object = {};
+    let object = {};
 
-    for (var i = 0; i < arguments.length; i++) {
-        for (var key in arguments[i]) {
+    for (let i = 0; i < arguments.length; i++) {
+        for (let key in arguments[i]) {
             if (typeof arguments[i][key] === "string" || typeof arguments[i][key] === "number" || (typeof arguments[i][key] === "object" && Array.isArray(arguments[i][key]))) {
                 object[key] = arguments[i][key];
             }
@@ -100,8 +100,8 @@ function merge() {
 
 
 function parse(key, value) {
-    var split = key.split(".");
-    var object = {};
+    let split = key.split(".");
+    let object = {};
 
     //object[split[0]] = (split.length > 1) ? parse(split.slice(1).join("."), value) : value;
 
@@ -134,8 +134,6 @@ function schemaParam(schema, params, key_param) {
                         newArr[key_param + op].push(r.newParams[0]);
                     }
                     newParams = newParams.concat([newArr]);
-                    console.log(newParams);
-
                 }
 
                 if (!params[op] || !params[op].length || params[op].length === 0) {
