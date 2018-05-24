@@ -71,9 +71,52 @@ let iconsClass = {
 };
 let controller = {};
 
+var json = {
+    'key1.key2.key3': 'test',
+    'key1.key3': 'value'
+};
+
+var objectMerge = [];
+
+
+console.log(merge(...objectMerge));
+
+function merge() {
+    var object = {};
+
+    for (var i = 0; i < arguments.length; i++) {
+        for (var key in arguments[i]) {
+            if (typeof arguments[i][key] === "string" || typeof arguments[i][key] === "number" || (typeof arguments[i][key] === "object" && Array.isArray(arguments[i][key]))) {
+                object[key] = arguments[i][key];
+            }
+            else {
+                object[key] = Object.assign({}, object[key], merge(arguments[i][key]));
+            }
+        }
+    }
+
+    return object;
+}
+
+
+function parse(key, value) {
+    var split = key.split(".");
+    var object = {};
+
+    //object[split[0]] = (split.length > 1) ? parse(split.slice(1).join("."), value) : value;
+
+    if (split.length > 1) {
+        object[split[0]] = parse(split.slice(1).join("."), value);
+    }
+    else {
+        object[split[0]] = value;
+    }
+
+    return object;
+}
 
 function schemaParam(schema, params, key_param) {
-
+    let newParams = [];
     if (typeof schema === 'object' && !(schema.type && schema.type.valid && typeof schema.type.valid === 'function')) {
         if (!params) params = {};
 
@@ -81,32 +124,54 @@ function schemaParam(schema, params, key_param) {
             let typeData = Array.isArray(schema[op]) ? 'array' : typeof schema[op];
             if (typeData === 'array') {
                 if (Array.isArray(params[op])) {
+                    let newArr = {};
+                    newArr[key_param + op] = [];
                     for (let i in params[op]) {
-                        let isErrorParam = schemaParam(schema[op][0], params[op][i], key_param + '[' + i + '].' + op);
-                        if (isErrorParam) return isErrorParam;
+                        if (key_param !== '') key_param += '.'
+
+                        let r = schemaParam(schema[op][0], params[op][i], '');
+                        if (r.error) return r;
+                        newArr[key_param + op].push(r.newParams[0]);
                     }
+                    newParams = newParams.concat([newArr]);
+                    console.log(newParams);
+
                 }
 
                 if (!params[op] || !params[op].length || params[op].length === 0) {
-                    let isErrorParam = schemaParam(schema[op][0], undefined, key_param + '.' + op);
-                    if (isErrorParam) return isErrorParam;
+                    if (key_param !== '') key_param += '.'
+                    let r = schemaParam(schema[op][0], undefined, key_param + op);
+                    if (r.error) return r;
+                    newParams = newParams.concat(r.newParams);
                 }
 
             } else {
-                let isErrorParam = schemaParam(schema[op], params[op], key_param + '.' + op);
-                if (isErrorParam) return isErrorParam;
+                if (key_param !== '') key_param += '.'
+
+                let r = schemaParam(schema[op], params[op], key_param + op);
+                if (r.error) return r;
+                newParams = newParams.concat(r.newParams);
             }
         }
     } else {
         if (schema.type && typeof schema.type.valid === 'function') {
             let r = schema.type.valid(params);
             if (!r)
-                return {param_name: key_param, error_code: schema.error_code, type: 'function'};
+                return {
+                    error: {
+                        param_name: key_param,
+                        error_code: schema.error_code,
+                        msg: 'server error invalid param',
+                        type: 'function'
+                    }
+                };
             if (!r.success)
-                return {param_name: key_param, error_code: schema.error_code, type: 'val'};
+                return {error: {param_name: key_param, error_code: schema.error_code, msg: r.error, type: 'val'}};
 
+            newParams.push(parse(key_param, r.value));
         }
     }
+    return {newParams};
 
 
 }
@@ -266,9 +331,10 @@ API = {
             })
             .then(() => {
                 if (typeof controller[name].infoAndControl.param === 'object' && !Array.isArray(controller[name].infoAndControl.param)) {
-                    let isErrorParam = schemaParam(controller[name].infoAndControl.param, param, '');
-                    if (isErrorParam)
-                        return Promise.reject(error.create('param "' + isErrorParam.param_name + '" required', 'api', {}, 0, isErrorParam.error_code || 500400404));
+                    let params_ = schemaParam(controller[name].infoAndControl.param, param, '');
+                    if (params_.error)
+                        return Promise.reject(error.create('param "' + params_.error.param_name + '" ' + params_.error.msg, 'api', {}, 0, params_.error.error_code || 500400404));
+                    param = Object.assign({}, param, merge(...params_.newParams));
                 }
                 return 'ok'
             })
