@@ -144,20 +144,27 @@ function schemaParam(schema, params, key_param) {
         }
     } else {
         if (schema.type && typeof schema.type.valid === 'function') {
-            let r = schema.type.valid(params);
-            if (!r)
-                return {
-                    error: {
-                        param_name: key_param,
-                        error_code: schema.error_code,
-                        msg: 'server error invalid param',
-                        type: 'function'
-                    }
-                };
-            if (!r.success)
-                return {error: {param_name: key_param, error_code: schema.error_code, msg: r.error, type: 'val'}};
+            if(params === undefined) {
+                let r = schema.type.valid(params);
+                if (!r)
+                    return {
+                        error: {
+                            param_name: key_param,
+                            error_code: schema.error_code,
+                            msg: 'server error invalid param',
+                            type: 'function'
+                        }
+                    };
+                if (!r.success)
+                    return {error: {param_name: key_param, error_code: schema.error_code, msg: r.error, type: 'val'}};
 
-            newParams.push(parse(key_param, r.value));
+                newParams.push(parse(key_param, r.value));
+            }else{
+                if(schema.required){
+                    return {error: {param_name: key_param, error_code: schema.error_code, msg: 'required', type: 'val'}};
+
+                }
+            }
         }
     }
     return {newParams};
