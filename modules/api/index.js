@@ -144,7 +144,7 @@ function schemaParam(schema, params, key_param) {
         }
     } else {
         if (schema.type && typeof schema.type.valid === 'function') {
-            if(params === undefined) {
+            if(params !== undefined) {
                 let r = schema.type.valid(params);
                 if (!r)
                     return {
