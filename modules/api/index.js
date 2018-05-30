@@ -7,6 +7,8 @@ const fs = require('fs');
 
 if (!fs.existsSync(path.normalize(__dirname + DIR_TO_ROOT + 'api')))
     fs.mkdirSync(path.normalize(__dirname + DIR_TO_ROOT + 'api'));
+if (!fs.existsSync(path.normalize(__dirname + DIR_TO_ROOT + 'api_plugins')))
+    fs.mkdirSync(path.normalize(__dirname + DIR_TO_ROOT + 'api_plugins'));
 const Promise = require("bluebird");
 const authController = require('./auth.js');
 const error = require('../error/api.js');
@@ -178,7 +180,8 @@ function schemaParam(schema, params, key_param) {
 
 
 }
-var toCamel =function (o) {
+
+var toCamel = function (o) {
     let newO, origKey, newKey, value;
     if (o instanceof Array) {
         return o.map(function (value) {
@@ -195,7 +198,7 @@ var toCamel =function (o) {
                     if (p2) return p2.toUpperCase();
                     return p1.toLowerCase();
                 });
-                console.log('newKey',newKey,origKey)
+                console.log('newKey', newKey, origKey)
                 value = o[origKey];
                 if (value instanceof Array || (value !== null && value.constructor === Object)) {
                     value = toCamel(value)
@@ -204,11 +207,12 @@ var toCamel =function (o) {
             }
         }
     }
-    console.log('newO',newO)
     return newO
-}
+};
 
 API = {
+    plugin: {},
+
     saveLog(name, err, user, param, json, type, request_id) {
         if (APIConfig.ApiEmitter) {
             APIConfig.ApiEmitter.emit('call', {method: name, user, param, error: err, response: json, request_id})
@@ -468,10 +472,8 @@ API = {
             api_server_key: '',
         }
     },
-    proxy: {},
     error: error,
     types: TypesAPI,
-    toCamelCase: toCamel,
     cache: {}
 };
 // alias method
@@ -490,28 +492,43 @@ function requireAPI(apiPath) {
             'module.exports = (API, redis) => {};\n')
 }
 
-fs.readdir(path.normalize(__dirname + DIR_TO_ROOT + 'api'), (err, items) => {
+fs.readdir(path.normalize(__dirname + DIR_TO_ROOT + 'api_plugins'), (err, items) => {
+    // load plugins
     for (let i = 0; i < items.length; i++) {
-        if (fs.statSync(path.normalize(__dirname + DIR_TO_ROOT + 'api/' + items[i])).isDirectory())
-            fs.readdir(path.normalize(__dirname + DIR_TO_ROOT + 'api/' + items[i]), (err, items2) => {
-                for (let i2 = 0; i2 < items2.length; i2++) {
-                    if (!fs.statSync(path.normalize(__dirname + DIR_TO_ROOT + 'api/' + items[i] + '/' + items2[i2])).isDirectory())
-                        requireAPI(items[i] + '/' + items2[i2]);
-                    else
-                        console.error("API Error load:" + items[i] + '/' + items2[i2]);
+        if (fs.statSync(path.normalize(__dirname + DIR_TO_ROOT + 'api_plugins/' + items[i])).isDirectory())
+            return console.error("API Error load api_plugins:" + items[i] + 'is not file');
 
-                }
-            });
-        else
-            requireAPI(items[i]);
+        if (API[items[i]])
+            return console.error("API Error load api_plugins:" + items[i] + ' is busy const please rename plugin');
+
+        API.plugin[items[i]] = require(path.normalize(__dirname + DIR_TO_ROOT + 'api/' + items[i]));
     }
+    //  ==========
 
-    // export_postman docs file
-    setTimeout(require('./export_postman'), 3000);
-    setTimeout(require('./export_insomnia'), 3000);
-    setTimeout(function () {
-        console.log("API running: " + API_cnt + " files\n\t Docs " + config.get('shema') + '://' + config.get('domain') + config.get('server_path') + config.get('api_path') + 'docs/')
-    }, 3000);
+    fs.readdir(path.normalize(__dirname + DIR_TO_ROOT + 'api'), (err, items) => {
+        for (let i = 0; i < items.length; i++) {
+            if (fs.statSync(path.normalize(__dirname + DIR_TO_ROOT + 'api/' + items[i])).isDirectory())
+                fs.readdir(path.normalize(__dirname + DIR_TO_ROOT + 'api/' + items[i]), (err, items2) => {
+                    for (let i2 = 0; i2 < items2.length; i2++) {
+                        if (!fs.statSync(path.normalize(__dirname + DIR_TO_ROOT + 'api/' + items[i] + '/' + items2[i2])).isDirectory())
+                            requireAPI(items[i] + '/' + items2[i2]);
+                        else
+                            console.error("API Error load api:" + items[i] + '/' + items2[i2]);
+
+                    }
+                });
+            else
+                requireAPI(items[i]);
+        }
+
+        // export_postman docs file
+        setTimeout(require('./export_postman'), 3000);
+        setTimeout(require('./export_insomnia'), 3000);
+        setTimeout(function () {
+            console.log("API running: " + API_cnt + " files\n\t Docs " + config.get('shema') + '://' + config.get('domain') + config.get('server_path') + config.get('api_path') + 'docs/')
+        }, 3000);
+    });
+
 });
 module.exports.controller = controller;
 module.exports.API = API;
