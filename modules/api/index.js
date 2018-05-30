@@ -489,11 +489,11 @@ fs.readdir(path.normalize(__dirname + DIR_TO_ROOT + 'api_plugins'), (err, items)
 
         let Plugin = require(path.normalize(__dirname + DIR_TO_ROOT + 'api_plugins/' + items[i]));
         if (typeof Plugin !== 'function') {
-            API.plugin[items[i]] = Plugin;
+            API.plugin[items[i].replace('.js','')] = Plugin;
             continue;
 
         }
-        API.plugin[items[i]] = Plugin(API);
+        API.plugin[items[i].replace('.js','')] = Plugin(API);
     }
     //  ==========
 
