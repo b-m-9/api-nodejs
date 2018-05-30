@@ -77,7 +77,7 @@ function merge(array_params) {
 
     for (let i = 0; i < array_params.length; i++) {
         for (let key in array_params[i]) {
-            if (typeof array_params[i][key] === "string" || typeof array_params[i][key] === "number" || (typeof array_params[i][key] === "object" && Array.isArray(array_params[i][key]))) {
+            if (typeof array_params[i][key] === "string" || typeof array_params[i][key] === "number" || typeof array_params[i][key] === "boolean" || (typeof array_params[i][key] === "object" && Array.isArray(array_params[i][key]))) {
                 object[key] = array_params[i][key];
             }
             else {
@@ -144,7 +144,7 @@ function schemaParam(schema, params, key_param) {
         }
     } else {
         if (schema.type && typeof schema.type.valid === 'function') {
-            if(params !== undefined) {
+            if (params !== undefined) {
                 let r = schema.type.valid(params);
                 if (!r)
                     return {
@@ -159,9 +159,16 @@ function schemaParam(schema, params, key_param) {
                     return {error: {param_name: key_param, error_code: schema.error_code, msg: r.error, type: 'val'}};
 
                 newParams.push(parse(key_param, r.value));
-            }else{
-                if(schema.required){
-                    return {error: {param_name: key_param, error_code: schema.error_code, msg: 'required', type: 'val'}};
+            } else {
+                if (schema.required) {
+                    return {
+                        error: {
+                            param_name: key_param,
+                            error_code: schema.error_code,
+                            msg: 'required',
+                            type: 'val'
+                        }
+                    };
 
                 }
             }
