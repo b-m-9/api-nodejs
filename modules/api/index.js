@@ -135,7 +135,7 @@ function schemaParam(schema, params, key_param) {
                 }
 
             } else {
-                if (key_param !== '') key_param += '.'
+                if (key_param !== '') key_param += '.';
 
                 let r = schemaParam(schema[op], params[op], key_param + op);
                 if (r.error) return r;
@@ -442,6 +442,33 @@ API = {
     proxy: {},
     error: error,
     types: TypesAPI,
+    toCamelCase: (o) => {
+        let newO, origKey, newKey, value;
+        if (o instanceof Array) {
+            return o.map(function (value) {
+                if (typeof value === "object") {
+                    value = toCamel(value)
+                }
+                return value
+            })
+        } else {
+            newO = {};
+            for (origKey in o) {
+                if (o.hasOwnProperty(origKey)) {
+                    newKey = origKey.replace(/^([A-Z])|\s(\w)/g, function (match, p1, p2) {
+                        if (p2) return p2.toUpperCase();
+                        return p1.toLowerCase();
+                    });
+                    value = o[origKey];
+                    if (value instanceof Array || (value !== null && value.constructor === Object)) {
+                        value = toCamel(value)
+                    }
+                    newO[newKey] = value
+                }
+            }
+        }
+        return newO
+    },
     cache: {}
 };
 // alias method
