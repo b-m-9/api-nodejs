@@ -74,17 +74,17 @@ let controller = {};
 
 function merge(array_params) {
     let object = {};
-
-    for (let i = 0; i < array_params.length; i++) {
-        for (let key in array_params[i]) {
-            if (typeof array_params[i][key] === "string" || typeof array_params[i][key] === "number" || typeof array_params[i][key] === "boolean" || (typeof array_params[i][key] === "object" && Array.isArray(array_params[i][key]))) {
-                object[key] = array_params[i][key];
-            }
-            else {
-                object[key] = Object.assign({}, object[key], merge(array_params[i][key]));
+    if (array_params)
+        for (let i = 0; i < array_params.length; i++) {
+            for (let key in array_params[i]) {
+                if (typeof array_params[i][key] === "string" || typeof array_params[i][key] === "number" || typeof array_params[i][key] === "boolean" || (typeof array_params[i][key] === "object" && Array.isArray(array_params[i][key]))) {
+                    object[key] = array_params[i][key];
+                }
+                else {
+                    object[key] = Object.assign({}, object[key], merge(array_params[i][key]));
+                }
             }
         }
-    }
 
     return object;
 }
