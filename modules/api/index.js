@@ -15,7 +15,7 @@ const error = require('../error/api.js');
 const TypesAPI = require('../api/Types.js');
 const random = require('../random');
 const APIConfig = require('../../index');
-let API;
+let API= {};
 let redis = require('redis').createClient(config.get('redis:port'), config.get('redis:host'), {db: config.get('redis:database')});
 redis.publishAPI = (method, user, data) => {
     redis.publish('api_notify', JSON.stringify({method, user, data}));
@@ -181,37 +181,23 @@ function schemaParam(schema, params, key_param) {
 
 }
 
-var toCamel = function (o) {
-    let newO, origKey, newKey, value;
-    if (o instanceof Array) {
-        return o.map(function (value) {
-            if (typeof value === "object") {
-                value = toCamel(value)
-            }
-            return value
-        })
-    } else {
-        newO = {};
-        for (origKey in o) {
-            if (o.hasOwnProperty(origKey)) {
-                newKey = origKey.replace(/^([A-Z])|[\s-_](\w)/g, function (match, p1, p2) {
-                    if (p2) return p2.toUpperCase();
-                    return p1.toLowerCase();
-                });
-                console.log('newKey', newKey, origKey)
-                value = o[origKey];
-                if (value instanceof Array || (value !== null && value.constructor === Object)) {
-                    value = toCamel(value)
-                }
-                newO[newKey] = value
-            }
-        }
-    }
-    return newO
-};
-
 API = {
-    plugin: {},
+    _props: function (key, val) {
+        if (key === 'register')
+            return false;
+        if (key === 'plugin')
+            return false;
+        if (key === 'saveLog')
+            return false;
+        if (key === 'call')
+            return false;
+        if (key === 'docs')
+            return false;
+        if (key === 'types')
+            return false;
+        API[key] = type;
+    },
+    plugin: {iconsClass},
 
     saveLog(name, err, user, param, json, type, request_id) {
         if (APIConfig.ApiEmitter) {
@@ -495,13 +481,19 @@ function requireAPI(apiPath) {
 fs.readdir(path.normalize(__dirname + DIR_TO_ROOT + 'api_plugins'), (err, items) => {
     // load plugins
     for (let i = 0; i < items.length; i++) {
-        if (fs.statSync(path.normalize(__dirname + DIR_TO_ROOT + 'api_plugins/' + items[i])).isDirectory())
-            return console.error("API Error load api_plugins:" + items[i] + 'is not file');
+        if (fs.statSync(path.normalize(__dirname + DIR_TO_ROOT + 'api_plugins/' + items[i])).isDirectory()) {
+            console.error("API Error load api_plugins:" + items[i] + 'is not file');
+            continue;
+        }
 
-        if (API[items[i]])
-            return console.error("API Error load api_plugins:" + items[i] + ' is busy const please rename plugin');
 
-        API.plugin[items[i]] = require(path.normalize(__dirname + DIR_TO_ROOT + 'api/' + items[i]));
+        let Plugin = require(path.normalize(__dirname + DIR_TO_ROOT + 'api/' + items[i]));
+        if (typeof Plugin !== 'function') {
+            API.plugin[items[i]] = Plugin;
+            continue;
+
+        }
+        API.plugin[items[i]] = Plugin(API);
     }
     //  ==========
 
