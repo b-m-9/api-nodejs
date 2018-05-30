@@ -487,7 +487,7 @@ fs.readdir(path.normalize(__dirname + DIR_TO_ROOT + 'api_plugins'), (err, items)
         }
 
 
-        let Plugin = require(path.normalize(__dirname + DIR_TO_ROOT + 'api/' + items[i]));
+        let Plugin = require(path.normalize(__dirname + DIR_TO_ROOT + 'api_plugins/' + items[i]));
         if (typeof Plugin !== 'function') {
             API.plugin[items[i]] = Plugin;
             continue;
