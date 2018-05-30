@@ -242,14 +242,14 @@ API = {
         if (docs && !docs.hide) {
             docs.method = name;
             docs.iconColor = stringToRGBHash(name);
-            for (let index in iconsClass) {
+            for (let index in API.plugin.iconsClass) {
                 if (name.toLowerCase().indexOf(index) !== -1) {
-                    docs.iconClass = iconsClass[index];
+                    docs.iconClass = API.plugin.iconsClass[index];
                     break;
                 }
             }
             if (!docs.iconClass)
-                docs.iconClass = iconsClass.default;
+                docs.iconClass = API.plugin.iconsClass.default;
             if (_public)
                 docs.access = 1;
             else
