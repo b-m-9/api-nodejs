@@ -191,10 +191,11 @@ var toCamel =function (o) {
         newO = {};
         for (origKey in o) {
             if (o.hasOwnProperty(origKey)) {
-                newKey = origKey.replace(/^([A-Z])|\s(\w)/g, function (match, p1, p2) {
+                newKey = origKey.replace(/^([A-Z])|[\s-_](\w)/g, function (match, p1, p2) {
                     if (p2) return p2.toUpperCase();
                     return p1.toLowerCase();
                 });
+                console.log('newKey',newKey,origKey)
                 value = o[origKey];
                 if (value instanceof Array || (value !== null && value.constructor === Object)) {
                     value = toCamel(value)
@@ -203,6 +204,7 @@ var toCamel =function (o) {
             }
         }
     }
+    console.log('newO',newO)
     return newO
 }
 
