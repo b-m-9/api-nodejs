@@ -39,11 +39,7 @@ config.default('developers', [{
     github: 'https://github.com/medve-dev',
     mail: 'bogdan.m@vidax.com'
 }]);
-config.save();
-
-
 
 setTimeout(function () {
     config.save();
-}, 500)
-config.save();
+}, 1000);
