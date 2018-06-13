@@ -34,13 +34,11 @@ if (config.get('server:session:enable')) {
         if (access === ':') access = '';
         store = new MongoStore({
             mongoOptions: {
-                keepAlive: 1, connectTimeoutMS: 30000, reconnectTries: 30, reconnectInterval: 5000,
-                server: {
-                    reconnectTries: Number.MAX_VALUE,
-                    reconnectInterval: 1000,
-                    socketOptions: {keepAlive: 1, connectTimeoutMS: 30000}
-                },
-                replset: {socketOptions: {keepAlive: 1, connectTimeoutMS: 30000}}
+                autoReconnect: true,
+                keepAlive: 1,
+                connectTimeoutMS: 30000,
+                reconnectTries: Number.MAX_VALUE,
+                reconnectInterval: 5000
             },
             url: 'mongodb://' + access + '@' + config.get('server:session:database:host') + '/' + config.get('server:session:database:database'),
             stringify: false
