@@ -64,6 +64,7 @@ function saveConfig() {
                         return resolve(true);
                     });
                 configString = JSON.parse(configString);
+                console.error(new Error().stack);
                 if (!Object.equal(configString, nconf.stores.file.store)) {
                     nconf.save((err) => {
                         console.log('[!] Updated config ' + NAME_CONFIG);
