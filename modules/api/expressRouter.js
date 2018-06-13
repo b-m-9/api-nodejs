@@ -33,6 +33,15 @@ if (config.get('server:session:enable')) {
         let access = config.get('server:session:database:username') + ':' + config.get('server:session:database:password');
         if (access === ':') access = '';
         store = new MongoStore({
+            mongoOptions: {
+                keepAlive: 1, connectTimeoutMS: 30000, reconnectTries: 30, reconnectInterval: 5000,
+                server: {
+                    reconnectTries: Number.MAX_VALUE,
+                    reconnectInterval: 1000,
+                    socketOptions: {keepAlive: 1, connectTimeoutMS: 30000}
+                },
+                replset: {socketOptions: {keepAlive: 1, connectTimeoutMS: 30000}}
+            },
             url: 'mongodb://' + access + '@' + config.get('server:session:database:host') + '/' + config.get('server:session:database:database'),
             stringify: false
         });
