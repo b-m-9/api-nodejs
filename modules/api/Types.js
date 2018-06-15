@@ -175,7 +175,7 @@ class _Object {
     }
 
     valid(v) {
-        if (typeof v === 'object')
+        if (typeof v !== 'object')
             return {success: false, error: 'Value is not object'};
         return {success: true, value: v};
     }
