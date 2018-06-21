@@ -1,5 +1,6 @@
 const express = require('express');
 const path = require('path');
+const qs = require('qs');
 const router = express.Router();
 const API = require('../../modules/api').API;
 
@@ -102,9 +103,20 @@ router.get('/export/insomnia', (req, res) => {
 router.get('/export/postman', (req, res) => {
     res.download(path.normalize(__dirname + '/../../_docs/postman.postman_collection'));
 });
-router.use(bodyParser.json({limit: '10mb'}));
-router.use(fileUpload());
+
 router.use(bodyParser.urlencoded({extended: true, limit: '10mb'}));
+router.use(bodyParser.json({limit: '100mb'}));
+router.use(fileUpload({
+    abortOnLimit: true,
+    limits: {fileSize: 30 * 1024  * 1024},
+}));
+router.use((req, res, next) => {
+    if (req.is('multipart/form-data')) {
+        req.body = qs.parse(req.body);
+    }
+    next();
+});
+
 
 router.use('/', (req, res, next) => {
     req.initTimestamp = (new Date()).getTime();
@@ -166,8 +178,6 @@ router.get('/docs/', (req, res) => {
 router.all('/:method/', (req, res) => {
     if (config.get('application:server:logs:express')) log.info('Call API: ' + req.params.method);
     let param = {...req.query, ...req.body, files: req.files};
-
-
     let user = {ip: req.infoClient, session: req.session};
     if (!req.params.method) {
         res.sendStatus(404);
@@ -182,14 +192,11 @@ router.all('/:method/', (req, res) => {
             res.header("Content-Type", "application/json; charset=utf-8");
             return res.end(JSON.stringify(result));
         }
-
         return res.end && res.end(JSON.stringify({
             error: error.create('API result of null', 'api', {param: param}, 10),
             success: false
         }));
-
     }).catch(err => {
-
         return res.end && res.end(JSON.stringify(err));
     });
 });
