@@ -15,7 +15,7 @@ const error = require('../error/api.js');
 const TypesAPI = require('../api/Types.js');
 const random = require('../random');
 const APIConfig = require('../../index');
-let API= {};
+let API = {};
 let redis = require('redis').createClient(config.get('redis:port'), config.get('redis:host'), {db: config.get('redis:database')});
 redis.publishAPI = (method, user, data) => {
     redis.publish('api_notify', JSON.stringify({method, user, data}));
@@ -73,14 +73,18 @@ function merge(array_params) {
     let object = {};
     if (array_params)
         for (let i = 0; i < array_params.length; i++) {
-            for (let key in array_params[i]) {
-                if (typeof array_params[i][key] === "string" || typeof array_params[i][key] === "number" || typeof array_params[i][key] === "boolean" || (typeof array_params[i][key] === "object" && Array.isArray(array_params[i][key]))) {
-                    object[key] = array_params[i][key];
-                }
-                else {
-                    object[key] = Object.assign({}, object[key], merge(array_params[i][key]));
-                }
+            if (typeof array_params[i] === "string" || typeof array_params[i] === "number" || typeof array_params[i] === "boolean" ) {
+                object = array_params[i];
             }
+            else
+                for (let key in array_params[i]) {
+                    if (typeof array_params[i][key] === "string" || typeof array_params[i][key] === "number" || typeof array_params[i][key] === "boolean" || (typeof array_params[i][key] === "object" && Array.isArray(array_params[i][key]))) {
+                        object[key] = array_params[i][key];
+                    }
+                    else {
+                        object[key] = Object.assign({}, object[key], merge(array_params[i][key]));
+                    }
+                }
         }
 
     return object;
@@ -97,9 +101,11 @@ function parse(key, value) {
         object[split[0]] = parse(split.slice(1).join("."), value);
     }
     else {
-        object[split[0]] = value;
+        if (split[0] !== '')
+            object[split[0]] = value;
+        else
+            object = value;
     }
-
     return object;
 }
 
@@ -116,7 +122,6 @@ function schemaParam(schema, params, key_param) {
                     newArr[key_param + op] = [];
                     for (let i in params[op]) {
                         if (key_param !== '') key_param += '.'
-
                         let r = schemaParam(schema[op][0], params[op][i], '');
                         if (r.error) return r;
                         newArr[key_param + op].push(merge(r.newParams));
@@ -484,11 +489,11 @@ fs.readdir(path.normalize(__dirname + DIR_TO_ROOT + 'api_plugins'), (err, items)
 
         let Plugin = require(path.normalize(__dirname + DIR_TO_ROOT + 'api_plugins/' + items[i]));
         if (typeof Plugin !== 'function') {
-            API.plugin[items[i].replace('.js','')] = Plugin;
+            API.plugin[items[i].replace('.js', '')] = Plugin;
             continue;
 
         }
-        API.plugin[items[i].replace('.js','')] = Plugin(API);
+        API.plugin[items[i].replace('.js', '')] = Plugin(API);
     }
     //  ==========
 
