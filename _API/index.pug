@@ -591,19 +591,19 @@ html(lang='en')
                                                             |   @name !{index}
                                                             |   @type !{(oneParam && oneParam.type && oneParam.type.name) ? oneParam.type.name : 'ERROR_PARAM'}
 
-                                                            if oneParam.type.max
+                                                            if oneParam && oneParam.type && oneParam.type.max
                                                                 br
                                                                 |   @var max=!{oneParam.type.max}
 
-                                                            if oneParam.type.fixed
+                                                            if oneParam && oneParam.type && oneParam.type.fixed
                                                                 br
                                                                 |   @var fixed=!{oneParam.type.fixed}
-                                                            if oneParam.type.regexp
+                                                            if oneParam && oneParam.type && oneParam.type.regexp
                                                                 br
                                                                 |   @regexp !{oneParam.type.regexp}
                                                             br
                                                             | */
-                                                            | !{oneParam.type.valid}
+                                                            | !{(oneParam && oneParam.type && oneParam.type.valid) ? oneParam.type.valid : ''}
                                                             | // =====================================
 
                                             p.title-method Source code of the method:
