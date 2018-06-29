@@ -589,7 +589,7 @@ html(lang='en')
                                                             br
                                                             | /**
                                                             |   @name !{index}
-                                                            |   @type !{(oneParam && oneParam.type && oneParam.type.name) ? oneParam.type.name : 'ERROR_PARAM'}
+                                                            |   @type !{(oneParam && oneParam.type && oneParam.type.name) ? oneParam.type.name : Array.isArray(oneParam) ? 'Array':'___'}
 
                                                             if oneParam && oneParam.type && oneParam.type.max
                                                                 br
