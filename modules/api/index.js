@@ -460,7 +460,8 @@ API = {
     },
     error: error,
     types: TypesAPI,
-    cache: {}
+    cache: {},
+    proxy: {},
 };
 // alias method
 API.emit = API.call;
