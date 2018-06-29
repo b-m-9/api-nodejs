@@ -574,7 +574,7 @@ html(lang='en')
 
 
                                         li
-                                            if val1 && val1.param && val1.param.length > 0
+                                            if val1 && val1.param && Object.keys(val1.param).length > 0
                                                 p.title-method Source code validate param:
 
                                                 ul.uk-list.uk-list-striped.list-code
