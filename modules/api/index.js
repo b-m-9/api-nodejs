@@ -223,7 +223,7 @@ API = {
         // })
     },
     register: (name, _public, cb, docs) => {
-        if (typeof _public == 'function') {
+        if (typeof _public === 'function') {
             docs = cb;
             cb = _public;
             _public = false
@@ -471,12 +471,15 @@ let API_cnt = 0;
 function requireAPI(apiPath) {
     // console.log("API:" + apiPath);
     API_cnt++;
-    let fileAPI = require(path.normalize(__dirname + DIR_TO_ROOT + 'api/' + apiPath));
-    if (typeof fileAPI === 'function')
-        fileAPI(API, redis);
-    else
-        console.error('[Error] (api/' + apiPath + ') Function is not defined:  \n\t' + '\n' +
-            'module.exports = (API, redis) => {};\n')
+
+    if(apiPath.indexOf('.js')!==-1) {
+        let fileAPI = require(path.normalize(__dirname + DIR_TO_ROOT + 'api/' + apiPath));
+        if (typeof fileAPI === 'function')
+            fileAPI(API, redis);
+        else
+            console.error('[Error] (api/' + apiPath + ') Function is not defined:  \n\t' + '\n' +
+                'module.exports = (API, redis) => {};\n')
+    }
 }
 
 fs.readdir(path.normalize(__dirname + DIR_TO_ROOT + 'api_plugins'), (err, items) => {
@@ -488,13 +491,15 @@ fs.readdir(path.normalize(__dirname + DIR_TO_ROOT + 'api_plugins'), (err, items)
         }
 
 
-        let Plugin = require(path.normalize(__dirname + DIR_TO_ROOT + 'api_plugins/' + items[i]));
-        if (typeof Plugin !== 'function') {
-            API.plugin[items[i].replace('.js', '')] = Plugin;
-            continue;
+        if(items[i].indexOf('.js')!==-1) {
+            let Plugin = require(path.normalize(__dirname + DIR_TO_ROOT + 'api_plugins/' + items[i]));
+            if (typeof Plugin !== 'function') {
+                API.plugin[items[i].replace('.js', '')] = Plugin;
+                continue;
 
+            }
+            API.plugin[items[i].replace('.js', '')] = Plugin(API);
         }
-        API.plugin[items[i].replace('.js', '')] = Plugin(API);
     }
     //  ==========
 
