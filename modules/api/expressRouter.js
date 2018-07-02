@@ -154,6 +154,7 @@ router.get('/docs/', (req, res) => {
 
     let config_local = {
         server_path: config.get('server_path'),
+        developers: config.get('developers'),
         ws_url: config.get('server:ws:url'),
         api_path: config.get('api_path'),
         domain: config.get('domain'),

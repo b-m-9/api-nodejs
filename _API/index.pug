@@ -624,9 +624,9 @@ html(lang='en')
                         ul.nav-footer
                             li
                                 a(href='/') !{config.project_name}
-
-                            li
-                                a(href='https://github.com/medve-dev/', target='_blank') Developer @medve_dev
+                            if config.developers && config.developers[0]
+                                li
+                                    a(href=config.developers[0].url, target='_blank') !{config.developers[0].name}
 
         script(type='text/javascript').
             var docs = !{JSON.stringify(methods.all)}
