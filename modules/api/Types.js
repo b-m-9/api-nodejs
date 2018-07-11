@@ -54,7 +54,7 @@ class _Float {
     }
 
     valid(v) {
-        if (!v) return {success: false, error: 'Value undefined'};
+        if (v === undefined) return {success: false, error: 'Value undefined'};
         v = Number(v);
         if (typeof v !== 'number') return {success: false, error: 'Value is not string'};
         if (isNaN(v)) return {success: false, error: 'Value NaN'};
