@@ -104,11 +104,11 @@ router.get('/export/postman', (req, res) => {
     res.download(path.normalize(__dirname + '/../../_docs/postman.postman_collection'));
 });
 
-router.use(bodyParser.urlencoded({extended: true, limit: '200mb'}));
-router.use(bodyParser.json({limit: '200mb'}));
+router.use(bodyParser.urlencoded({extended: true, limit: '10mb'}));
+router.use(bodyParser.json({limit: '20mb'}));
 router.use(fileUpload({
     abortOnLimit: true,
-    limits: {fileSize: 30 * 1024  * 1024},
+    limits: {fileSize: 200 * 1024  * 1024},
 }));
 router.use((req, res, next) => {
     if (req.is('multipart/form-data')) {
