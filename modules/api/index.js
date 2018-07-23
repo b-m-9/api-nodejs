@@ -73,16 +73,17 @@ function merge(array_params) {
     let object = {};
     if (array_params)
         for (let i = 0; i < array_params.length; i++) {
-            if (typeof array_params[i] === "string" || typeof array_params[i] === "number" || typeof array_params[i] === "boolean" ) {
+            if (typeof array_params[i] === "string" || typeof array_params[i] === "number" || typeof array_params[i] === "boolean") {
                 object = array_params[i];
             }
             else
                 for (let key in array_params[i]) {
+                    console.log(typeof array_params[i][key] , key, array_params[i][key])
                     if (typeof array_params[i][key] === "string" || typeof array_params[i][key] === "number" || typeof array_params[i][key] === "boolean" || (typeof array_params[i][key] === "object" && Array.isArray(array_params[i][key]))) {
                         object[key] = array_params[i][key];
                     }
                     else {
-                        object[key] = Object.assign({}, object[key], merge(array_params[i][key]));
+                        object[key] = Object.assign({}, object[key], array_params[i][key]);
                     }
                 }
         }
@@ -115,31 +116,31 @@ function schemaParam(schema, params, key_param) {
         if (!params) params = {};
 
         for (let op in schema) {
+            let new_key_param = key_param;
             let typeData = Array.isArray(schema[op]) ? 'array' : typeof schema[op];
             if (typeData === 'array') {
                 if (Array.isArray(params[op])) {
                     let newArr = {};
-                    newArr[key_param + op] = [];
+                    newArr[new_key_param + op] = [];
                     for (let i in params[op]) {
-                        if (key_param !== '') key_param += '.'
+                        if (new_key_param !== '') new_key_param += '.';
                         let r = schemaParam(schema[op][0], params[op][i], '');
                         if (r.error) return r;
-                        newArr[key_param + op].push(merge(r.newParams));
+                        newArr[new_key_param + op].push(merge(r.newParams));
                     }
                     newParams = newParams.concat([newArr]);
                 }
 
                 if (!params[op] || !params[op].length || params[op].length === 0) {
-                    if (key_param !== '') key_param += '.'
-                    let r = schemaParam(schema[op][0], undefined, key_param + op);
+                    if (new_key_param !== '') new_key_param += '.';
+                    let r = schemaParam(schema[op][0], undefined, new_key_param + op);
                     if (r.error) return r;
                     newParams = newParams.concat(r.newParams);
                 }
 
             } else {
-                if (key_param !== '') key_param += '.';
-
-                let r = schemaParam(schema[op], params[op], key_param + op);
+                if (new_key_param && new_key_param !== '') new_key_param += '.';
+                let r = schemaParam(schema[op], params[op], new_key_param + op);
                 if (r.error) return r;
                 newParams = newParams.concat(r.newParams);
             }
@@ -472,7 +473,7 @@ function requireAPI(apiPath) {
     // console.log("API:" + apiPath);
     API_cnt++;
 
-    if(apiPath.indexOf('.js')!==-1) {
+    if (apiPath.indexOf('.js') !== -1) {
         let fileAPI = require(path.normalize(__dirname + DIR_TO_ROOT + 'api/' + apiPath));
         if (typeof fileAPI === 'function')
             fileAPI(API, redis);
@@ -491,7 +492,7 @@ fs.readdir(path.normalize(__dirname + DIR_TO_ROOT + 'api_plugins'), (err, items)
         }
 
 
-        if(items[i].indexOf('.js')!==-1) {
+        if (items[i].indexOf('.js') !== -1) {
             let Plugin = require(path.normalize(__dirname + DIR_TO_ROOT + 'api_plugins/' + items[i]));
             if (typeof Plugin !== 'function') {
                 API.plugin[items[i].replace('.js', '')] = Plugin;
