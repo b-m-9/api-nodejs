@@ -108,7 +108,7 @@ router.use(bodyParser.urlencoded({extended: true, limit: '10mb'}));
 router.use(bodyParser.json({limit: '20mb'}));
 router.use(fileUpload({
     abortOnLimit: true,
-    limits: {fileSize: 200 * 1024  * 1024},
+    limits: {fileSize: 200 * 1024 * 1024},
 }));
 router.use((req, res, next) => {
     if (req.is('multipart/form-data')) {
@@ -190,6 +190,9 @@ router.all('/:method/', (req, res) => {
 
     API.call(req.params.method, user, param, 'http').then(result => {
         if (result) {
+            if (result.redirect) {
+                return res.redirect(302, result.redirect)
+            }
             res.header("Content-Type", "application/json; charset=utf-8");
             return res.end(JSON.stringify(result));
         }

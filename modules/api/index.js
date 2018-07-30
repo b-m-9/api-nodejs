@@ -403,11 +403,15 @@ API = {
                 return json
             })
             .then((json) => {
+
                 if (!json)
                     return Promise.reject('CORE API error {res} of undefined');
                 let res = {success: true, data: json};
                 res.latency_ms = (new Date()).getTime() - initTimestamp;
                 res.requestId = request_id;
+                if (json.mode === 'REDIRECT' && typeof json.url === 'string') {
+                    res.redirect = json.url;
+                }
                 return res;
             })
             // timeout promise
