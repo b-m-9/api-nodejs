@@ -114,7 +114,7 @@ var stackTrace = require('stack-trace');
 function getPathAPI() {
     var trace = stackTrace.get();
 
-    return trace[2].getFileName().replace(path.normalize(__dirname + DIR_TO_ROOT + 'api/'),'').replace('.js','/')
+    return trace[2].getFileName().replace(path.normalize(__dirname + DIR_TO_ROOT + 'api/'), '').replace('.js', '')
 }
 
 function schemaParam(schema, params, key_param) {
@@ -230,16 +230,16 @@ API = {
         //     console.error('[!!!] Error save log API', errdb, ' -0- ', name, err, user, param, json, type, request_id);
         // })
     },
-    register: (name, _public, cb, docs) => {
-
-        if (typeof _public === 'function') {
+    register: (name, cb, docs) => {
+        const _public = false
+        if (typeof name === 'function') {
             docs = cb;
-            cb = _public;
-            _public = false
+            cb = name;
+            name = ''
         }
+        if (name !== '') name = '/' + name;
 
-        if (_public) name = 'public_' + name;
-        name = getPathAPI()+name;
+        name = getPathAPI() + name;
         if (!controller[name]) controller[name] = {};
         controller[name].fn = cb;
         controller[name].level = docs.level;

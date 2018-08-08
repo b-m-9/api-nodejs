@@ -176,7 +176,8 @@ router.get('/docs/', (req, res) => {
     }));
 });
 
-router.all('/:method/', (req, res) => {
+router.all('/*/', (req, res) => {
+    req.params.method = req.path.replace(/^\//, '').replace(/\/$/, '');
     if (config.get('application:server:logs:express')) log.info('Call API: ' + req.params.method);
     let param = {...req.query, ...req.body, files: req.files};
     let user = {ip: req.infoClient, session: req.session};
