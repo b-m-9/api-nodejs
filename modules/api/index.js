@@ -109,6 +109,14 @@ function parse(key, value) {
     return object;
 }
 
+var stackTrace = require('stack-trace');
+
+function getPathAPI() {
+    var trace = stackTrace.get();
+
+    return trace[2].getFileName().replace(path.normalize(__dirname + DIR_TO_ROOT + 'api/'),'').replace('.js','/')
+}
+
 function schemaParam(schema, params, key_param) {
     let newParams = [];
     if (typeof schema === 'object' && !(schema.type && schema.type.valid && typeof schema.type.valid === 'function')) {
@@ -223,6 +231,7 @@ API = {
         // })
     },
     register: (name, _public, cb, docs) => {
+
         if (typeof _public === 'function') {
             docs = cb;
             cb = _public;
@@ -230,6 +239,7 @@ API = {
         }
 
         if (_public) name = 'public_' + name;
+        name = getPathAPI()+name;
         if (!controller[name]) controller[name] = {};
         controller[name].fn = cb;
         controller[name].level = docs.level;
@@ -473,17 +483,27 @@ API.on = API.register;
 let API_cnt = 0;
 
 function requireAPI(apiPath) {
-    // console.log("API:" + apiPath);
     API_cnt++;
-
     if (apiPath.indexOf('.js') !== -1) {
-        let fileAPI = require(path.normalize(__dirname + DIR_TO_ROOT + 'api/' + apiPath));
+        let fileAPI = require(apiPath);
         if (typeof fileAPI === 'function')
             fileAPI(API, redis);
         else
             console.error('[Error] (api/' + apiPath + ') Function is not defined:  \n\t' + '\n' +
                 'module.exports = (API, redis) => {};\n')
     }
+}
+
+function readDirApi(dir) {
+    fs.readdir(dir, (err, items) => {
+        for (let i = 0; i < items.length; i++) {
+            if (fs.statSync(dir + '/' + items[i]).isDirectory())
+                readDirApi(dir + '/' + items[i])
+            else
+                requireAPI(dir + '/' + items[i]);
+        }
+
+    });
 }
 
 fs.readdir(path.normalize(__dirname + DIR_TO_ROOT + 'api_plugins'), (err, items) => {
@@ -507,29 +527,17 @@ fs.readdir(path.normalize(__dirname + DIR_TO_ROOT + 'api_plugins'), (err, items)
     }
     //  ==========
 
-    fs.readdir(path.normalize(__dirname + DIR_TO_ROOT + 'api'), (err, items) => {
-        for (let i = 0; i < items.length; i++) {
-            if (fs.statSync(path.normalize(__dirname + DIR_TO_ROOT + 'api/' + items[i])).isDirectory())
-                fs.readdir(path.normalize(__dirname + DIR_TO_ROOT + 'api/' + items[i]), (err, items2) => {
-                    for (let i2 = 0; i2 < items2.length; i2++) {
-                        if (!fs.statSync(path.normalize(__dirname + DIR_TO_ROOT + 'api/' + items[i] + '/' + items2[i2])).isDirectory())
-                            requireAPI(items[i] + '/' + items2[i2]);
-                        else
-                            console.error("API Error load api:" + items[i] + '/' + items2[i2]);
 
-                    }
-                });
-            else
-                requireAPI(items[i]);
-        }
+    readDirApi(path.normalize(__dirname + DIR_TO_ROOT + 'api'))
 
-        // export_postman docs file
-        setTimeout(require('./export_postman'), 3000);
-        setTimeout(require('./export_insomnia'), 3000);
-        setTimeout(function () {
-            console.log("API running: " + API_cnt + " files\n\t Docs " + config.get('shema') + '://' + config.get('domain') + config.get('server_path') + config.get('api_path') + 'docs/')
-        }, 3000);
-    });
+
+    // export_postman docs file
+    setTimeout(require('./export_postman'), 3000);
+    setTimeout(require('./export_insomnia'), 3000);
+    setTimeout(function () {
+        console.log("API running: " + API_cnt + " files\n\t Docs " + config.get('shema') + '://' + config.get('domain') + config.get('server_path') + config.get('api_path') + 'docs/')
+    }, 3000);
+
 
 });
 module.exports.controller = controller;

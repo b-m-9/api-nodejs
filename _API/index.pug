@@ -379,7 +379,7 @@ html(lang='en')
                             .uk-accordion(data-uk-accordion='{showfirst: false,collapse: false}', id ="method_API_" + val1.method.split('/').join('-'))
                                 h3.uk-accordion-title
                                     .uk-grid
-                                        .uk-width-1-5
+                                        .uk-width-3-10
                                             if val1.method.length >= 35
                                                 span(style='text-transform: none;font-size: 10px;')
                                                     i(class=val1.iconClass style='color: #' + val1.iconColor + ';font-size: 14px;position: relative;bottom: 0px;')
@@ -412,10 +412,10 @@ html(lang='en')
                                                     if val1.method.toLowerCase().indexOf('delete') !== -1 || val1.method.toLowerCase().indexOf('remove') !== -1
                                                         i.uk-icon-trash(style='color: #ea0f0f;font-size: 10px;position: relative;margin-left: -16px;background:  #fff;border-radius: 12px;bottom: -7px;padding: 1px 3px;')
                                                     | !{val1.method}
-                                        .uk-width-3-5
+                                        .uk-width-5-10
                                             if val1 && val1.title
                                                 span.title !{val1.title}
-                                        .uk-width-1-5.uk-text-right
+                                        .uk-width-2-10.uk-text-right
                                             span
                                                 .uk-badge.bage-http !{val1.group}
                                 .uk-accordion-content(style='background:#fff')
