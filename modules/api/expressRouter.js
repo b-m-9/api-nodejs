@@ -148,32 +148,25 @@ router.use('/', (req, res, next) => {
     }
 
 });
-var pug = require('pug');
 
-router.get('/docs/', (req, res) => {
-
+router.post('/config/docs/api/', (req, res) => {
     let config_local = {
         server_path: config.get('server_path'),
-        developers: config.get('developers'),
         ws_url: config.get('server:ws:url'),
-        api_path: config.get('api_path'),
-        domain: config.get('domain'),
-        project_name: config.get('project_name'),
         version: git_status.version,
         commitHash: git_status.commitHash,
         latency_ms: (Math.random() * 100).toFixed(0),
         countQueries: (Math.random() * 1000).toFixed(0),
-        shema: config.get('shema') + '://'
     };
-    res.set('Content-Type', 'text/html');
+    res.header("Content-Type", "application/json; charset=utf-8");
+
     let docs = API.docs;
-
-
-    res.end(pug.renderFile(path.normalize(__dirname + '/../../_API/index.pug'), {
-        methods: {all: docs},
+    return res.end && res.end(JSON.stringify({
+        methods: docs,
         config: config_local,
         admin: true
     }));
+
 });
 
 router.all('/*/', (req, res) => {
