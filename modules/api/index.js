@@ -251,10 +251,10 @@ API = {
         if (!controller[name]) controller[name] = {};
         controller[name].fn = cb;
         controller[name].level = docs.level;
-        if (_public)
-            controller[name].level = 0;
-        if (!docs.level && docs.level !== 0)
+
+        if (!docs.level)
             controller[name].level = 3;
+
         controller[name].infoAndControl = docs;
 
         if (docs && !docs.hide) {
@@ -268,16 +268,7 @@ API = {
             }
             if (!docs.iconClass)
                 docs.iconClass = API.plugin.iconsClass.default;
-            if (_public)
-                docs.access = 1;
-            else
-                docs.access = 2;
-            if (!docs.level) {
-                if (_public)
-                    docs.level = 0;
-                else
-                    docs.level = 1;
-            }
+
             if (!docs.response || !Array.isArray(docs.response))
                 docs.response = [];
             if (docs.response) {
