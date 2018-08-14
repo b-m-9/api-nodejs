@@ -149,7 +149,7 @@ router.use('/', (req, res, next) => {
 
 });
 
-router.post('/config/docs/api/', (req, res) => {
+router.all('/config/docs/api/', (req, res) => {
     let config_local = {
         server_path: config.get('server_path'),
         ws_url: config.get('server:ws:url'),
@@ -161,6 +161,15 @@ router.post('/config/docs/api/', (req, res) => {
     res.header("Content-Type", "application/json; charset=utf-8");
 
     let docs = API.docs;
+    for (let i  in docs) {
+        if (docs[i] && docs[i].param) {
+            for (let p in docs[i].param) {
+                if (docs[i].param[p] && docs[i].param[p].type && docs[i].param[p].type.valid) {
+                    docs[i].param[p].type.validator = docs[i].param[p].type.valid.toString();
+                }
+            }
+        }
+    }
     return res.end && res.end(JSON.stringify({
         methods: docs,
         config: config_local,
