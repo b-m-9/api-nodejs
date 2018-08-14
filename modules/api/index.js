@@ -240,6 +240,14 @@ API = {
         if (name !== '') name = '/' + name;
 
         name = getPathAPI() + name;
+
+
+        if (!docs) docs = {level: 0, title: name};
+        if (!docs.param) docs.param = {};
+        if (!docs.ressponse) docs.ressponse = [];
+
+        if (typeof docs.param !== 'object' || Array.isArray(docs.param)) throw new Error('Error api param not Object in method: ' + name);
+
         if (!controller[name]) controller[name] = {};
         controller[name].fn = cb;
         controller[name].level = docs.level;
