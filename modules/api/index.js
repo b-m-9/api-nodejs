@@ -252,7 +252,7 @@ API = {
         controller[name].fn = cb;
         controller[name].level = docs.level;
 
-        if (!docs.level)
+        if (!docs.level && docs.level !== 0)
             controller[name].level = 3;
 
         controller[name].infoAndControl = docs;
