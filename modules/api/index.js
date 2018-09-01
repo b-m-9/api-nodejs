@@ -276,7 +276,7 @@ API = {
         if (!docs.ressponse) docs.ressponse = [];
 
         if (typeof docs.param !== 'object') throw new Error('Error api param not Object in method: ' + name);
-        validateParamsInMethod(name, docs.param)
+        validateParamsInMethod(name, docs.param);
         if (!controller[name]) controller[name] = {};
         controller[name].fn = cb;
         controller[name].level = docs.level;
