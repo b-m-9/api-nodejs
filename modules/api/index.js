@@ -189,6 +189,35 @@ function schemaParam(schema, params, key_param) {
 
 }
 
+function validateParamsInMethod(name, param_s, paramName) {
+    if (!param_s || typeof param_s !== 'object') {
+        throw Error('#0001,error params in method: ' + name + ' - [' + paramName + ']')
+    }
+    if (param_s.type && param_s.error_code) {
+        if (!param_s.type.name)
+            throw Error('#0002,error params in method: ' + name + ' - [' + paramName + ']')
+    } else {
+        for (let param_name in param_s) {
+            if (!param_s[param_name])
+                throw Error('#0003,error params in method: ' + name + ' - [' + param_name + ']')
+
+            if (Array.isArray(param_s[param_name])) {
+                if (!param_s[param_name][0])
+                    throw Error('#0004,error params in method: ' + name + ' - [' + param_name + ']')
+
+                return validateParamsInMethod(name, param_s[param_name][0], param_name)
+
+            }
+            if (!param_s[param_name])
+                throw Error('#0005,error params in method: ' + name + ' - [' + param_name + ']')
+            if (!param_s[param_name].type)
+                throw Error('#0006,error params in method: ' + name + ' - [' + param_name + ']')
+            if (!param_s[param_name].type.name)
+                throw Error('#0007,error params in method: ' + name + ' - [' + param_name + ']')
+        }
+    }
+}
+
 API = {
     _props: function (key, val) {
         if (key === 'register')
@@ -246,8 +275,8 @@ API = {
         if (!docs.param) docs.param = {};
         if (!docs.ressponse) docs.ressponse = [];
 
-        if (typeof docs.param !== 'object' || Array.isArray(docs.param)) throw new Error('Error api param not Object in method: ' + name);
-
+        if (typeof docs.param !== 'object') throw new Error('Error api param not Object in method: ' + name);
+        validateParamsInMethod(name, docs.param)
         if (!controller[name]) controller[name] = {};
         controller[name].fn = cb;
         controller[name].level = docs.level;
