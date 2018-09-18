@@ -42,10 +42,15 @@ class _Boolean {
 class _Enum {
     constructor(values) {
         this.name = 'ENUM';
-        this.values = values;
+        this.enums = values;
+        if (typeof this.enums !== 'object' || !Array.isArray(this.enums))
+            this.enums = [];
     }
 
     valid(v) {
+        if (this.enums.indexOf(v) === -1)
+            return {success: false, error: 'Value invalid enum,' + this.enums.split(',')};
+
         return {success: true, value: v};
     }
 }
