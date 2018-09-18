@@ -39,6 +39,17 @@ class _Boolean {
     }
 }
 
+class _Enum {
+    constructor(values) {
+        this.name = 'ENUM';
+        this.values = values;
+    }
+
+    valid(v) {
+        return {success: true, value: v};
+    }
+}
+
 class _Float {
     // IEEE_754-2008 - Standard for Floating-Point Arithmetic
     constructor(length, fixed, options) {
@@ -201,6 +212,9 @@ const FLOAT = (length, fixed, options) => {
 const INTEGER = (length, options) => {
     return new _Intenger(length, options);
 };
+const ENUM = (...values) => {
+    return new _Enum(values);
+};
 const FILE = () => {
     return new _File();
 };
@@ -222,6 +236,7 @@ module.exports = {
     DATE,
     STRING,
     FLOAT,
+    ENUM,
     INTEGER,
     BOOLEAN,
     FILE,
