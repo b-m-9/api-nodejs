@@ -15,7 +15,8 @@ class API {
             if (auth_controller.auth_admin && typeof auth_controller.auth_admin === 'function')
                 module.exports.admin = auth_controller.auth_admin;
         }
-        this.expressRouter = require('./modules/api/expressRouter');
+        this.expressRouter = require('./modules/api/expressRouter').router;
+        this.API = require('./modules/api/expressRouter').API;
         this.emitter = ApiEmitter;
         module.exports.ApiEmitter = ApiEmitter;
         ApiEmitter.emit('init', {start: !!1});

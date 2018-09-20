@@ -207,4 +207,5 @@ router.all('/*/', (req, res) => {
         return res.end && res.end(JSON.stringify(err));
     });
 });
-module.exports = router;
+module.exports.router = router;
+module.exports.API = API;
