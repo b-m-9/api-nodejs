@@ -74,8 +74,7 @@ if (config.get('server:session:enable')) {
         console.log('api-nodejs-> Express use session store Local');
         store = undefined
     }
-
-    router.use(session({
+    const sessionConfig = session({
         secret: config.get('server:session:secret'),
         name: config.get('server:session:name'),
         cookie: {
@@ -85,7 +84,9 @@ if (config.get('server:session:enable')) {
         resave: true,
         saveUninitialized: true,
         store
-    }));
+    });
+    module.exports.session = sessionConfig;
+    router.use(sessionConfig);
 }
 router.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');

@@ -17,6 +17,7 @@ class API {
         }
         this.expressRouter = require('./modules/api/expressRouter').router;
         this.API = require('./modules/api/expressRouter').API;
+        this.expressSession = require('./modules/api/expressRouter').session;
         this.emitter = ApiEmitter;
         module.exports.ApiEmitter = ApiEmitter;
         ApiEmitter.emit('init', {start: !!1});
