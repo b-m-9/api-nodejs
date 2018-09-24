@@ -78,12 +78,13 @@ if (config.get('server:session:enable')) {
         secret: config.get('server:session:secret'),
         name: config.get('server:session:name'),
         cookie: {
-            maxAge: config.get('server:session:ttl_hours') * 60 * 60 * 1000 // hours
+            maxAge: config.get('server:session:ttl_hours') * 60 * 60 * 1000, // hours
+            ...(config.get('server:session:cookie') || {}),
         },
         httpOnly: true,
         resave: true,
         saveUninitialized: true,
-        ...(config.get('server:session:options') || {}),
+
         store
     });
     module.exports.session = sessionConfig;

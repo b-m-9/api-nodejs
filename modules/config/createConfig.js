@@ -22,7 +22,7 @@ config.default('server:session:database:username', '');
 config.default('server:session:database:password', '');
 config.default('server:session:database:database', '');
 config.default('server:session:database:host', '127.0.0.1');
-config.default('server:session:database:options', {});
+config.default('server:session:cookie', {});
 
 config.default('redis:port', 6379);
 config.default('redis:host', '127.0.0.1');
