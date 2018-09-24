@@ -67,6 +67,7 @@ let iconsClass = {
 
 };
 let controller = {};
+let aliases = {};
 
 
 function merge(array_params) {
@@ -109,7 +110,7 @@ function parse(key, value) {
     return object;
 }
 
-var stackTrace = require('stack-trace');
+const stackTrace = require('stack-trace');
 
 function getPathAPI() {
     var trace = stackTrace.get();
@@ -237,7 +238,6 @@ API = {
         API[key] = type;
     },
     plugin: {iconsClass},
-
     saveLog(name, err, user, param, json, type, request_id) {
         if (APIConfig.ApiEmitter) {
             APIConfig.ApiEmitter.emit('call', {method: name, user, param, error: err, response: json, request_id})
@@ -261,8 +261,13 @@ API = {
         //     console.error('[!!!] Error save log API', errdb, ' -0- ', name, err, user, param, json, type, request_id);
         // })
     },
+    createAlias: (aliasName, toMethod) => {
+        if (!aliasName || typeof aliasName !== 'string') throw new Error('createAlias error aliasName is not valid');
+        if (!toMethod || typeof toMethod !== 'string') throw new Error('createAlias error aliasName is not valid');
+        aliases[aliasName] = toMethod;
+    },
     register: (name, cb, docs) => {
-        const _public = false
+        const _public = false;
         if (typeof name === 'function') {
             docs = cb;
             cb = name;
@@ -350,6 +355,8 @@ API = {
         if (!type) type = 'server';
         // console.log('emit api', {name, type});
         if (!param) param = {};
+        if (aliases[name])
+            name = aliases[name];
         return new Promise((resolve, reject) => {
             if (!name || !controller.hasOwnProperty(name))
                 return reject(error.create('method not fount', 'api', {
