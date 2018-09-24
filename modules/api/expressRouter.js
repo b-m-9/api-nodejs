@@ -174,7 +174,7 @@ router.all('/config/docs/api/', (req, res) => {
     }
     return res.end && res.end(JSON.stringify({
         methods: docs.filter((m) => {
-            return (!!m && m.metho && m.param)
+            return (!!m && m.method && m.param)
         }),
         config: config_local,
         admin: true
