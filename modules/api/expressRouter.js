@@ -83,6 +83,7 @@ if (config.get('server:session:enable')) {
         httpOnly: true,
         resave: true,
         saveUninitialized: true,
+        ...(config.get('server:session:options') || {}),
         store
     });
     module.exports.session = sessionConfig;
