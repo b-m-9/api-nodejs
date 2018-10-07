@@ -49,7 +49,7 @@ class _Enum {
 
     valid(v) {
         if (this.enums.indexOf(v) === -1)
-            return {success: false, error: 'Value invalid enum,' + this.enums.join(',')};
+            return {success: false, error: 'Value invalid enum: ' + this.enums.join(',')};
 
         return {success: true, value: v};
     }
