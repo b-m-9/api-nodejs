@@ -27,7 +27,7 @@ class _Boolean {
         this.name = 'BOOLEAN';
     }
 
-    valid(v) {
+    static valid(v) {
         if (v === 1) v = true;
         if (v === 0) v = false;
         if (v === '1') v = true;
@@ -49,7 +49,7 @@ class _Enum {
 
     valid(v) {
         if (this.enums.indexOf(v) === -1)
-            return {success: false, error: 'Value invalid enum,' + this.enums.split(',')};
+            return {success: false, error: 'Value invalid enum,' + this.enums.join(',')};
 
         return {success: true, value: v};
     }
@@ -144,9 +144,8 @@ class _Date {
     }
 
     valid(v) {
-        return {success: true, value: v};
-
         if (!v) return {success: false, error: 'Value undefined'};
+
         if (typeof v !== 'string' && typeof v !== 'number') return {success: false, error: 'Value invalid typeof'};
 
         if (!moment(v).isValid())
@@ -165,7 +164,7 @@ class _File {
         this.name = 'FILE';
     }
 
-    valid(v) {
+    static valid(v) {
         return {success: true, value: v};
     }
 }
@@ -175,7 +174,7 @@ class _Array {
         this.name = 'ARRAY';
     }
 
-    valid(v) {
+    static valid(v) {
         if (typeof v === 'string')
             v = v.split(',');
         if (!Array.isArray(v))
@@ -190,7 +189,7 @@ class _Object {
         this.name = 'OBJECT';
     }
 
-    valid(v) {
+    static valid(v) {
         if (typeof v !== 'object')
             return {success: false, error: 'Value is not object'};
         return {success: true, value: v};
