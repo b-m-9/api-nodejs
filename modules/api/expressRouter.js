@@ -187,7 +187,7 @@ router.all('/*/', (req, res) => {
     req.params.method = req.path.replace(/^\//, '').replace(/\/$/, '');
     if (config.get('application:server:logs:express')) log.info('Call API: ' + req.params.method);
     let param = {...req.query, ...req.body, files: req.files};
-    let user = {ip: req.infoClient, session: req.session};
+    let user = {ip: req.infoClient, session: req.session,headers:req.headers};
     if (!req.params.method) {
         res.sendStatus(404);
         return res.end && res.end(JSON.stringify({
