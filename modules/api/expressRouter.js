@@ -130,11 +130,12 @@ router.use('/', (req, res, next) => {
     }
     if (IP === '::1') IP = '127.0.0.1';
     let infoIP = geoip(IP);
-
-    req.session.lastUse = new Date();
-    if (!req.session.first_ip)
-        req.session.first_ip = IP;
-    req.session.ip = IP;
+    if (req.session) {
+        req.session.lastUse = new Date();
+        if (!req.session.first_ip)
+            req.session.first_ip = IP;
+        req.session.ip = IP;
+    }
     if (config.get('application:server:logs:express')) log.info('Express request: \n\t\tUrl: ' + req.protocol + '://' + req.get('Host') + req.url + '\n\t\tClient: ' + infoIP.ip + '/' + infoIP.counterCode);
     req.infoClient = infoIP;
 
@@ -187,7 +188,7 @@ router.all('/*/', (req, res) => {
     req.params.method = req.path.replace(/^\//, '').replace(/\/$/, '');
     if (config.get('application:server:logs:express')) log.info('Call API: ' + req.params.method);
     let param = {...req.query, ...req.body, files: req.files};
-    let user = {ip: req.infoClient, session: req.session,headers:req.headers};
+    let user = {ip: req.infoClient, session: req.session, headers: req.headers};
     if (!req.params.method) {
         res.sendStatus(404);
         return res.end && res.end(JSON.stringify({
