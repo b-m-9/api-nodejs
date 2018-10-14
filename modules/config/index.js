@@ -94,7 +94,7 @@ const model = {
             if (!param || typeof param !== 'string')
                 return reject('param is not string');
             if (testWrite) {
-                if (!nconf.get(param)) {
+                if (nconf.get(param) === undefined) {
                     nconf.set(param, value);
                     return resolve(true);
                 }
