@@ -27,7 +27,7 @@ class _Boolean {
         this.name = 'BOOLEAN';
     }
 
-    static valid(v) {
+    valid(v) {
         if (v === 1) v = true;
         if (v === 0) v = false;
         if (v === '1') v = true;
@@ -164,7 +164,7 @@ class _File {
         this.name = 'FILE';
     }
 
-    static valid(v) {
+    valid(v) {
         return {success: true, value: v};
     }
 }
@@ -174,7 +174,7 @@ class _Array {
         this.name = 'ARRAY';
     }
 
-    static valid(v) {
+    valid(v) {
         if (typeof v === 'string')
             v = v.split(',');
         if (!Array.isArray(v))
@@ -189,7 +189,7 @@ class _Object {
         this.name = 'OBJECT';
     }
 
-    static valid(v) {
+    valid(v) {
         if (typeof v !== 'object')
             return {success: false, error: 'Value is not object'};
         return {success: true, value: v};
