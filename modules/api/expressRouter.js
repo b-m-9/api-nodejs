@@ -12,6 +12,7 @@ const error = require('../../modules/error/api');
 
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
+const UAParser = require('ua-parser-js');
 
 const bodyParser = require('body-parser');
 const fileUpload = require('express-fileupload');
@@ -188,7 +189,12 @@ router.all('/*/', (req, res) => {
     req.params.method = req.path.replace(/^\//, '').replace(/\/$/, '');
     if (config.get('application:server:logs:express')) log.info('Call API: ' + req.params.method);
     let param = {...req.query, ...req.body, files: req.files};
-    let user = {ip: req.infoClient, session: req.session, headers: req.headers};
+    let user = {
+        ip: req.infoClient,
+        session: req.session,
+        headers: req.headers,
+        agent: new UAParser().setUA(req.headers['user-agent']).getResult()
+    };
     if (!req.params.method) {
         res.sendStatus(404);
         return res.end && res.end(JSON.stringify({
