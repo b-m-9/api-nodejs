@@ -266,6 +266,12 @@ API = {
         if (!toMethod || typeof toMethod !== 'string') throw new Error('createAlias error aliasName is not valid');
         aliases[aliasName] = toMethod;
     },
+    redirect: (url, change_base) => {
+        return Promise.resolve({
+            mode: 'REDIRECT',
+            url: (change_base || (config.get('shema') + '://' + config.get('domain') + config.get('server_path'))) + '' + url
+        });
+    },
     register: (name, cb, docs) => {
         const _public = false;
         if (typeof name === 'function') {
