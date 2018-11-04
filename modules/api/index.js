@@ -269,7 +269,7 @@ API = {
     redirect: (url, change_base) => {
         return Promise.resolve({
             mode: 'REDIRECT',
-            url: (change_base || (config.get('shema') + '://' + config.get('domain') + config.get('server_path'))) + '' + url
+            url: (change_base || (config.get('shema') + '://' + config.get('domain'))) + '' + url
         });
     },
     register: (name, cb, docs) => {
