@@ -136,7 +136,7 @@ router.use('/', (req, res, next) => {
             req.session.first_ip = IP;
         req.session.ip = IP;
     }
-    if (config.get('server:api:debug:log')) console.log('Express request: \n\t\tUrl: ' + req.protocol + '://' + req.get('Host') + req.url + '\n\t\tClient: ' + infoIP.ip + '/' + infoIP.counterCode);
+    if (config.get('server:api:debug:log')) console.log('API request: \n\t\tMethod: ' + req.url+ '\n\t\tClient: ' + infoIP.ip + '/' + infoIP.counterCode);
     req.infoClient = infoIP;
 
     // req.infoClient.lang = req.params.lang;
