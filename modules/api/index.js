@@ -484,8 +484,7 @@ API = {
 
 
                 // error is not api data error
-                if (!!config.get('server:api:debug:errorResponse'))
-                    console.error('API error - ', name, '*', type, '\n\tUser:', user, '\n\tParam:', param, '\n\tError:', err);
+                console.error('Server Error:', name, ",", err);
                 let err_message = 'no_message';
                 if (err && typeof err === 'string') err_message = 'REST-API Error: ' + err;
                 if (err && err.message && typeof err.message === 'string') err_message = 'REST-API Error: ' + err.message;
@@ -501,7 +500,8 @@ API = {
                 let res = {success: false, error: err};
                 res.latency_ms = (new Date()).getTime() - initTimestamp;
                 res.requestId = request_id;
-
+                if (!!config.get('server:api:debug:errorResponse'))
+                    console.error('API error - ', name, '*', type, '\n\tUser:', user, '\n\tParam:', param, '\n\tResponse:', res);
                 return Promise.reject(res);
             }); // ---^^^^^---  Error API  ---^^^^^^----
 
