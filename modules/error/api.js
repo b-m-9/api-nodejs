@@ -21,7 +21,7 @@ function create_error(message, type, params, level, errorCode, statusCode) {
         object: params,
         level,
         errorCode,
-        stack: (!!config('server:api:debug:stack')) ? message_stack : undefined,
+        stack: (!!config.get('server:api:debug:stack')) ? message_stack : undefined,
         statusCode
     }
 }
