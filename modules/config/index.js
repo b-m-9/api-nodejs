@@ -10,8 +10,6 @@ const NAME_CONFIG = 'api_config';
 const fs = require('fs'),
     path = require('path'),
     nconf = require('../nconf-local'),
-    error = require('../../modules/error'),
-    log = require('../../modules/log'),
     _path_config = path.normalize(__dirname + DIR_TO_ROOT + DIR_CONFIG + '/');
 if (!fs.existsSync(path.normalize(__dirname + DIR_TO_ROOT + DIR_CONFIG)))
     fs.mkdirSync(path.normalize(__dirname + DIR_TO_ROOT + DIR_CONFIG));
@@ -25,7 +23,7 @@ function reloadConfig() {
         }
     } catch (e) {
         setTimeout(reloadConfig, 5000);
-        log.error('File ' + NAME_CONFIG + '.json [format Error]:', e);
+        console.error('File ' + NAME_CONFIG + '.json [format Error]:', e);
     }
 
 }
@@ -78,7 +76,7 @@ function saveConfig() {
 
                 }
             } catch (e) {
-                log.error('File ' + NAME_CONFIG + '.json [Error read format]: see ' + NAME_CONFIG + '.json saveConfig' + e);
+                console.error('File ' + NAME_CONFIG + '.json [Error read format]: see ' + NAME_CONFIG + '.json saveConfig' + e);
                 return reject('File ' + NAME_CONFIG + '.json [Error read format]: see ' + NAME_CONFIG + '.json saveConfig')
             }
         });

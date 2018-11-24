@@ -6,7 +6,6 @@ const API = require('../../modules/api').API;
 
 const config = require('../../modules/config');
 
-const log = require('../../modules/log');
 const geoip = require('../../modules/geoip');
 const error = require('../../modules/error/api');
 
@@ -30,7 +29,7 @@ router.use(cookieParser());
 if (config.get('server:session:enable')) {
     let store;
     if (config.get('server:session:driver') === 'mongodb') {
-        if (!!config('server:api:debug')) console.log('api-nodejs-> Express use session store MongoDB');
+        if (!!config.get('server:api:debug')) console.log('api-nodejs-> Express use session store MongoDB');
         const MongoStore = require('connect-mongo')(session);
         let access = config.get('server:session:database:username') + ':' + config.get('server:session:database:password');
         if (access === ':') access = '';
@@ -47,7 +46,7 @@ if (config.get('server:session:enable')) {
         });
     }
     if (config.get('server:session:driver') === 'redis') {
-        if (!!config('server:api:debug')) console.log('api-nodejs-> Express use session store Redis');
+        if (!!config.get('server:api:debug')) console.log('api-nodejs-> Express use session store Redis');
         const redis = require('redis').createClient(config.get('redis:port'), config.get('redis:host'));
         const RedisStore = require('connect-redis')(session);
         store = new RedisStore({client: redis});
@@ -55,7 +54,7 @@ if (config.get('server:session:enable')) {
 
     if (config.get('server:session:driver') === 'pg') {
 
-        if (!!config('server:api:debug')) console.log('api-nodejs-> Express use session store Postgres');
+        if (!!config.get('server:api:debug')) console.log('api-nodejs-> Express use session store Postgres');
 
         const pg = require('pg'),
             pgSession = require('connect-pg-simple')(session),
@@ -72,7 +71,7 @@ if (config.get('server:session:enable')) {
     }
 
     if (config.get('server:session:driver') === 'local') {
-        if (!!config('server:api:debug')) console.log('api-nodejs-> Express use session store Local');
+        if (!!config.get('server:api:debug')) console.log('api-nodejs-> Express use session store Local');
         store = undefined
     }
     const sessionConfig = session({

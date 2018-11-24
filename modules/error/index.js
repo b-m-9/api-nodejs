@@ -3,8 +3,6 @@
  */
 'use strict';
 
-const log = require('../log');
-
 function PropertyError(message, stopServer) {
     this.name = "Application Error";
 
@@ -17,7 +15,7 @@ function PropertyError(message, stopServer) {
     } else {
         this.stack = (new Error()).stack;
     }
-    log.error('\n' + this.stack);
+    console.error('\n' + this.stack);
     if (stopServer)
 
         setTimeout(()=> {

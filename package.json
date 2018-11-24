@@ -44,7 +44,6 @@
     "redis": "^2.8.0",
     "stack-trace": "0.0.10",
     "tabgeo": "^0.1.0",
-    "ua-parser-js": "^0.7.18",
-    "winston": "^2.4.2"
+    "ua-parser-js": "^0.7.18"
   }
 }
