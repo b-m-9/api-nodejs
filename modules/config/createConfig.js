@@ -11,8 +11,8 @@ config.default('server_path', '/');
 config.default('api_path', 'api/v1/');
 
 config.default('server:session:enable', true);
-config.default('server:session:name', random.str(6,8));
-config.default('server:session:secret', random.str(12,15));
+config.default('server:session:name', random.str(6, 8));
+config.default('server:session:secret', random.str(12, 15));
 config.default('server:session:ttl_hours', 48);
 
 
@@ -30,15 +30,17 @@ config.default('redis:password', '');
 config.default('redis:database', 0);
 
 
-
-
-config.default('server:api:timeout',10);
+config.default('server:api:timeout', 10);
+config.default('server:api:debug:stack', true);
+config.default('server:api:debug:log', true);
+config.default('server:api:debug:errorResponse', true);
+config.default('server:api:debug:successResponse', false);
 config.default('git:commitHash', '000000');
 config.default('version', '1.0.01');
 config.default('developers', [{
     name: 'Bogdan Medvedev',
     github: 'https://github.com/medve-dev',
-    mail: 'bogdan.m@vidax.com'
+    mail: 'bogdan@medve-dev.net'
 }]);
 
 setTimeout(function () {

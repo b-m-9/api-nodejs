@@ -30,7 +30,7 @@ router.use(cookieParser());
 if (config.get('server:session:enable')) {
     let store;
     if (config.get('server:session:driver') === 'mongodb') {
-        console.log('api-nodejs-> Express use session store MongoDB');
+        if (!!config('server:api:debug')) console.log('api-nodejs-> Express use session store MongoDB');
         const MongoStore = require('connect-mongo')(session);
         let access = config.get('server:session:database:username') + ':' + config.get('server:session:database:password');
         if (access === ':') access = '';
@@ -47,7 +47,7 @@ if (config.get('server:session:enable')) {
         });
     }
     if (config.get('server:session:driver') === 'redis') {
-        console.log('api-nodejs-> Express use session store Redis');
+        if (!!config('server:api:debug')) console.log('api-nodejs-> Express use session store Redis');
         const redis = require('redis').createClient(config.get('redis:port'), config.get('redis:host'));
         const RedisStore = require('connect-redis')(session);
         store = new RedisStore({client: redis});
@@ -55,7 +55,7 @@ if (config.get('server:session:enable')) {
 
     if (config.get('server:session:driver') === 'pg') {
 
-        console.log('api-nodejs-> Express use session store Postgres');
+        if (!!config('server:api:debug')) console.log('api-nodejs-> Express use session store Postgres');
 
         const pg = require('pg'),
             pgSession = require('connect-pg-simple')(session),
@@ -72,7 +72,7 @@ if (config.get('server:session:enable')) {
     }
 
     if (config.get('server:session:driver') === 'local') {
-        console.log('api-nodejs-> Express use session store Local');
+        if (!!config('server:api:debug')) console.log('api-nodejs-> Express use session store Local');
         store = undefined
     }
     const sessionConfig = session({
@@ -137,7 +137,7 @@ router.use('/', (req, res, next) => {
             req.session.first_ip = IP;
         req.session.ip = IP;
     }
-    if (config.get('application:server:logs:express')) log.info('Express request: \n\t\tUrl: ' + req.protocol + '://' + req.get('Host') + req.url + '\n\t\tClient: ' + infoIP.ip + '/' + infoIP.counterCode);
+    if (config.get('server:api:debug:log')) console.log('Express request: \n\t\tUrl: ' + req.protocol + '://' + req.get('Host') + req.url + '\n\t\tClient: ' + infoIP.ip + '/' + infoIP.counterCode);
     req.infoClient = infoIP;
 
     // req.infoClient.lang = req.params.lang;

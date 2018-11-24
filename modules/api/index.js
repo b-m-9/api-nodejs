@@ -359,7 +359,6 @@ API = {
         let request_id = new Date().getTime() + '-' + random.str(7, 7); // reqid for login and response
 
         if (!type) type = 'server';
-        // console.log('emit api', {name, type});
         if (!param) param = {};
         if (aliases[name])
             name = aliases[name];
@@ -445,7 +444,7 @@ API = {
                 let call_method = controller[name].fn(user, param);
                 if (!call_method || !call_method.then) {
                     // очень опасно код внутри метода выполнился  но метод нечего не вернул ПРОСТО ПИЗДЕЦ =)
-                    console.log(new Error('Server error: "' + name + '" - the method did not return a promise'));
+                    console.error(new Error('Server error: "' + name + '" - the method did not return a promise'));
                     return Promise.reject(error.create('Server error: "' + name + '" - the method did not return a promise', 'api', {}, 10, 500));
                 }
                 return call_method
@@ -465,15 +464,14 @@ API = {
                 if (json.mode === 'REDIRECT' && typeof json.url === 'string') {
                     res.redirect = json.url;
                 }
+                if (!!config.get('server:api:debug:successResponse'))
+                    console.log('API success - ', name, '*', type, '\n\tUser:', user, '\n\tParam:', param, '\n\tResponse:', res);
                 return res;
             })
             // timeout promise
             .timeout(1000 * config.get('server:api:timeout'), 'API timeout')
             // ----- Error API ---------->
             .catch(err => {
-                console.error(err);
-
-                // error save log
                 // if (!err || err.level > 1) console.error('API->emit(name, user, param, cb, type)->controller[name]->err:', err);
                 API.saveLog(name, null, user, param, {success: false, result: false}, type, request_id);
                 return Promise.reject(err);
@@ -486,7 +484,8 @@ API = {
 
 
                 // error is not api data error
-                console.error(err);
+                if (!!config.get('server:api:debug:errorResponse'))
+                    console.error('API error - ', name, '*', type, '\n\tUser:', user, '\n\tParam:', param, '\n\tError:', err);
                 let err_message = 'no_message';
                 if (err && typeof err === 'string') err_message = 'REST-API Error: ' + err;
                 if (err && err.message && typeof err.message === 'string') err_message = 'REST-API Error: ' + err.message;

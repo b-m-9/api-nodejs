@@ -1,8 +1,9 @@
 "use strict";
 const Promise = require("bluebird");
+const config = require("../config");
 Error.stackTraceLimit = 30;
 
-function create_error(message, type, stack, level, errorCode, statusCode) {
+function create_error(message, type, params, level, errorCode, statusCode) {
     let stack_ = (new Error()).stack.replace(new RegExp('    ', 'g'), '').replace(new RegExp('at ', 'g'), '').replace(new RegExp('Promise.(.*).err', 'g'), 'Promise').split("\n");
     let message_stack = '';
     if (stack_[2] && stack_[2].indexOf('bluebird') === -1) message_stack += stack_[2];
@@ -17,10 +18,10 @@ function create_error(message, type, stack, level, errorCode, statusCode) {
         apiError: true,
         message,
         errorType: type,
-        object: stack,
+        object: params,
         level,
         errorCode,
-        stack: message_stack,
+        stack: (!!config('server:api:debug:stack')) ? message_stack : undefined,
         statusCode
     }
 }
