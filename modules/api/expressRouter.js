@@ -187,7 +187,6 @@ router.all('/config/docs/api/', (req, res) => {
 
 router.all('/*/', (req, res) => {
     req.params.method = req.path.replace(/^\//, '').replace(/\/$/, '');
-    if (config.get('application:server:logs:express')) log.info('Call API: ' + req.params.method);
     let param = {...req.query, ...req.body, files: req.files};
     let user = {
         ip: req.infoClient,
@@ -203,21 +202,26 @@ router.all('/*/', (req, res) => {
         }));
     }
 
-    API.call(req.params.method, user, param, 'http').then(result => {
-        if (result) {
-            if (result.redirect) {
-                return res.redirect(302, result.redirect)
+    API.call(req.params.method, user, param, 'http')
+        .then(result => {
+            if (result) {
+                if (result.redirect)
+                    return res.redirect(302, result.redirect);
+
+                return result;
             }
-            res.header("Content-Type", "application/json; charset=utf-8");
-            return res.end(JSON.stringify(result));
-        }
-        return res.end && res.end(JSON.stringify({
-            error: error.create('API result of null', 'api', {param: param}, 10),
-            success: false
-        }));
-    }).catch(err => {
-        return res.end && res.end(JSON.stringify(err));
-    });
+            return {
+                error: error.create('API result of null', 'api', {param: param}, 10),
+                success: false
+            };
+        })
+        .catch(err => err)
+        .then(response => {
+            if (response && typeof response === 'object') {
+                res.header("Content-Type", "application/json; charset=utf-8");
+                return res.end && res.end(JSON.stringify(response));
+            }
+        });
 });
 module.exports.router = router;
 module.exports.API = API;
