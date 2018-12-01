@@ -15,7 +15,7 @@ const error = require('../error/api.js');
 const TypesAPI = require('../api/Types.js');
 const random = require('../random');
 const APIConfig = require('../../index');
-let API = {};
+// let API = {};
 let redis = require('redis').createClient(config.get('redis:port'), config.get('redis:host'), {db: config.get('redis:database')});
 redis.publishAPI = (method, user, data) => {
     redis.publish('api_notify', JSON.stringify({method, user, data}));
@@ -221,7 +221,7 @@ function validateParamsInMethod(name, param_s, paramName) {
     }
 }
 
-API = {
+let API = {
     _props: function (key, val) {
         if (key === 'register')
             return false;
@@ -261,25 +261,59 @@ API = {
         //     console.error('[!!!] Error save log API', errdb, ' -0- ', name, err, user, param, json, type, request_id);
         // })
     },
+    /***
+     *  @name API.createAlias
+     *  @param {string} aliasName - From method:
+     *  @param {string} toMethod - To method:
+     */
     createAlias: (aliasName, toMethod) => {
         if (!aliasName || typeof aliasName !== 'string') throw new Error('createAlias error aliasName is not valid');
         if (!toMethod || typeof toMethod !== 'string') throw new Error('createAlias error aliasName is not valid');
         aliases[aliasName] = toMethod;
     },
+    /***
+     *  @name API.redirect
+     *  @param {string} url - Redirect to:
+     *  @param {string} change_base - Base URL:
+     */
     redirect: (url, change_base) => {
         return Promise.resolve({
             mode: 'REDIRECT',
             url: (change_base || (config.get('shema') + '://' + config.get('domain'))) + '' + url
         });
     },
+
+
+    /***
+     *  @name API.register
+     *  @param {string= |func}name - name method
+     *  @param {func} cb - Function method
+     * or shift params (cb = docs)
+     *  @param {Object} cb - ADD name to path
+     *  @param {string} cb.title - Title of method
+     *  @param {number} cb.level - access level
+     *  @param {string} cb.description - description of method
+     *  @param {string} cb.group - group method
+     *  @param {Object} cb.param - params method
+     *  @param {Array} cb.response - responese method
+     *
+     *  @param {Object} docs - ADD name to path
+     *  @param {string} docs.title - Title of method
+     *  @param {number} docs.level - access level
+     *  @param {string} docs.description - description of method
+     *  @param {string} docs.group - group method
+     *  @param {Object} docs.param - params method
+     *  @param {Array} docs.response - responese method
+     *
+     */
     register: (name, cb, docs) => {
-        const _public = false;
         if (typeof name === 'function') {
             docs = cb;
             cb = name;
             name = ''
         }
         if (name !== '') name = '/' + name;
+        const _public = false;
 
         name = getPathAPI() + name;
 
@@ -353,6 +387,13 @@ API = {
             }, 1)
         }
     },
+    /***
+     *  @name API.call
+     *  @param {string} name - Call method
+     *  @param {Object} user - User
+     *  @param {Object} param - Parameters
+     *  @param {type} [type='server'] - Who call method? (express,server,or etc)
+     */
     call: (name, user, param, type) => {
         let initTimestamp = (new Date()).getTime(); // start time unix call method
 
