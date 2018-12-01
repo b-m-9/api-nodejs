@@ -447,7 +447,7 @@ API = {
                     console.error(new Error('Server error: "' + name + '" - the method did not return a promise'));
                     return Promise.reject(error.create('Server error: "' + name + '" - the method did not return a promise', 'api', {}, 10, 500));
                 }
-                return call_method
+                return call_method.catch(API.error.validate);
             })
             .then((json) => {
                 // save success log
