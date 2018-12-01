@@ -50,46 +50,113 @@ app.use('/api/v1', restapi.expressRouter);
 - описать файл конфигураций что значит каждый из параметров в нем 
 
 
-### API Types and validate
+API Types and validate
 ----
-                 
+- ##### String:
 ```
+/**
+* @param {string} options.regexp - STRING REGEXP (optional)
+*/
 API.types.STRING(lenght,options)
 ```               
+- ##### Number:
 ```
-API.types.FLOAT(10,2,options)
+/**
+*      ┌──────────────── fixed (3)
+*  13.556 ───────── length (5)
+
+* @param {string} options.regexp - STRING REGEXP (optional)
+*/
+API.types.FLOAT(length,fixed,options) //float number
+API.types.INTEGER(length,options) // integer
 ```          
+- ##### Date:
 ```
-API.types.DATE()
-```        
+/**
+* @param {number} options.zone_utc - Convert to ZONE (example 0 = UTC) (optional)
+*/
+API.types.DATE(options)
 ```
-API.types.INTEGER(10,options)
+          
+- ##### Enum:
 ```
-- options.regexp = 'STRING_REGEXP'
-- нужно описать  что такое типы как они работают какие опыции они принимают
-- описать каждый из типов 
-- описать как работает ответ ошибок 
-- как принимают regexp
-- описать как написать свой тип данных
+API.types.ENUM(...values) 
+// example API.types.ENUM('active','pending','deleted') 
+```
+      
+- ##### Boolean:
+```
+API.types.BOOLEAN()
+```
+   
+- ##### Object:
+```
+API.types.OBJECT()
+```
+   
+- ##### Array:
+```
+API.types.ARRAY()
+```
+ 
+- ##### FILE:  (validator soon)
+```
+API.types.FILE()
+```
+
+#### Own type
+You can also create your own type. 
+for this you need to add the file to the ```PROJECT_ROOT/api_plugins``` folder
+###### Example
+```
+// PROJECT_ROOT/api_plugins/object-id-type.js
+
+const mongoose = require('mongoose');
+
+module.exports = (API) => {
+
+    class _ObjectId {
+        constructor(len, options) {
+            this.name = 'ObjectID';
+
+        }
+
+        valid(v) {
+            if (!v || v === '' || typeof v !== 'string' || !mongoose.Types.ObjectId.isValid(v))
+                return {
+                    success: false,
+                    error: 'Value is not ObjectId'
+                };
+            return {success: true, value: v};
+        }
+    }
+
+    API.types.ObjectId = () => {
+        return new _ObjectId();
+    };
+};
+
+//Example use type 
+API.types.ObjectId()
+```
 
 
-### API File
+
+### API File example
 ./api/GROUP_PATH/API_file.js
 ```javascript
-const path = require('path');
-const nameGroupAPI = path.basename(__filename, '.js');
 module.exports = (API, redis) => {
+    // method api/v1/GROUP_PATH/API_file/test
     API.register('test', (user, param) => {
         return new Promise((resolve, reject) => {
             if (!param) return reject('param is not defined');
             return resolve({example: 1, param: param})
         })
-            .catch(API.error.validate)
     }, {
         title: 'Test API',
         level: 0,// 0 public,1 user,2 admin,3 server
-        description: 'Example API',
-        group: nameGroupAPI,
+        description: 'This method for test and learn api. =)',
+        group: "Testing API",
         param: {
             test:{
                 type: API.types.STRING(10),
@@ -107,20 +174,68 @@ module.exports = (API, redis) => {
     });
 };
 ```
+Каждый register должен содержать function c return Promise  важно чтоб каждый метод в результате выполненея возвращял промис
+Как генерируется имя метода? 
+api/v1/ + путь к файлу с методом + (1 параметр из register если он является строкой) 
+таким образом мы получаем 
+api/v1/папка1/папка2/файл/test 
 
-- если еррор кода нет то вернет код 500400404 если параметр не пройдет валидацию или будет не найден
-- нужно описать как создать файл апи  
-- как регестрировать метод 
-- что значит имя  метода
-- что метод должен вернуть  какие параметры они приймет
-- описать doc 
-- что такое lvl
-- не забыть упомянуть про hide
-- что такое параметр  
-- что такое  ответ 
+##### Каждый метод имеет документацию в которой 
+- title - заголовок метода 
+- level - уровень доступа к методу
+
+      0 - публичный метод авторизация не требуется 
+      
+      1 - пользовательский метод перед вызовом будет вызвана 
+          функция auth_user которая должна вернуть status: true
+          если юзер авторизован а также может вернуть дополнитлеьно user_id 
+          для того чтоб в методе был  параметр  auth.user.user_id
+          
+      2 - Админский метод аналогично как и юзерский 
+          функция проверок auth_admin
+          
+      3 - Серверный метод может быть вызван только на севрере 
+          (к примеру в других методах) API.call($method,$user,$params,'server')
+          
+- description - описание метода (подробности предупреждениея и другая информация по методу)
+- group - группа метода (категория к кому относится метод для документации чтоб удобно оформить документацию)
+- hide - не показывать данный метод в списке (документации) (секретный метод) (optional)
+- param - параметры 
+    
+        paramName: {
+            type: API.types.STRING(10), // тип параметра
+            error_code:12345678, // код ошибки в если параметр прийдет не валидный
+            title: 'example param', // описание 
+            required: true // обезательный 
+        }
+        
+        // параметры также может быть массивом
+        paramArray: [{
+             type: API.types.STRING(10), // тип параметра
+             error_code:12345678, // код ошибки в если параметр прийдет не валидный
+             title: 'example param', // описание 
+             required: true // обезательный 
+        }] 
+        // в данном случаи будет проверен каждый елемент массива на сотвествие типа
+           и если стоит required то массив должен иметь хотябы один елемент
+           
+        // параметр также может быть массивом с обектами 
+           данном случаи будет проверено весь массив с нужными обектами 
+           
+            paramArray: [{param1:{type...},param2:{type...}}
+- response - массив  в котором описуется что вернет метод
+
+
+на основе этой документации все параметры будут валидироватся и уровни доступы  до того как будет вызван сам параметр
+если в методе произойдет синтаксическая ошибка метод вернет код 500 с указанием ошибки
+
 
 
 After starting the application, the ./api/ and ./config/ folder will be created.
 - ./api/ - directory with API
 - ./config/api_config.json - configuration file
+
+
+конфиграционый файл  создается при первом запуске правильная конфигурация влият на работу  апи 
+все параметры имееют логиченые название  вы можете ознакомится с ним самостоятельно
  
