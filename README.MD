@@ -147,11 +147,8 @@ API.types.ObjectId()
 ```javascript
 module.exports = (API, redis) => {
     // method api/v1/GROUP_PATH/API_file/test
-    API.register('test', (user, param) => {
-        return new Promise((resolve, reject) => {
-            if (!param) return reject('param is not defined');
-            return resolve({example: 1, param: param})
-        })
+    API.register('test', async (user, param) => {
+       return {ok:1};
     }, {
         title: 'Test API',
         level: 0,// 0 public,1 user,2 admin,3 server
@@ -179,6 +176,46 @@ module.exports = (API, redis) => {
 api/v1/ + путь к файлу с методом + (1 параметр из register если он является строкой) 
 таким образом мы получаем 
 api/v1/папка1/папка2/файл/test 
+##### Обработка ошибок 
+Ошибки имеют строгую структуру все ответы апи возвращяют ответ в виде JSON:
+###### Пример error response:
+
+       {
+         "success": false,
+         "error": {
+           "apiError": true,
+           "message": "Page not found",
+           "errorType": "api",
+           "object": {
+             
+           },
+           "level": 0,
+           "errorCode": 4041543664702404,
+           "stack": "Object.API.register [as fn] (./path/api/file.js:444:52)"
+         },
+         "latency_ms": 4,
+         "requestId": "1543748408108-wirUSou"
+       }
+       
+Часто нам необходимо описовать свои ошибки в методах для того чтоб наш клиент понимал что пошло не так в API встроена удобная и гибкая система содание ошибок:
+###### Генерирование ошибок в методах:
+Вам достаточно будет использовать данный код в своем методе: (метод сразу вернет ***Promise.reject***)
+```
+    return API.error.response("Error message example",55511111) 
+    
+```
+данный способ подойтет в большенстве случаев он принимает 3 параметра (message,errorcode,params) параметры не обезательный но если ваш метод должен вернуть чтото дополнительно вы можете  его использовать.
+
+Более гибкий способ описание ошибок:
+```
+    return Promise.reject(
+        API.error.create("Error message example",'api',{},10,55511111,500)
+    )
+```
+Данный метод принимает параметры тип и уровенть ошибки , а также statusCode с которым будет возращен запрос
+параметры данного метода (message, type, params, level, errorCode, statusCode) 
+***Будте внимательны так как данный метод не возвращяет в себе reject он создает только нужный обект для его возврата API вам необходимо вернуть ответ его в Promise.reject()***
+
 
 ##### Каждый метод имеет документацию в которой 
 - title - заголовок метода 
