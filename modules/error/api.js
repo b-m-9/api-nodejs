@@ -26,6 +26,22 @@ function create_error(message, type, params, level, errorCode, statusCode) {
     }
 }
 
+/**
+ *
+ * @name API.error.response
+ *
+ * @param {string} message - response.error.message
+ * @param {number} errorCode - response.error.errorCode
+ * @param {object} params - response.error.object
+ *
+ * @returns {Promise} - REJECT for API response
+ */
+function init_error(message, errorCode, params) {
+    if(!params || typeof params !== 'object')
+        params = {};
+    return Promise.reject(create_error(message, 'api', params, 0, errorCode))
+}
+
 function validate_error(err) {
     if (err.apiError) return Promise.reject(err);
     if (err.error && err.error.apiError) return Promise.reject(err.error);
@@ -39,6 +55,12 @@ function validate_error(err) {
     return Promise.reject(create_error(message, 'api', err_obj, 1, 500));
 }
 
+/**
+ *
+ * @name API.error.soon
+ *
+ * @returns {Promise} - REJECT for API response (method in development)
+ */
 function soon() {
     let message = 'method in development';
     let stack = 'no stack';
@@ -46,6 +68,7 @@ function soon() {
     return Promise.reject(create_error(message, 'api', err_obj, 1, 500));
 }
 
-exports.create = create_error;
-exports.validate = validate_error;
-exports.soon = soon;
+module.exports.create = create_error;
+module.exports.response = init_error;
+module.exports.validate = validate_error;
+module.exports.soon = soon;
