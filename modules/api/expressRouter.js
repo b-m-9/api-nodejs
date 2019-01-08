@@ -188,7 +188,7 @@ router.all('/config/docs/api/', (req, res) => {
 router.all('/*/', (req, res) => {
     req.params.method = req.path.replace(/^\//, '').replace(/\/$/, '');
     let param = {...req.query, ...req.body};
-    const checksumParams = crypto.createHash('sha256').update(JSON.stringify(param)).digest('hex')
+    const checksumParams = crypto.createHash('sha256').update(JSON.stringify(param)).digest('hex');
     param.files = req.files;
     let user = {
         checksumParams,

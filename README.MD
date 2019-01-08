@@ -48,8 +48,14 @@ app.use('/api/v1', restapi.expressRouter);
 - описать как создается  конфигурационый файл
 - описать что такое api express router
 - описать файл конфигураций что значит каждый из параметров в нем 
-
-
+## Контрольная сумма парамметров запроса для restAPI авторизации 
+```
+    let param = {...__GET, ...__POST};
+    const checksumParams = crypto.createHash('sha256')
+        .update(JSON.stringify(param))
+        .digest('hex');
+        
+```
 API Types and validate
 ----
 - ##### String:
