@@ -15,6 +15,7 @@ const UAParser = require('ua-parser-js');
 
 const bodyParser = require('body-parser');
 const fileUpload = require('express-fileupload');
+const crypto = require('crypto');
 
 let git_status = {version: '1.2.0', commitHash: '#git'};
 const git = require('git-rev');
@@ -186,8 +187,11 @@ router.all('/config/docs/api/', (req, res) => {
 
 router.all('/*/', (req, res) => {
     req.params.method = req.path.replace(/^\//, '').replace(/\/$/, '');
-    let param = {...req.query, ...req.body, files: req.files};
+    let param = {...req.query, ...req.body};
+    const checksumParams = crypto.createHash('sha256').update(JSON.stringify(param)).digest('hex')
+    param.files = req.files;
     let user = {
+        checksumParams,
         ip: req.infoClient,
         session: req.session,
         headers: req.headers,
