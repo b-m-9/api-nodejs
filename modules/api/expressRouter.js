@@ -154,6 +154,12 @@ router.use('/', (req, res, next) => {
 
 });
 
+const api_docs_public= config.get('api:docs:public');
+const api_docs_user= config.get('api:docs:user');
+const api_docs_admin= config.get('api:docs:admin');
+const api_docs_server= config.get('api:docs:server');
+
+
 router.all('/config/docs/api/', (req, res) => {
     let config_local = {
         server_path: config.get('server_path'),
@@ -177,7 +183,18 @@ router.all('/config/docs/api/', (req, res) => {
     }
     return res.end && res.end(JSON.stringify({
         methods: docs.filter((m, i) => {
-            return (!!m && !!m.method)
+            if(!m || !m.method)
+              return false;
+             if(!api_docs_public && m.level === 0)
+              return false;
+             if(!api_docs_user && m.level === 1)
+              return false;
+             if(!api_docs_admin && m.level === 2)
+              return false;
+             if(!api_docs_server && m.level === 3)
+              return false;
+
+            return true;
         }),
         config: config_local,
         admin: true
