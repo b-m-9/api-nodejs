@@ -83,9 +83,9 @@ if (config.get('server:session:enable')) {
             ...(config.get('server:session:cookie') || {}),
         },
         httpOnly: true,
-        resave: true,
-        saveUninitialized: true,
 
+        resave: config.get('server:session:resave'),
+        saveUninitialized: config.get('server:session:saveUninitialized'),
         store
     });
     module.exports.session = sessionConfig;
