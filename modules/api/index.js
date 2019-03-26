@@ -532,8 +532,11 @@ let API = {
         let res = {success: false, error: err};
         res.latency_ms = (new Date()).getTime() - initTimestamp;
         res.requestId = request_id;
-        if (!!config.get('server:api:debug:errorResponse'))
+        if (!!config.get('server:api:debug:errorResponse')) {
+          if (res && res.error && res.error.errorCode === 40301)
+            return Promise.reject(res);
           console.error('API error - ', name, '*', type, '\n\tUser:', user, '\n\tParam:', param, '\n\tResponse:', res);
+        }
         return Promise.reject(res);
       }); // ---^^^^^---  Error API  ---^^^^^^----
 

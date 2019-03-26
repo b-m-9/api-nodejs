@@ -222,7 +222,7 @@ router.all('/*/', (req, res) => {
         }));
     }
 
-    API.call(req.params.method, user, param, 'http')
+    return API.call(req.params.method, user, param, 'http')
         .then(result => {
             if (result) {
                 if (result.redirect)
