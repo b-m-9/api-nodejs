@@ -207,6 +207,8 @@ function validateParamsInMethod(name, param_s, paramName) {
       if (!param_s[param_name].type && typeof param_s[param_name] === 'object') {
         return validateParamsInMethod(name, param_s[param_name], param_name)
       }
+      if (typeof param_s[param_name] === 'function')
+        throw Error('#0008 (call fn type) ,error params in method: ' + name + ' - [' + param_name + ']');
       if (!param_s[param_name].type)
         throw Error('#0006,error params in method: ' + name + ' - [' + param_name + ']');
       if (!param_s[param_name].type.name)
