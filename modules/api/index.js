@@ -15,6 +15,17 @@ const error = require('../error/api.js');
 const TypesAPI = require('../api/Types.js');
 const random = require('../random');
 const APIConfig = require('../../index');
+
+if(!APIConfig.user){
+  APIConfig.user = async () => {
+    return {status: false};
+  };
+}
+if(!APIConfig.admin){
+  APIConfig.admin = async () => {
+    return {status: false};
+  };
+}
 // let API = {};
 let redis = require('redis').createClient(config.get('redis:port'), config.get('redis:host'), {db: config.get('redis:database')});
 redis.publishAPI = (method, user, data) => {
