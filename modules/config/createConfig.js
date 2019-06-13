@@ -1,6 +1,6 @@
 'use strict';
-var config = require('./index');
-var random = require('../../modules/random');
+const config = require('./index');
+const random = require('../../modules/random');
 
 // var portfinder = require('portfinder');
 config.default('project_name', 'API');
