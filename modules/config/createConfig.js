@@ -42,9 +42,9 @@ config.default('api:docs:user', true);
 config.default('api:docs:admin', false);
 config.default('api:docs:server', false);
 config.default('developers', [{
-  name: 'Bogdan Medvedev',
-  github: 'https://github.com/medve-dev',
-  mail: 'bogdan@medve-dev.net'
+  name: 'b-m-9',
+  github: 'https://github.com/b-m-9',
+  mail: ''
 }]);
 
 setTimeout(function () {
