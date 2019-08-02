@@ -6,14 +6,17 @@ class APIEmitter extends EventEmitter {
 const ApiEmitter = new APIEmitter();
 
 class API {
-    constructor(auth_controller, options) {
-        if (!auth_controller || !auth_controller.auth_user) auth_controller = options;
+    constructor(configs, options) {
+        if (!configs || !configs.auth_user) configs = options;
 
-        if (auth_controller) {
-            if (auth_controller.auth_user && typeof auth_controller.auth_user === 'function')
-                module.exports.user = auth_controller.auth_user;
-            if (auth_controller.auth_admin && typeof auth_controller.auth_admin === 'function')
-                module.exports.admin = auth_controller.auth_admin;
+        if (configs) {
+            if (configs.auth_user && typeof configs.auth_user === 'function')
+                module.exports.user = configs.auth_user;
+            if (configs.auth_admin && typeof configs.auth_admin === 'function')
+                module.exports.admin = configs.auth_admin;
+
+            if (configs.redis && typeof configs.redis === 'function')
+                module.exports.redis = configs.redis;
         }
         this.expressRouter = require('./modules/api/expressRouter').router;
         this.API = require('./modules/api/expressRouter').API;

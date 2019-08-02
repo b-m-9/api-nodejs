@@ -16,21 +16,26 @@ const TypesAPI = require('../api/Types.js');
 const random = require('../random');
 const APIConfig = require('../../index');
 
-if(!APIConfig.user){
+if (!APIConfig.user) {
   APIConfig.user = async () => {
     return {status: false};
   };
 }
-if(!APIConfig.admin){
+if (!APIConfig.admin) {
   APIConfig.admin = async () => {
     return {status: false};
   };
 }
 // let API = {};
-let redis = require('redis').createClient(config.get('redis:port'), config.get('redis:host'), {db: config.get('redis:database')});
-redis.publishAPI = (method, user, data) => {
-  redis.publish('api_notify', JSON.stringify({method, user, data}));
-};
+let redis = null;
+if (APIConfig.redis) {
+  redis = APIConfig.redis;
+} else {
+  redis = require('redis').createClient(config.get('redis:port'), config.get('redis:host'), {db: config.get('redis:database')});
+  redis.publishAPI = (method, user, data) => {
+    redis.publish('api_notify', JSON.stringify({method, user, data}));
+  };
+}
 
 function stringToRGBHash(str) { // java String#hashCode
   let hash = 0;
