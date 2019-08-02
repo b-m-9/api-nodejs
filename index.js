@@ -15,7 +15,7 @@ class API {
             if (configs.auth_admin && typeof configs.auth_admin === 'function')
                 module.exports.admin = configs.auth_admin;
 
-            if (configs.redis && typeof configs.redis === 'function')
+            if (configs.redis)
                 module.exports.redis = configs.redis;
         }
         this.expressRouter = require('./modules/api/expressRouter').router;
