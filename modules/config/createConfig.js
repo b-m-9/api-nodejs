@@ -41,11 +41,7 @@ config.default('api:docs:public', true);
 config.default('api:docs:user', true);
 config.default('api:docs:admin', false);
 config.default('api:docs:server', false);
-config.default('developers', [{
-  name: 'b-m-9',
-  github: 'https://github.com/b-m-9',
-  mail: ''
-}]);
+config.default('developers', []);
 
 setTimeout(function () {
   config.save();

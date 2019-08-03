@@ -1,5 +1,5 @@
 /**
- * Created by bogdanmedvedev on 29.06.16.
+ * Created by b-m-9 on 29.06.16.
  */
 const path = require('path');
 

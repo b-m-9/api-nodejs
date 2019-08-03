@@ -1,5 +1,5 @@
 /**
- * Created by bogdanmedvedev on 27.06.16.
+ * Created by b-m-9 on 27.06.16.
  */
 var config = require('./index.js');
 config.set('example:name', 'value', 'testField[true(no resave),false(resave)]', 'keyConfig','noSaveTofile[true(no Save file now),false( save to file now)]');

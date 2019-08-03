@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/medve-dev/api-nodejs.git"
+    "url": "git+https://github.com/b-m-9/api-nodejs.git"
   },
   "keywords": [
     "api",
@@ -17,12 +17,12 @@
     "nodejs",
     "api"
   ],
-  "author": "Bogdan Medvediev",
+  "author": "b-m-9",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/medve-dev/api-nodejs/issues"
+    "url": "https://github.com/b-m-9/api-nodejs/issues"
   },
-  "homepage": "https://github.com/medve-dev/api-nodejs#readme",
+  "homepage": "https://github.com/b-m-9/api-nodejs#readme",
   "dependencies": {
     "bluebird": "^3.5.1",
     "body-parser": "^1.18.2",

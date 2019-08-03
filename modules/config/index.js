@@ -1,6 +1,6 @@
 'use strict';
 /**
- * Created by bogdanmedvedev on 11.01.18.
+ * Created by b-m-9 on 11.01.18.
  */
 
 const DIR_TO_ROOT = '/../../../../';

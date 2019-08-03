@@ -1,5 +1,5 @@
 /**
- * Created by bogdanmedvedev on 27.06.16.
+ * Created by b-m-9 on 27.06.16.
  */
 var random = require('./index.js');
 
