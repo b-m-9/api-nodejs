@@ -524,7 +524,7 @@ let API = {
       // ----- Error API ---------->
       .catch(err => {
         // if (!err || err.level > 1) console.error('API->emit(name, user, param, cb, type)->controller[name]->err:', err);
-        API.saveLog(name, null, user, param, {success: false, result: false}, type, request_id);
+        API.saveLog(name, err, user, param, {success: false, result: false}, type, request_id);
         return Promise.reject(err);
 
       })
@@ -550,6 +550,8 @@ let API = {
         let res = {success: false, error: err};
         res.latency_ms = (new Date()).getTime() - initTimestamp;
         res.requestId = request_id;
+        if (res.error)
+          res.error.object = undefined;
         if (!!config.get('server:api:debug:errorResponse')) {
           if (res && res.error && res.error.errorCode === 40301)
             return Promise.reject(res);
