@@ -550,8 +550,8 @@ let API = {
         let res = {success: false, error: err};
         res.latency_ms = (new Date()).getTime() - initTimestamp;
         res.requestId = request_id;
-        if (res.error)
-          res.error.object = undefined;
+        if (res.error && !config.get('server:api:debug:stack'))
+          res.error.stack = undefined;
         if (!!config.get('server:api:debug:errorResponse')) {
           if (res && res.error && res.error.errorCode === 40301)
             return Promise.reject(res);
