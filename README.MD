@@ -282,3 +282,46 @@ After starting the application, the ./api/ and ./config/ folder will be created.
 конфиграционый файл  создается при первом запуске правильная конфигурация влият на работу  апи 
 все параметры имееют логиченые название  вы можете ознакомится с ним самостоятельно
  
+ 
+## Plugins (./api_plugins) 
+
+- DDOS/Flood protect
+
+  https://gist.github.com/b-m-9/f84b80499f0b99ff41a13a6766bbb2ac
+  
+  **How to use:**
+  ```
+   const ddosKey = 'protect-1'; // key for count req
+   const floodSign = await API.plugin.ddos.lockApi(auth.ddosKey, blockForSec);
+   await API.plugin.ddos.checkLockApi(auth.ddosKey, floodSign, delayMS);
+  ```
+___
+- Param types ObjectId
+
+  https://gist.github.com/b-m-9/04fcacb8548d4ac2d010c80d25e9a7ac
+  
+  **How to use:**
+  ```
+  param:{
+    newsId: {
+      type: API.types.ObjectId(),
+      // ...
+    }
+  }
+  ```
+___
+- Quick param pagination API.method
+
+  https://gist.github.com/b-m-9/8aa319d8e522968fda191082599898a2
+  
+  ```
+  // in source validator
+  let page = API.plugin.pageAPI.get(param.page, param.limit, {maxLimit: 100, defaultLimit: 20, maxPage: 2000});
+  
+  
+  // in meta block
+  param: {
+    ...API.plugin.pageAPI.docsParams(API),
+  } //...
+  ```
+___
