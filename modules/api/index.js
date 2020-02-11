@@ -474,16 +474,16 @@ let API = {
             if (controller[name].infoAndControl.param.hasOwnProperty(i) && controller[name].infoAndControl.param[i].name)
               cParam[controller[name].infoAndControl.param[i].name] = controller[name].infoAndControl.param[i];
             if (cParam[controller[name].infoAndControl.param[i].name].required && (param[controller[name].infoAndControl.param[i].name] === undefined || param[controller[name].infoAndControl.param[i].name] === null || param[controller[name].infoAndControl.param[i].name] === ''))
-              return Promise.reject(error.create('param "' + controller[name].infoAndControl.param[i].name + '" required', 'api', {}, 0, controller[name].infoAndControl.param[i].error_code || 500400404));
+              return Promise.reject(error.create('Param "' + controller[name].infoAndControl.param[i].name + '" is required', 'api', {}, 0, controller[name].infoAndControl.param[i].error_code || 500400404));
           }
         }
         for (let key in param) {
           if (param.hasOwnProperty(key) && cParam.hasOwnProperty(key) && cParam[key].type && typeof cParam[key].type.valid === 'function') {
             let r = cParam[key].type.valid(param[key]);
             if (!r)
-              return Promise.reject(error.create('param "' + key + '" type error (function validator)', 'api', {}, 0, cParam[key].error_code || 500400404));
+              return Promise.reject(error.create('Param "' + key + '" type error (function validator)', 'api', {}, 0, cParam[key].error_code || 500400404));
             if (!r.success)
-              return Promise.reject(error.create('param "' + key + '" error: ' + r.error, 'api', {}, 0, cParam[key].error_code || 500400404));
+              return Promise.reject(error.create('Param "' + key + '" error: ' + r.error, 'api', {}, 0, cParam[key].error_code || 500400404));
             param[key] = r.value;
           }
         }
