@@ -1,5 +1,5 @@
 # NodeJS Module Rest-API
-API-NodeJS - это минималистичный и гибкий фреймворк
+api-bxcore - это минималистичный и гибкий фреймворк
  предоставляющий обширный набор функций для построения REST-API на Node.js.
 
 Имеет в своем распоряжении множество служебных методов и 
@@ -11,7 +11,7 @@ API-NodeJS - это минималистичный и гибкий фреймв�
 
 ### Install module
 ```javascript
-npm i api-nodejs
+npm i api-bxcore
 ```
 
 #### Quick start
@@ -19,7 +19,7 @@ npm i api-nodejs
 const express = require('express');
 const app = express();
 
-const RestAPI = require('api-nodejs');
+const RestAPI = require('api-bxcore');
 const restapi = new RestAPI({}, {
     auth_user: (user) => {
 
