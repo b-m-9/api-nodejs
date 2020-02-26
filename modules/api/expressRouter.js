@@ -53,24 +53,6 @@ if (config.get('server:session:enable')) {
         store = new RedisStore({client: redis});
     }
 
-    if (config.get('server:session:driver') === 'pg') {
-
-        if (!!config.get('server:api:debug')) console.log('api-nodejs-> Express use session store Postgres');
-
-        const pg = require('pg'),
-            pgSession = require('connect-pg-simple')(session),
-            pgPool = new pg.Pool({
-                user: config.get('server:session:database:username'),
-                password: config.get('server:session:database:password'),
-                host: config.get('server:session:database:host'),
-                database: config.get('server:session:database:database')
-            });
-        store = new pgSession({
-            pool: pgPool,// Connection pool
-            tableName: 'session'   // Use another table-name than the default "session" one
-        })
-    }
-
     if (config.get('server:session:driver') === 'local') {
         if (!!config.get('server:api:debug')) console.log('api-nodejs-> Express use session store Local');
         store = undefined
