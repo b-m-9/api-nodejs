@@ -34,15 +34,15 @@ if (config.get('server:session:enable')) {
         const MongoStore = require('connect-mongo')(session);
         let access = config.get('server:session:database:username') + ':' + config.get('server:session:database:password');
         if (access === ':') access = '';
+        if (access !== '') access += '@';
         store = new MongoStore({
             mongoOptions: {
-                autoReconnect: true,
+                useNewUrlParser: true,
+                useUnifiedTopology: true,
                 keepAlive: 1,
-                connectTimeoutMS: 30000,
-                reconnectTries: Number.MAX_VALUE,
-                reconnectInterval: 5000
+                connectTimeoutMS: 30000
             },
-            url: 'mongodb://' + access + '@' + config.get('server:session:database:host') + '/' + config.get('server:session:database:database'),
+            url: 'mongodb://' + access + '' + config.get('server:session:database:host') + '/' + config.get('server:session:database:database'),
             stringify: false
         });
     }
