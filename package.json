@@ -1,14 +1,11 @@
 {
-  "name": "api-nodejs",
+  "name": "api-bxcore",
   "version": "2.0.53",
   "description": "",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/b-m-9/api-nodejs.git"
+    "url": "git+https://gitlab.com/b-m-9/api-core.git"
   },
   "keywords": [
     "api",
@@ -17,12 +14,10 @@
     "nodejs",
     "api"
   ],
-  "author": "b-m-9",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
-    "url": "https://github.com/b-m-9/api-nodejs/issues"
+    "url": "https://gitlab.com/b-m-9/api-core/issues"
   },
-  "homepage": "https://github.com/b-m-9/api-nodejs#readme",
   "dependencies": {
     "bluebird": "^3.5.1",
     "body-parser": "^1.18.2",
@@ -40,7 +35,6 @@
     "nconf": "^0.10.0",
     "optimist": "^0.6.1",
     "path": "^0.12.7",
-    "pg": "^7.4.1",
     "redis": "^2.8.0",
     "stack-trace": "0.0.10",
     "tabgeo": "^0.1.0",
