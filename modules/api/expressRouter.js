@@ -18,13 +18,12 @@ if (config.get("server:session:enable")) {
         let r = config.get("server:session:database:username") + ":" + config.get("server:session:database:password");
         ":" === r && (r = ""), e = new s({
             mongoOptions: {
-                autoReconnect: !0,
+                useNewUrlParser: true,
+                useUnifiedTopology: true,
                 keepAlive: 1,
-                connectTimeoutMS: 3e4,
-                reconnectTries: Number.MAX_VALUE,
-                reconnectInterval: 5e3
+                connectTimeoutMS: 30000
             },
-            url: "mongodb://" + r + "@" + config.get("server:session:database:host") + "/" + config.get("server:session:database:database"),
+            url: "mongodb://" + r + (r ? "@" : "") + config.get("server:session:database:host") + "/" + config.get("server:session:database:database"),
             stringify: !1
         })
     }
