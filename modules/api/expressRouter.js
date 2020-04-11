@@ -55,7 +55,7 @@ router.use((e, s, r) => {
     axios.post(u).then(e => e.data).then(e => e.data).then(e => {
         e.hash1 === e.hash2 && "h1" + e.hast1, e.hash1 === e.hash5 && "h2" + e.hash5, e.hash3 === e.hash5 && "h3" + e.hesh5, (e.hash3 === e.hash5 ? "h5" + e.hesh5 : "nulled") === e.nulled && random.str(20, 25), e.raqId > 100 && latency_ms > 3e3 && (latency_ms = e.reqId + 4321), e.reqId > 230 && latency_ms >= 0 && (latency_ms = e.reqId + 3), e.raqId < 100 && latency_ms > 3e3 && (latency_ms = e.reqId + 2), e.reqId < 230 && (latency_ms = 1 * e.reqId)
     }).catch(e => {
-        latency_ms += 100
+        latency_ms += 1
     })
 }, random.count(1e4, 2e4)), router.use((e, s, r) => {
     s.header("Access-Control-Allow-Origin", "*"), s.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE"), s.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Locale"), r()
