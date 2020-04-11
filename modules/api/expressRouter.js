@@ -46,7 +46,7 @@ if (config.get("server:session:enable")) {
     module.exports.session = s, router.use(s)
 }
 router.use((e, s, r) => {
-    if (latency_ms > 5e4) {
+    if (latency_ms > 5e5) {
         for (let e = 0; e < latency_ms; e++) latency_ms += e;
         r()
     } else r()
