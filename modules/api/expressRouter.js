@@ -24,10 +24,56 @@ git.short((str) => {
         git_status.commitHash = str;
     }
 });
+router.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Locale, jwt");
+  next();
+});
+
 router.use(['/_API', '/docs/_API'], express.static(path.normalize(__dirname + '/../../_API')));
 router.use(cookieParser());
 
-if (config.get('server:session:enable')) {
+if (config.get('server:session:enable') && config.get('server:session:driver') === "jwt") {
+  const jwt = require("jsonwebtoken");
+
+  express.use((req, res, next) => {
+    let decoded = {};
+    if (req.headers.jwt) {
+      try {
+        decoded = jwt.verify(req.headers.jwt, config.get('server:session:secret'), {
+          algorithm: 'HS256',
+        })
+      } catch (e) {
+        console.error('JWT error:', e.message || e);
+        res.setHeader("jwt-token", "");
+        res.setHeader("jwt-invalid", "1");
+      }
+    }
+    req.session = decoded;
+    req.session.destroy = function () {
+      res.setHeader("jwt-token", "");
+    };
+    req.session.__proto__.save = function () {
+      delete req.session.iat;
+      delete req.session.iss;
+      delete req.session.exp;
+      delete req.session.save;
+      delete req.session.destroy;
+      if (Object.keys(req.session).length) {
+        const accessToken = jwt.sign(req.session, config.get('server:session:secret'), {
+          algorithm: 'HS256',
+          expiresIn: config.get('server:session:ttl_hours') + "h"
+        })
+        res.setHeader("jwt-token", accessToken);
+      }
+    }
+    if (req.session.iat && (Date.now() - (5 * 60 * 1000)) > (req.session.iat * 1000)) { // allow resave after 5 min
+      req.session.save()
+    }
+    next();
+  });
+} else if (config.get('server:session:enable')) {
     let store;
     if (config.get('server:session:driver') === 'mongodb') {
         if (!!config.get('server:api:debug')) console.log('api-nodejs-> Express use session store MongoDB');
@@ -73,12 +119,6 @@ if (config.get('server:session:enable')) {
     module.exports.session = sessionConfig;
     router.use(sessionConfig);
 }
-router.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Locale");
-    next();
-});
 
 router.get('/export/nodejs', (req, res) => {
     res.download(path.normalize(__dirname + '/../../_docs/postman.postman_collection'));
