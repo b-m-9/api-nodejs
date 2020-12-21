@@ -37,7 +37,7 @@ router.use(cookieParser());
 if (config.get('server:session:enable') && config.get('server:session:driver') === "jwt") {
   const jwt = require("jsonwebtoken");
 
-  express.use((req, res, next) => {
+  router.use((req, res, next) => {
     let decoded = {};
     if (req.headers.jwt) {
       try {
