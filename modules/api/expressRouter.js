@@ -54,7 +54,7 @@ if (config.get('server:session:enable') && config.get('server:session:driver') =
     req.session.destroy = function () {
       res.setHeader("jwt-token", "");
     };
-    req.session.__proto__.save = function () {
+    req.session.save = function () {
       delete req.session.iat;
       delete req.session.iss;
       delete req.session.exp;
