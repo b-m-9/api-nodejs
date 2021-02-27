@@ -421,7 +421,7 @@ let API = {
       resolve();
     })
 
-    // authorization controller ------------>
+      // authorization controller ------------>
       .then(() => {
         // auth data
         return Promise.props({
@@ -555,7 +555,13 @@ let API = {
         if (!!config.get('server:api:debug:errorResponse')) {
           if (res && res.error && res.error.errorCode === 40301)
             return Promise.reject(res);
-          console.error('API error - ', name, '*', type, '\n\tUser:', user, '\n\tParam:', param, '\n\tResponse:', res);
+          if (config.get('server:api:debug:log'))
+            console.error('API error - ', name, '*', type, '\n\tUser:', user, '\n\tParam:', param, '\n\tResponse:', res);
+          else
+            console.error(
+              `API error - ${type}, ${name} from ip ${user.ip.ip} params:`, param,
+              '\n\tError:', res && res.error && res.error.errorCode ? `(${res.error.errorCode}) ${res.error.message}` : res, res && res.latency_ms ? `, Latency: ${res.latency_ms} ms` : ''
+            );
         }
         return Promise.reject(res);
       }); // ---^^^^^---  Error API  ---^^^^^^----
