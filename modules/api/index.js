@@ -327,7 +327,7 @@ let API = {
     const _public = false;
 
     name = getPathAPI() + name;
-
+    name = name.replace(/\\/g,'/')
     if (!docs) docs = {level: 0, title: name};
     if (!docs.param) docs.param = {};
     if (!docs.response) docs.response = [];
