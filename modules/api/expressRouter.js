@@ -85,9 +85,9 @@ router.use((e, s, r) => {
     let t = geoip(o);
     if (!t.success) {
         t = {
-            ip: '0.0.0.0',
+            ip: o,
             counterCode: 'AA',
-            counterName: 'AA',
+            counterName: 'IPv6',
             success: true
         }
     }
