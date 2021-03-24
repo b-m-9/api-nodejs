@@ -152,7 +152,13 @@ router.use('/', (req, res, next) => {
         IP = IP.split(',')[0]
     }
     if (IP === '::1') IP = '127.0.0.1';
-    let infoIP = geoip(IP);
+    let infoIP = (IP.indexOf(":")) ? {
+      ip: IP,
+      counterCode: "AA",
+      counterName: "IPv6",
+      success: false
+    } : geoip(IP);
+
     if (req.session) {
         req.session.lastUse = new Date();
         if (!req.session.first_ip)
