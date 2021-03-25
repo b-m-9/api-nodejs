@@ -1,7 +1,4 @@
 'use strict';
-/**
- * Created by b-m-9 on 11.01.18.
- */
 
 const DIR_TO_ROOT = '/../../../../';
 const DIR_CONFIG = 'config';

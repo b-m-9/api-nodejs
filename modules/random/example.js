@@ -1,6 +1,3 @@
-/**
- * Created by b-m-9 on 27.06.16.
- */
 var random = require('./index.js');
 
 console.log(random.int(4,5)); // return example  2517

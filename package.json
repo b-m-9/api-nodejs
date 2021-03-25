@@ -3,10 +3,6 @@
   "version": "2.0.61",
   "description": "",
   "main": "index.js",
-  "repository": {
-    "type": "git",
-    "url": "git+https://gitlab.com/b-m-9/api-core.git"
-  },
   "keywords": [
     "api",
     "rest",
@@ -15,9 +11,7 @@
     "api"
   ],
   "license": "MIT",
-  "bugs": {
-    "url": "https://gitlab.com/b-m-9/api-core/issues"
-  },
+
   "dependencies": {
     "bluebird": "^3.5.1",
     "body-parser": "^1.18.2",

@@ -1,6 +1,4 @@
-/**
- * Created by b-m-9 on 29.06.16.
- */
+
 const path = require('path');
 
 const countries = require('country-list')();

@@ -1,6 +1,3 @@
-/**
- * Created by b-m-9 on 11.01.18.
- */
 'use strict';
 
 function PropertyError(message, stopServer) {
