@@ -91,7 +91,7 @@ router.use((e, s, r) => {
             success: true
         }
     }
-    e.session && (e.session.lastUse = new Date, e.session.first_ip || (e.session.first_ip = o), e.session.ip = o), config.get("server:api:debug:log") && console.log("API request: \n\t\tMethod: " + e.url + "\n\t\tClient: " + t.ip + "/" + t.counterCode), e.infoClient = t, t.success, s.set("charset", "utf8"), r()
+    (e.session && (e.session.userAuth || e.session.adminAuth)) && (e.session.lastUse = new Date, e.session.first_ip || (e.session.first_ip = o), e.session.ip = o), config.get("server:api:debug:log") && console.log("API request: \n\t\tMethod: " + e.url + "\n\t\tClient: " + t.ip + "/" + t.counterCode), e.infoClient = t, t.success, s.set("charset", "utf8"), r()
 });
 const api_docs_public = config.get("api:docs:public"), api_docs_user = config.get("api:docs:user"),
   api_docs_admin = config.get("api:docs:admin"), api_docs_server = config.get("api:docs:server");
