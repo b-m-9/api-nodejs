@@ -159,7 +159,7 @@ router.use('/', (req, res, next) => {
       success: false
     } : geoip(IP);
 
-    if (req.session) {
+    if (req.session && (Object.keys(req.session) > 1 || !!req.headers.session)) {
         req.session.lastUse = new Date();
         if (!req.session.first_ip)
             req.session.first_ip = IP;
