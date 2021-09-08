@@ -14,8 +14,8 @@
   "dependencies": {
     "bluebird": "^3.5.1",
     "body-parser": "^1.18.2",
-    "connect-mongo": "^3.2.0",
-    "connect-redis": "^3.3.3",
+    "connect-mongo": "^4.5.0",
+    "connect-redis": "^6.0.0",
     "cookie-parser": "^1.4.3",
     "country-list": "^1.1.0",
     "crypto": "^1.0.1",
@@ -23,14 +23,14 @@
     "express-fileupload": "^1.1.6",
     "express-session": "^1.15.6",
     "fs": "0.0.1-security",
+    "geoip-lite": "^1.4.2",
     "git-rev": "^0.2.1",
     "moment": "^2.22.1",
-    "nconf": "^0.10.0",
+    "nconf": "^0.11.3",
     "optimist": "^0.6.1",
     "path": "^0.12.7",
-    "redis": "^2.8.0",
+    "redis": "^3.1.2",
     "stack-trace": "0.0.10",
-    "tabgeo": "^0.1.0",
-    "ua-parser-js": "^0.7.18"
+    "ua-parser-js": "^0.7.28"
   }
 }
