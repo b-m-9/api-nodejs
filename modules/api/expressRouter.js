@@ -17,9 +17,11 @@ if (config.get("server:session:enable")) {
         const MongoConn = require("connect-mongo");
         // const s = new MongoConn(session);
         let r = config.get("server:session:database:username") + ":" + config.get("server:session:database:password");
-        ":" === r && (r = ""), e =  MongoConn.create({
+        ":" === r && (r = "");
+        e =  MongoConn.create({
           mongoUrl: "mongodb://" + r + (r ? "@" : "") + config.get("server:session:database:host") + "/" + config.get("server:session:database:database"),
-          ttl: (config.get("server:session:ttl_hours") * 60 * 60)
+          ttl: (config.get("server:session:ttl_hours") * 60 * 60),
+          stringify: !1
         })
     }
     if ("redis" === config.get("server:session:driver")) {
