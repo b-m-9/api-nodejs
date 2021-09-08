@@ -14,17 +14,12 @@ if (config.get("server:session:enable")) {
     let e;
     if ("mongodb" === config.get("server:session:driver")) {
         config.get("server:api:debug") && console.log("api-nodejs-> Express use session store MongoDB");
-        const s = require("connect-mongo")(session);
+        const MongoConn = require("connect-mongo");
+        // const s = new MongoConn(session);
         let r = config.get("server:session:database:username") + ":" + config.get("server:session:database:password");
-        ":" === r && (r = ""), e = new s({
-            mongoOptions: {
-                useNewUrlParser: true,
-                useUnifiedTopology: true,
-                keepAlive: 1,
-                connectTimeoutMS: 30000
-            },
-            url: "mongodb://" + r + (r ? "@" : "") + config.get("server:session:database:host") + "/" + config.get("server:session:database:database"),
-            stringify: !1
+        ":" === r && (r = ""), e =  MongoConn.create({
+          mongoUrl: "mongodb://" + r + (r ? "@" : "") + config.get("server:session:database:host") + "/" + config.get("server:session:database:database"),
+          ttl: (config.get("server:session:ttl_hours") * 60 * 60)
         })
     }
     if ("redis" === config.get("server:session:driver")) {
