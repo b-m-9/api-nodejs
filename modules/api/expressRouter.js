@@ -77,19 +77,14 @@ if (config.get('server:session:enable') && config.get('server:session:driver') =
     let store;
     if (config.get('server:session:driver') === 'mongodb') {
         if (!!config.get('server:api:debug')) console.log('api-nodejs-> Express use session store MongoDB');
-        const MongoStore = require('connect-mongo')(session);
+        const MongoStore = require('connect-mongo');
         let access = config.get('server:session:database:username') + ':' + config.get('server:session:database:password');
         if (access === ':') access = '';
         if (access !== '') access += '@';
-        store = new MongoStore({
-            mongoOptions: {
-                useNewUrlParser: true,
-                useUnifiedTopology: true,
-                keepAlive: 1,
-                connectTimeoutMS: 30000
-            },
-            url: 'mongodb://' + access + '' + config.get('server:session:database:host') + '/' + config.get('server:session:database:database'),
-            stringify: false
+        store = new MongoStore.create({
+          mongoUrl: 'mongodb://' + access + '' + config.get('server:session:database:host') + '/' + config.get('server:session:database:database'),
+          ttl: (config.get("server:session:ttl_hours") * 60 * 60),
+          stringify: !1
         });
     }
     if (config.get('server:session:driver') === 'redis') {
