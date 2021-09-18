@@ -1,4 +1,4 @@
-const countries = new (require('country-list'))();
+const countries = require('country-list');
 const geoip = require('geoip-lite');
 module.exports = function (ip) {
   if (typeof ip !== 'string')
