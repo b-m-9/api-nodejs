@@ -1,6 +1,6 @@
 {
   "name": "rest9-api",
-  "version": "2.0.67",
+  "version": "2.0.68",
   "description": "rest9-api - это минималистичный и гибкий фреймворк  предоставляющий обширный набор функций для построения REST-API на Node.js.",
   "main": "index.js",
   "scripts": {
