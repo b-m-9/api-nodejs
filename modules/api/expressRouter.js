@@ -81,7 +81,7 @@ if (config.get('server:session:enable') && config.get('server:session:driver') =
         let access = config.get('server:session:database:username') + ':' + config.get('server:session:database:password');
         if (access === ':') access = '';
         if (access !== '') access += '@';
-        store = new MongoStore.create({
+        store = MongoStore.create({
           mongoUrl: 'mongodb://' + access + '' + config.get('server:session:database:host') + '/' + config.get('server:session:database:database'),
           ttl: (config.get("server:session:ttl_hours") * 60 * 60),
           stringify: !1
