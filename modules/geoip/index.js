@@ -17,14 +17,7 @@ module.exports = function (ip) {
   //     return {success: false,error:'error typeof ip'};
   const code = geoip.lookup(ip);
   if (!code) {
-    return {
-      ip: ip,
-      counterCode: "AA",
-      counterName: "Unknown",
-      city: "Unknown",
-      range: [0, 0],
-      success: true
-    };
+    return {success: false, error: 'geoip.lookup not found: ' + ip};
   }
   return {
     ip: ip,
