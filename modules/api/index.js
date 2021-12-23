@@ -230,7 +230,7 @@ let API = {
     }).then(n => (API.saveLog(e, null, r, o, n, t, i), n)).then(a => {
       if (!a) return Promise.reject("CORE API error {res} of undefined");
       let s = {success: !0, data: a};
-      return s.latency_ms = (new Date).getTime() - n, s.requestId = i, "REDIRECT" === a.mode && "string" == typeof a.url && (s.redirect = a.url), config.get("server:api:debug:log") && console.log("API success -> " + e.url + " took: "+s.latency_ms+ "ms from: " + r && r.ip), config.get("server:api:debug:successResponse") && console.log("API success - ", e, "*", t, "\n\tUser:", r, "\n\tParam:", o, "\n\tResponse:", s), s
+      return s.latency_ms = (new Date).getTime() - n, s.requestId = i, "REDIRECT" === a.mode && "string" == typeof a.url && (s.redirect = a.url), config.get("server:api:debug:log") && console.log("API success -> " + e.url + " took: "+ s.latency_ms + "ms from:", r && r.ip), config.get("server:api:debug:successResponse") && console.log("API success - ", e, "*", t, "\n\tUser:", r, "\n\tParam:", o, "\n\tResponse:", s), s
     }).timeout(1e3 * config.get("server:api:timeout"), "API timeout").catch(n => (API.saveLog(e, n, r, o, {
       success: !1,
       result: !1
