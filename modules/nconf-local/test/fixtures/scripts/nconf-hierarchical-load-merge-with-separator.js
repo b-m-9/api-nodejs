@@ -9,7 +9,8 @@
 var path = require('path'),
     nconf = require('../../../lib/nconf');
 
-nconf.argv()
+nconf.argv({separator: '--'})
+     .env('__')
      .file(path.join(__dirname, '..', 'merge', 'file1.json'));
 
 process.stdout.write(JSON.stringify({
