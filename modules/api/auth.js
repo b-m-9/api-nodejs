@@ -25,6 +25,12 @@ const checkAuth = (level, auth) => {
                 type: 'user'
             }, 0, 40301, 403));
 
+        if (level === 2 && auth.admin.NotAllowed)
+          return reject(APIerror.create('You are not allowed to call this method', 'unauthorized', {
+            pos: 'modules/api/auth.js(controller):#3',
+            level: level,
+            type: 'admin'
+          }, 0, 40505, 405));
         if (level === 2 && !auth.admin.status)
             return reject(APIerror.create('You are not authorized Admin', 'unauthorized', {
                 pos: 'modules/api/auth.js(controller):#2',
@@ -32,12 +38,6 @@ const checkAuth = (level, auth) => {
                 type: 'admin'
             }, 0, 40302, 403));
 
-        if (level === 2 && auth.admin.NotAllowed)
-            return reject(APIerror.create('You are not allowed to call this method', 'unauthorized', {
-                pos: 'modules/api/auth.js(controller):#3',
-                level: level,
-                type: 'admin'
-            }, 0, 40505, 405));
         resolve(auth);
     });
 };
