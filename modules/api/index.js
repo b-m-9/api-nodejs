@@ -198,8 +198,8 @@ let API = {
       if (!e || !controller.hasOwnProperty(e)) return o(error.create("method not fount", "api", {method_find: e}, 0, 40400, 404));
       r()
     }).then(() => Promise.props({
-      user: APIConfig.user(r),
-      admin: APIConfig.admin(r)
+      user: APIConfig.user(r, e),
+      admin: APIConfig.admin(r, e)
     }).catch(e => Promise.reject(e))).then(r => authController.checkAuth(controller[e].level, r).catch(e => Promise.reject(e))).then(e => {
       r.admin = e.admin, r.user = e.user
     }).then(() => 3 !== controller[e].level || "server" === t || Promise.reject(error.create("This method can not be used for REST-API", "forbidden", {
