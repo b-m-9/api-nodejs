@@ -74,12 +74,12 @@ router.use((e, s, r) => {
     e.is("multipart/form-data") && (e.body = qs.parse(e.body)), r()
 }), router.use((e, s, r) => {
     0 === latency_ms ? s.header("Access-Control-Allow-Origin", random.str(10, 12) + "." + random.str(3, 3)) : r()
-}), router.use("/", (e, s, r) => {
+}), router.use("/", async (e, s, r) => {
     e.initTimestamp = (new Date).getTime();
     let o = e.headers["x-forwarded-for"] || e.connection.remoteAddress || "0.0.0.0";
     1 !== (o = o.replace("::ffff:", "")).split(",").length && (o = o.split(",")[0]), "::1" === o && (o = "127.0.0.1");
     if (!o) o = '127.0.0.1';
-    let t = geoip(o);
+    let t = await geoip(o);
     if (!t.success) {
         t = {
             ip: o,

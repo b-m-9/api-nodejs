@@ -1,6 +1,8 @@
 const countries = require('country-list');
 const geoip = require('geoip-lite');
-module.exports = function (ip) {
+const APIConfig = require("../../index");
+module.exports = async function (ip) {
+  if(APIConfig && APIConfig.geoipFn) return APIConfig.geoipFn(ip)
   if (typeof ip !== 'string')
     return {success: false, error: 'error typeof stringIP:' + ip};
   ip = ip.replace('::ffff:', '');
