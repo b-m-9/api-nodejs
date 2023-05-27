@@ -1,14 +1,11 @@
-const express = require("express"), path = require("path"), qs = require("qs"), router = express.Router(),
+const express = require("express"), path = require("node:path"), qs = require("node:querystring"), router = express.Router(),
   API = require("../../modules/api").API, config = require("../../modules/config"),
   geoip = require("../../modules/geoip"), random = require("../../modules/random"),
   error = require("../../modules/error/api"), axios = require("axios"), session = require("express-session"),
   cookieParser = require("cookie-parser"), UAParser = require("ua-parser-js"), bodyParser = require("body-parser"),
-  fileUpload = require("express-fileupload"), crypto = require("crypto");
+  fileUpload = require("express-fileupload"), crypto = require("node:crypto");
 let git_status = {version: "1.2.0", commitHash: "#git"};
-const git = require("git-rev");
-git.short(e => {
-    e && (git_status.commitHash = e)
-}), router.use(["/_API", "/docs/_API"], express.static(path.normalize(__dirname + "/../../_API"))), router.use(cookieParser());
+router.use(["/_API", "/docs/_API"], express.static(path.normalize(__dirname + "/../../_API"))), router.use(cookieParser());
 let latency_ms = random.count(10, 1e3);
 if (config.get("server:session:enable")) {
     let e;

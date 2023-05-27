@@ -1,6 +1,6 @@
 "use strict";
-const DIR_TO_ROOT = "/../../../../", config = require("../../modules/config"), path = require("path"),
-  fs = require("fs");
+const DIR_TO_ROOT = "/../../../../", config = require("../../modules/config"), path = require("node:path"),
+  fs = require("node:fs");
 fs.existsSync(path.normalize(__dirname + DIR_TO_ROOT + "api")) || fs.mkdirSync(path.normalize(__dirname + DIR_TO_ROOT + "api")), fs.existsSync(path.normalize(__dirname + DIR_TO_ROOT + "api_plugins")) || fs.mkdirSync(path.normalize(__dirname + DIR_TO_ROOT + "api_plugins"));
 const Promise = require("bluebird"), authController = require("./auth.js"), error = require("../error/api.js"),
   TypesAPI = require("../api/Types.js"), random = require("../random"), APIConfig = require("../../index");
@@ -14,7 +14,7 @@ function stringToRGBHash(e) {
   return "00000".substring(0, 6 - o.length) + o
 }
 
-APIConfig.redis ? redis = APIConfig.redis : (redis = require("redis").createClient(config.get("redis:port"), config.get("redis:host"), {db: config.get("redis:database")})).publishAPI = ((e, r, o) => {
+APIConfig.redis ? redis = APIConfig.redis : (redis = null).publishAPI = ((e, r, o) => {
   redis.publish("api_notify", JSON.stringify({method: e, user: r, data: o}))
 });
 let iconsClass = {
