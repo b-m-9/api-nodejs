@@ -23,7 +23,8 @@ if (config.get("server:session:enable")) {
     }
     if ("redis" === config.get("server:session:driver")) {
         config.get("server:api:debug") && console.log("api-nodejs-> Express use session store Redis");
-        const s = require("redis").createClient(config.get("redis:port"), config.get("redis:host"));
+        const s = require("redis").createClient({url:config.get("redis:uri")});
+        // s.connect().then(); // todo: check it
         e = new (require("connect-redis")(session))({client: s})
     }
 
@@ -68,7 +69,7 @@ router.use((e, s, r) => {
 })), router.use((e, s, r) => {
     latency_ms < 10 ? setTimeout(r, 9e3) : r()
 }), router.use((e, s, r) => {
-    e.is("multipart/form-data") && (e.body = qs.parse(e.body)), r()
+    e.is("multipart/form-data") && (e.body = typeof e.body === "object" ? e.body : qs.parse(e.body)), r()
 }), router.use((e, s, r) => {
     0 === latency_ms ? s.header("Access-Control-Allow-Origin", random.str(10, 12) + "." + random.str(3, 3)) : r()
 }), router.use("/", async (e, s, r) => {
