@@ -123,7 +123,7 @@ router.all("/config/docs/api/", (e, s) => {
         error: error.create("API result of null", "api", {param: r}, 10),
         success: !1
     }).catch(e => e).then(rcf => {
-        if (rcf && "object" == typeof rcf) return s.header("Content-Type", "application/json; charset=utf-8"),s.header("Server-Timing", `method;dur=${rcf.latency_ms || 0}, api;dur=${(new Date).getTime() - e.initTimestamp}${e.startRequestAt ? ", total;dur="+((new Date).getTime() - e.startRequestAt): ""}`), latency_ms += 1, s.end && s.end(JSON.stringify(rcf))
+        if (rcf && "object" == typeof rcf) return s.header("Content-Type", "application/json; charset=utf-8"),s.header("Server-Timing", `api;desc="Method function works";dur=${rcf.latency_ms || 0}, controller;desc="Prepare request and response";dur=${(new Date).getTime() - e.initTimestamp - rcf.latency_ms}${e.startRequestAt ? ", total;dur="+((new Date).getTime() - e.startRequestAt): ""}`), latency_ms += 1, s.end && s.end(JSON.stringify(rcf))
     }) : (s.sendStatus(404), s.end && s.end(JSON.stringify({
         error: error.create("method not found", "param", {
             method: e.params.method,
