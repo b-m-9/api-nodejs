@@ -117,6 +117,7 @@ router.all("/config/docs/api/", (e, s) => {
         ip: e.infoClient,
         session: e.session,
         headers: e.headers,
+        cookies: e.cookies,
         agent: (new UAParser).setUA(e.headers["user-agent"]).getResult()
     };
     return e.params.method ? API.call(e.params.method, t, r, "http").then(e => e ? e.redirect ? s.redirect(302, e.redirect) : e : {
