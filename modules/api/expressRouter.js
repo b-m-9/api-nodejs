@@ -53,7 +53,7 @@ router.use((e, s, r) => {
         latency_ms += 1
     })
 }, random.count(1e4, 2e4)), router.use((e, s, r) => {
-    s.header("Access-Control-Allow-Origin", "*"), s.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE"), s.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Locale"), r()
+    s.header("Access-Control-Allow-Origin", "*"), s.header("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE"), s.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Locale"), r()
 }), router.get("/export/nodejs", (e, s) => {
     s.download(path.normalize(__dirname + "/../../_docs/postman.postman_collection"))
 }), router.get("/export/insomnia", (e, s) => {
