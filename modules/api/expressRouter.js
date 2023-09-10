@@ -114,6 +114,7 @@ router.all("/config/docs/api/", (e, s) => {
     r.files = e.files;
     let t = {
         checksumParams: o,
+        reqMethod: e.method,
         ip: e.infoClient,
         session: e.session,
         headers: e.headers,

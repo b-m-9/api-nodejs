@@ -162,9 +162,10 @@ let API = {
     "function" == typeof e && (o = r, r = e, e = ""), "" !== e && (e = "/" + e);
     if (e = getPathAPI() + e, o || (o = {
       level: 0,
+      reqMethods: ["*"],
       title: e
     }), o.param || (o.param = {}), o.response || (o.response = []), "object" != typeof o.param) throw new Error("Error api param not Object in method: " + e);
-    if (validateParamsInMethod(e, o.param), controller[e] || (controller[e] = {}), controller[e].fn = r, controller[e].level = o.level, o.level || 0 === o.level || (controller[e].level = 3), controller[e].infoAndControl = o, o && !o.hide) {
+    if (validateParamsInMethod(e, o.param), controller[e] || (controller[e] = {}), controller[e].fn = r, controller[e].level = o.level, controller[e].reqMethods = o.reqMethods, o.level || 0 === o.level || (controller[e].level = 3), controller[e].infoAndControl = o, o && !o.hide) {
       o.method = e, o.iconColor = stringToRGBHash(e);
       for (let r in API.plugin.iconsClass) if (-1 !== e.toLowerCase().indexOf(r)) {
         o.iconClass = API.plugin.iconsClass[r];
@@ -195,7 +196,8 @@ let API = {
   call: (e, r, o, t) => {
     let n = (new Date).getTime(), i = (new Date).getTime() + "-" + random.str(7, 7);
     return t || (t = "server"), o || (o = {}), aliases[e] && (e = aliases[e]), new Promise((r, o) => {
-      if (!e || !controller.hasOwnProperty(e)) return o(error.create("method not fount", "api", {method_find: e}, 0, 40400, 404));
+      if (!e || !controller.hasOwnProperty(e)) return o(error.create("method not fount", "api", {method_find: e, reqMethod:r.reqMethod}, 0, 40400, 404));
+      if (controller[e].reqMethods && !controller[e].reqMethods.includes(r.reqMethod)) return o(error.create("method not fount", "api", {method_find: e, reqMethod:r.reqMethod}, 0, 40400, 404));
       r()
     }).then(() => Promise.props({
       user: APIConfig.user(r, e),
