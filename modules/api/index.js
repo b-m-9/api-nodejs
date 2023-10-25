@@ -196,8 +196,8 @@ let API = {
   call: (e, r, o, t) => {
     let n = (new Date).getTime(), i = (new Date).getTime() + "-" + random.str(7, 7);
     return t || (t = "server"), o || (o = {}), aliases[e] && (e = aliases[e]), new Promise((re, o) => {
-      if (!e || !controller.hasOwnProperty(e)) return o(error.create("method not fount", "api", {method_find: e, reqMethod:r.reqMethod}, 0, 40400, 404));
-      if (APIConfig.enableCorsMethod && controller[e].reqMethods && !controller[e].reqMethods.includes(r.reqMethod) && "server" !== t) return o(error.create("method not fount", "api", {method_find: e, reqMethod:r.reqMethod}, 0, 40400, 404));
+      if (!e || !controller.hasOwnProperty(e)) return o(error.create("method not found!", "api", {method_find: e, reqMethod:r.reqMethod}, 0, 40400, 404));
+      if (APIConfig.enableCorsMethod && controller[e].reqMethods && !controller[e].reqMethods.includes(r.reqMethod) && "server" !== t) return o(error.create("method not found.", "api", {method_find: e, reqMethod:r.reqMethod}, 0, 40400, 404));
       re()
     }).then(() => Promise.props({
       user: APIConfig.user(r, e),
