@@ -32,7 +32,7 @@ if (config.get("server:session:enable")) {
     const s = session({
         secret: config.get("server:session:secret"),
         name: config.get("server:session:name"),
-        proxy: config.get("server:session:proxy"),
+        proxy: config.get("server:session:proxy") || false,
         cookie: {maxAge: 60 * config.get("server:session:ttl_hours") * 60 * 1e3, ...(config.get("server:session:cookie") || {})},
         httpOnly: !0,
         resave: config.get("server:session:resave"),
