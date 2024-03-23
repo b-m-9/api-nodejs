@@ -2,7 +2,7 @@ const express = require("express"), path = require("node:path"), qs = require("n
   API = require("../../modules/api").API, config = require("../../modules/config"),
   geoip = require("../../modules/geoip"), random = require("../../modules/random"),
   error = require("../../modules/error/api"), axios = require("axios"), session = require("express-session"),
-  cookieParser = require("cookie-parser"), UAParser = require("ua-parser-js"), bodyParser = require("body-parser"),
+  cookieParser = require("cookie-parser"), UAParser = require("ua-parser-js"),
   fileUpload = require("express-fileupload"), crypto = require("node:crypto");
 let git_status = {version: "1.2.0", commitHash: "#git"};
 router.use(["/_API", "/docs/_API"], express.static(path.normalize(__dirname + "/../../_API"))), router.use(cookieParser());
@@ -59,10 +59,10 @@ router.use((e, s, r) => {
     s.download(path.normalize(__dirname + "/../../_docs/insomnia.json"))
 }), router.get("/export/postman", (e, s) => {
     s.download(path.normalize(__dirname + "/../../_docs/postman.postman_collection"))
-}), router.use(bodyParser.urlencoded({
+}), router.use(express.urlencoded({
     extended: !0,
     limit: "10mb"
-})), router.use(bodyParser.json({limit: "20mb"})), router.use(fileUpload({
+})), router.use(express.json({limit: "20mb"})), router.use(fileUpload({
     abortOnLimit: !0,
     limits: {fileSize: 209715200}
 })), router.use((e, s, r) => {
