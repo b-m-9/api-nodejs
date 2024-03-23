@@ -62,6 +62,7 @@ API Types and validate
 ```
 /**
 * @param {string} options.regexp - STRING REGEXP (optional)
+* @param {string} options.regexp_option - STRING REGEXP OPTION (optional)
 */
 API.types.STRING(lenght,options)
 ```               
@@ -72,6 +73,7 @@ API.types.STRING(lenght,options)
 *  13.556 ───────── length (5)
 
 * @param {string} options.regexp - STRING REGEXP (optional)
+* @param {string} options.regexp_option - STRING REGEXP OPTION (optional)
 */
 API.types.FLOAT(length,fixed,options) //float number
 API.types.INTEGER(length,options) // integer

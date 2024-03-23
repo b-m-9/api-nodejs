@@ -6,8 +6,10 @@ class _String {
     this.max = len || 255;
     if (options) {
       if (options.regexp) {
-        this.regexp = new RegExp(String(options.regexp))
-
+        if (options.regexp_option)
+          this.regexp = new RegExp(String(options.regexp), String(options.regexp_option))
+        else
+          this.regexp = new RegExp(String(options.regexp))
       }
     }
   }
@@ -64,7 +66,10 @@ class _Float {
     this.fixed = fixed || 4;
     if (options) {
       if (options.regexp) {
-        this.regexp = new RegExp(String(options.regexp))
+        if (options.regexp_option)
+          this.regexp = new RegExp(String(options.regexp), String(options.regexp_option))
+        else
+          this.regexp = new RegExp(String(options.regexp))
       }
     }
   }
@@ -105,7 +110,10 @@ class _Intenger {
     this.fixed = 0;
     if (options) {
       if (options.regexp) {
-        this.regexp = new RegExp(String(options.regexp))
+        if (options.regexp_option)
+          this.regexp = new RegExp(String(options.regexp), String(options.regexp_option))
+        else
+          this.regexp = new RegExp(String(options.regexp))
       }
     }
   }
